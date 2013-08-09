@@ -27,7 +27,8 @@
 			"Kdyby\\Aop\\": "src/"
 		},
 		"classmap": [
-			"src/Kdyby/Aop/exceptions.php"
+			"src/Kdyby/Aop/annotations.php",
+			"src/Kdyby/Aop/exceptions.php",
 		]
 	}
 }
