@@ -1,0 +1,33 @@
+{
+	"name": "kdyby/aop",
+	"type": "library",
+	"description": "AOP for Nette Framework Dependency Injection Container",
+	"keywords": ["nette", "kdyby", "aop", "di", "dic", "aspect"],
+	"homepage": "http://kdyby.org",
+	"license": ["BSD-3-Clause", "GPL-2.0", "GPL-3.0"],
+	"authors": [
+		{
+			"name": "Filip Procházka",
+			"homepage": "http://filip-prochazka.com"
+		}
+	],
+	"support": {
+		"email": "filip@prochazka.su",
+		"issues": "https://github.com/kdyby/aop/issues"
+	},
+	"require": {
+		"nette/nette": "@dev",
+		"doctrine/common": "~2.3"
+	},
+	"require-dev": {
+		"nette/tester": "@dev"
+	},
+	"autoload": {
+		"psr-0": {
+			"Kdyby\\Aop\\": "src/"
+		},
+		"classmap": [
+			"src/Kdyby/Aop/exceptions.php"
+		]
+	}
+}
