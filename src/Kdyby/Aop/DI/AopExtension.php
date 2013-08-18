@@ -32,13 +32,52 @@ if (isset(Nette\Loaders\NetteLoader::getInstance()->renamed['Nette\Configurator'
 class AopExtension extends Nette\DI\CompilerExtension
 {
 
+	const ASPECT_TAG = 'kdyby.aspect';
+
+	/**
+	 * @var array
+	 */
 	public $defaults = array();
+
+
+
+	public function loadConfiguration()
+	{
+		$builder = $this->getContainerBuilder();
+
+		foreach ($this->compiler->getExtensions() as $extension) {
+			if (!$extension instanceof IAspectsProvider) {
+				continue;
+			}
+
+			if (!($config = $extension->getAspectsConfiguration()) || !$config instanceof AspectsConfig) {
+				$refl = new Nette\Reflection\Method($extension, 'getAspectsConfiguration');
+				$given = is_object($config) ? 'instance of ' . get_class($config) : gettype($config);
+				throw new Kdyby\Aop\UnexpectedValueException("Method $refl is expected to return instance of \\Kdyby\\Aop\\DI\\AspectsConfig, but $given given.");
+			}
+
+			$config->load($this->compiler, $builder);
+		}
+	}
+
 
 
 	public function beforeCompile()
 	{
 		$builder = $this->getContainerBuilder();
 		$config = $this->getConfig($this->defaults);
+	}
+
+
+
+	/**
+	 * @param string $configFile
+	 * @param Nette\DI\CompilerExtension $extension
+	 * @return AspectsConfig
+	 */
+	public static function loadAspects($configFile, Nette\DI\CompilerExtension $extension)
+	{
+		return new AspectsConfig($extension->loadFromFile($configFile), $extension);
 	}
 
 

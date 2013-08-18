@@ -29,3 +29,33 @@ class InvalidStateException extends \RuntimeException implements Exception
 {
 
 }
+
+
+
+/**
+ * @author Filip Procházka <filip@prochazka.su>
+ */
+class InvalidArgumentException extends \InvalidArgumentException implements Exception
+{
+
+}
+
+
+
+/**
+ * @author Filip Procházka <filip@prochazka.su>
+ */
+class UnexpectedValueException extends \UnexpectedValueException
+{
+
+}
+
+
+
+/**
+ * @author Filip Procházka <filip@prochazka.su>
+ */
+class InvalidAspectExceptions extends \LogicException implements Exception
+{
+
+}
