@@ -17,10 +17,13 @@
 	},
 	"require": {
 		"nette/nette": "@dev",
-		"doctrine/common": "~2.3"
+		"kdyby/annotations": "@dev"
 	},
 	"require-dev": {
 		"nette/tester": "@dev"
+	},
+	"conflict": {
+		"kdyby/doctrine": "0.9.*"
 	},
 	"autoload": {
 		"psr-0": {
@@ -28,7 +31,7 @@
 		},
 		"classmap": [
 			"src/Kdyby/Aop/annotations.php",
-			"src/Kdyby/Aop/exceptions.php",
+			"src/Kdyby/Aop/exceptions.php"
 		]
 	}
 }
