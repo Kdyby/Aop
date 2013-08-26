@@ -10,6 +10,7 @@
 
 namespace KdybyTests\Aop;
 
+use Doctrine\Common\Annotations\AnnotationReader;
 use Kdyby;
 use Kdyby\Aop\Pointcut;
 use Kdyby\Aop\Pointcut\Matcher;
@@ -59,6 +60,28 @@ class PointcutRulesTest extends Tester\TestCase
 
 		$data[] = array(FALSE,
 			new Pointcut\Rules(array(new Matcher\WithinMatcher('KdybyTests\Aop\Cat'))),
+			$this->createDefinition('KdybyTests\Aop\SmegHead'),
+		);
+
+		$reader = new AnnotationReader();
+
+		$data[] = array(TRUE,
+			new Pointcut\Rules(array(new Matcher\ClassAnnotateWithMatcher('KdybyTests\Aop\Test', $reader))),
+			$this->createDefinition('KdybyTests\Aop\SmegHead'),
+		);
+
+		$data[] = array(FALSE,
+			new Pointcut\Rules(array(new Matcher\ClassAnnotateWithMatcher('KdybyTests\Aop\Test', $reader))),
+			$this->createDefinition('KdybyTests\Aop\Legie'),
+		);
+
+		$data[] = array(TRUE,
+			new Pointcut\Rules(array(new Matcher\MethodAnnotateWithMatcher('KdybyTests\Aop\Test', $reader))),
+			$this->createDefinition('KdybyTests\Aop\Legie'),
+		);
+
+		$data[] = array(FALSE,
+			new Pointcut\Rules(array(new Matcher\MethodAnnotateWithMatcher('KdybyTests\Aop\Test', $reader))),
 			$this->createDefinition('KdybyTests\Aop\SmegHead'),
 		);
 

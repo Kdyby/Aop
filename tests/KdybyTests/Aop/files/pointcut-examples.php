@@ -10,6 +10,7 @@
 
 namespace KdybyTests\Aop;
 
+use Doctrine\Common\Annotations\Annotation;
 use Nette;
 
 
@@ -45,6 +46,9 @@ interface Cat
 class Legie implements Rimmer, Lister, Kryten, Cat
 {
 
+	/**
+	 * @Test()
+	 */
 	public function publicCalculation()
 	{
 	}
@@ -67,6 +71,9 @@ class Legie implements Rimmer, Lister, Kryten, Cat
 
 
 
+/**
+ * @Test()
+ */
 class SmegHead
 {
 
@@ -78,3 +85,12 @@ class SmegHead
 }
 
 
+
+/**
+ * @Annotation
+ * @Target({"CLASS", "METHOD"})
+ */
+class Test extends Annotation
+{
+
+}

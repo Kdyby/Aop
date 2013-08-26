@@ -10,6 +10,7 @@
 
 namespace Kdyby\Aop\Pointcut\Matcher;
 
+use Doctrine\Common\Annotations\Reader;
 use Kdyby;
 use Nette;
 
@@ -21,9 +22,37 @@ use Nette;
 class ClassAnnotateWithMatcher extends Nette\Object implements Kdyby\Aop\Pointcut\Rule
 {
 
+	/**
+	 * @var string
+	 */
+	private $annotationClass;
+
+	/**
+	 * @var \Doctrine\Common\Annotations\Reader
+	 */
+	private $reader;
+
+
+
+	public function __construct($annotationClass, Reader $reader)
+	{
+		$this->annotationClass = $annotationClass;
+		$this->reader = $reader;
+	}
+
+
+
 	public function matches(Kdyby\Aop\Pointcut\Method $method)
 	{
+		foreach ($method->getClassAnnotations($this->reader) as $annotation) {
+			if (!$annotation instanceof $this->annotationClass) {
+				continue;
+			}
 
+			return TRUE;
+		}
+
+		return FALSE;
 	}
 
 }

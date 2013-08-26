@@ -10,6 +10,7 @@
 
 namespace Kdyby\Aop\Pointcut;
 
+use Doctrine\Common\Annotations\Reader;
 use Kdyby;
 use Nette;
 
@@ -70,6 +71,28 @@ class Method extends Nette\Object
 	public function getTypesWithin()
 	{
 		return $this->serviceDefinition->getTypesWithin();
+	}
+
+
+
+	/**
+	 * @param Reader $reader
+	 * @return array|object[]
+	 */
+	public function getAnnotations(Reader $reader)
+	{
+		return $reader->getMethodAnnotations($this->method);
+	}
+
+
+
+	/**
+	 * @param Reader $reader
+	 * @return array|object[]
+	 */
+	public function getClassAnnotations(Reader $reader)
+	{
+		return $reader->getClassAnnotations($this->serviceDefinition->getTypeReflection());
 	}
 
 
