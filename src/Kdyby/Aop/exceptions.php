@@ -59,3 +59,13 @@ class InvalidAspectExceptions extends \LogicException implements Exception
 {
 
 }
+
+
+
+/**
+ * @author Filip Procházka <filip@prochazka.su>
+ */
+class NoRulesExceptions extends InvalidStateException
+{
+
+}

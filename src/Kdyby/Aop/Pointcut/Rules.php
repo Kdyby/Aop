@@ -60,6 +60,10 @@ class Rules extends Nette\Object implements Rule
 	 */
 	public function matches(Method $method)
 	{
+		if (empty($this->rules)) {
+			throw new Kdyby\Aop\NoRulesExceptions();
+		}
+
 		$logical = array();
 		foreach ($this->rules as $rule) {
 			$logical[] = $rule->matches($method);
