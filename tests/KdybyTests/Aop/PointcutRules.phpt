@@ -29,7 +29,7 @@ require_once __DIR__ . '/files/pointcut-examples.php';
 class PointcutRulesTest extends Tester\TestCase
 {
 
-	public function dataMatch()
+	public function dataMatchClass()
 	{
 		$data = array();
 
@@ -53,6 +53,25 @@ class PointcutRulesTest extends Tester\TestCase
 			$this->createDefinition('KdybyTests\Aop\Legie'),
 		);
 
+		return $data;
+	}
+
+
+
+	/**
+	 * @dataProvider dataMatchClass
+	 */
+	public function testMatchClass($expected, Kdyby\Aop\Pointcut\Filter $rules, Kdyby\Aop\Pointcut\ServiceDefinition $def)
+	{
+		Assert::same($expected, (bool) $def->match($rules));
+	}
+
+
+
+	public function dataMatchWithin()
+	{
+		$data = array();
+
 		$data[] = array(TRUE,
 			new Pointcut\Rules(array(new Matcher\WithinMatcher('KdybyTests\Aop\Cat'))),
 			$this->createDefinition('KdybyTests\Aop\Legie'),
@@ -62,6 +81,25 @@ class PointcutRulesTest extends Tester\TestCase
 			new Pointcut\Rules(array(new Matcher\WithinMatcher('KdybyTests\Aop\Cat'))),
 			$this->createDefinition('KdybyTests\Aop\SmegHead'),
 		);
+
+		return $data;
+	}
+
+
+
+	/**
+	 * @dataProvider dataMatchWithin
+	 */
+	public function testMatchWithin($expected, Kdyby\Aop\Pointcut\Filter $rules, Kdyby\Aop\Pointcut\ServiceDefinition $def)
+	{
+		Assert::same($expected, (bool) $def->match($rules));
+	}
+
+
+
+	public function dataMatchMethod()
+	{
+		$data = array();
 
 		$data[] = array(TRUE,
 			new Pointcut\Rules(array(new Matcher\MethodMatcher('injectFoo'))),
@@ -98,6 +136,25 @@ class PointcutRulesTest extends Tester\TestCase
 			$this->createDefinition('KdybyTests\Aop\Legie'),
 		);
 
+		return $data;
+	}
+
+
+
+	/**
+	 * @dataProvider dataMatchMethod
+	 */
+	public function testMatchMethod($expected, Kdyby\Aop\Pointcut\Filter $rules, Kdyby\Aop\Pointcut\ServiceDefinition $def)
+	{
+		Assert::same($expected, (bool) $def->match($rules));
+	}
+
+
+
+	public function dataMatchFilter()
+	{
+		$data = array();
+
 		$data[] = array(TRUE,
 			new Pointcut\Rules(array(new Matcher\FilterMatcher('KdybyTests\Aop\MyPointcutFilter'))),
 			$this->createDefinition('KdybyTests\Aop\Legie'),
@@ -107,6 +164,25 @@ class PointcutRulesTest extends Tester\TestCase
 			new Pointcut\Rules(array(new Matcher\FilterMatcher('KdybyTests\Aop\MyPointcutFilter'))),
 			$this->createDefinition('KdybyTests\Aop\SmegHead'),
 		);
+
+		return $data;
+	}
+
+
+
+	/**
+	 * @dataProvider dataMatchFilter
+	 */
+	public function testMatchFilter($expected, Kdyby\Aop\Pointcut\Filter $rules, Kdyby\Aop\Pointcut\ServiceDefinition $def)
+	{
+		Assert::same($expected, (bool) $def->match($rules));
+	}
+
+
+
+	public function dataMatchClassAnnotateWith()
+	{
+		$data = array();
 
 		$reader = new AnnotationReader();
 
@@ -119,6 +195,27 @@ class PointcutRulesTest extends Tester\TestCase
 			new Pointcut\Rules(array(new Matcher\ClassAnnotateWithMatcher('KdybyTests\Aop\Test', $reader))),
 			$this->createDefinition('KdybyTests\Aop\Legie'),
 		);
+
+		return $data;
+	}
+
+
+
+	/**
+	 * @dataProvider dataMatchClassAnnotateWith
+	 */
+	public function testMatchClassAnnotateWith($expected, Kdyby\Aop\Pointcut\Filter $rules, Kdyby\Aop\Pointcut\ServiceDefinition $def)
+	{
+		Assert::same($expected, (bool) $def->match($rules));
+	}
+
+
+
+	public function dataMatchMethodAnnotateWith()
+	{
+		$data = array();
+
+		$reader = new AnnotationReader();
 
 		$data[] = array(TRUE,
 			new Pointcut\Rules(array(new Matcher\MethodAnnotateWithMatcher('KdybyTests\Aop\Test', $reader))),
@@ -136,9 +233,9 @@ class PointcutRulesTest extends Tester\TestCase
 
 
 	/**
-	 * @dataProvider dataMatch
+	 * @dataProvider dataMatchMethodAnnotateWith
 	 */
-	public function testMatch($expected, Kdyby\Aop\Pointcut\Filter $rules, Kdyby\Aop\Pointcut\ServiceDefinition $def)
+	public function testMatchMethodAnnotateWith($expected, Kdyby\Aop\Pointcut\Filter $rules, Kdyby\Aop\Pointcut\ServiceDefinition $def)
 	{
 		Assert::same($expected, (bool) $def->match($rules));
 	}
