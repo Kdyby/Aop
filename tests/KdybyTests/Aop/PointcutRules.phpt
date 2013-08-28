@@ -98,6 +98,16 @@ class PointcutRulesTest extends Tester\TestCase
 			$this->createDefinition('KdybyTests\Aop\Legie'),
 		);
 
+		$data[] = array(TRUE,
+			new Pointcut\Rules(array(new Matcher\FilterMatcher('KdybyTests\Aop\MyPointcutFilter'))),
+			$this->createDefinition('KdybyTests\Aop\Legie'),
+		);
+
+		$data[] = array(FALSE,
+			new Pointcut\Rules(array(new Matcher\FilterMatcher('KdybyTests\Aop\MyPointcutFilter'))),
+			$this->createDefinition('KdybyTests\Aop\SmegHead'),
+		);
+
 		$reader = new AnnotationReader();
 
 		$data[] = array(TRUE,
@@ -128,7 +138,7 @@ class PointcutRulesTest extends Tester\TestCase
 	/**
 	 * @dataProvider dataMatch
 	 */
-	public function testMatch($expected, Kdyby\Aop\Pointcut\Rule $rules, Kdyby\Aop\Pointcut\ServiceDefinition $def)
+	public function testMatch($expected, Kdyby\Aop\Pointcut\Filter $rules, Kdyby\Aop\Pointcut\ServiceDefinition $def)
 	{
 		Assert::same($expected, (bool) $def->match($rules));
 	}

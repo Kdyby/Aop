@@ -51,7 +51,7 @@ class MatcherFactory extends Nette\Object
 	/**
 	 * @param string $type
 	 * @param string $arg
-	 * @return Rule
+	 * @return Filter
 	 */
 	public function getMatcher($type, $arg)
 	{

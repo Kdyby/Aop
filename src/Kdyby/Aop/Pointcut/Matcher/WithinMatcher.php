@@ -18,7 +18,7 @@ use Nette;
 /**
  * @author Filip Procházka <filip@prochazka.su>
  */
-class WithinMatcher extends Nette\Object implements Kdyby\Aop\Pointcut\Rule
+class WithinMatcher extends Nette\Object implements Kdyby\Aop\Pointcut\Filter
 {
 
 	/**

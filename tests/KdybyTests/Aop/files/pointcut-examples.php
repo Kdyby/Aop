@@ -11,6 +11,8 @@
 namespace KdybyTests\Aop;
 
 use Doctrine\Common\Annotations\Annotation;
+use Kdyby\Aop\Pointcut\Filter;
+use Kdyby\Aop\Pointcut\Method;
 use Nette;
 
 
@@ -99,5 +101,17 @@ class SmegHead
  */
 class Test extends Annotation
 {
+
+}
+
+
+
+class MyPointcutFilter implements Filter
+{
+
+	public function matches(Method $method)
+	{
+		return $method->getClassName() === 'KdybyTests\Aop\Legie';
+	}
 
 }

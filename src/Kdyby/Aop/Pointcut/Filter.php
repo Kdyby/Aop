@@ -18,7 +18,7 @@ use Nette;
 /**
  * @author Filip Procházka <filip@prochazka.su>
  */
-interface Rule
+interface Filter
 {
 
 	function matches(Method $method);

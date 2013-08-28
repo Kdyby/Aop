@@ -18,7 +18,7 @@ use Nette;
 /**
  * @author Filip Procházka <filip@prochazka.su>
  */
-class Rules extends Nette\Object implements Rule
+class Rules extends Nette\Object implements Filter
 {
 
 	const OP_AND = 'AND';
@@ -30,7 +30,7 @@ class Rules extends Nette\Object implements Rule
 	private $operator;
 
 	/**
-	 * @var array|Rule[]
+	 * @var array|Filter[]
 	 */
 	private $rules;
 
@@ -47,7 +47,7 @@ class Rules extends Nette\Object implements Rule
 
 
 
-	public function addRule(Rule $rule)
+	public function addRule(Filter $rule)
 	{
 		$this->rules[] = $rule;
 	}

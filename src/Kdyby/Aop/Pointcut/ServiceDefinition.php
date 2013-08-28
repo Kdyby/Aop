@@ -110,10 +110,10 @@ class ServiceDefinition extends Nette\Object
 
 
 	/**
-	 * @param Rule $rule
+	 * @param Filter $rule
 	 * @return array|Nette\Reflection\Method[]
 	 */
-	public function match(Rule $rule)
+	public function match(Filter $rule)
 	{
 		$matching = array();
 		foreach ($this->getOpenMethods() as $method) {

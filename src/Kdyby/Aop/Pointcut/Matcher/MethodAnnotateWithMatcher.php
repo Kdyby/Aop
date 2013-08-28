@@ -19,7 +19,7 @@ use Nette;
 /**
  * @author Filip Procházka <filip@prochazka.su>
  */
-class MethodAnnotateWithMatcher extends Nette\Object implements Kdyby\Aop\Pointcut\Rule
+class MethodAnnotateWithMatcher extends Nette\Object implements Kdyby\Aop\Pointcut\Filter
 {
 
 	/**

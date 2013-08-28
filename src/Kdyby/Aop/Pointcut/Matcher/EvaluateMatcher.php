@@ -18,7 +18,7 @@ use Nette;
 /**
  * @author Filip Procházka <filip@prochazka.su>
  */
-class EvaluateMatcher extends Nette\Object implements Kdyby\Aop\Pointcut\Rule
+class EvaluateMatcher extends Nette\Object implements Kdyby\Aop\Pointcut\Filter
 {
 
 	public function matches(Kdyby\Aop\Pointcut\Method $method)
