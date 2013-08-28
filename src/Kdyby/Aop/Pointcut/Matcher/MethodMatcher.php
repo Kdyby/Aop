@@ -33,9 +33,6 @@ class MethodMatcher extends Nette\Object implements Kdyby\Aop\Pointcut\Filter
 
 
 
-	/**
-	 * @todo visibility
-	 */
 	public function __construct($method)
 	{
 		if (strpos($method, ' ') !== FALSE) {
