@@ -62,6 +62,13 @@ class Legie implements Rimmer, Lister, Kryten, Cat
 
 
 
+	private function privateCalculation()
+	{
+
+	}
+
+
+
 	public function injectBar()
 	{
 

@@ -24,6 +24,9 @@ use Nette;
  */
 class Method extends Nette\Object
 {
+	const VISIBILITY_PUBLIC = 'public';
+	const VISIBILITY_PROTECTED = 'protected';
+	const VISIBILITY_PRIVATE = 'private';
 
 	/**
 	 * @var \Nette\Reflection\Method
@@ -51,6 +54,17 @@ class Method extends Nette\Object
 	public function getName()
 	{
 		return $this->method->getName();
+	}
+
+
+
+	/**
+	 * @return string
+	 */
+	public function getVisibility()
+	{
+		return $this->method->isPublic() ? self::VISIBILITY_PUBLIC
+			: ($this->method->isProtected() ? self::VISIBILITY_PROTECTED : self::VISIBILITY_PRIVATE);
 	}
 
 

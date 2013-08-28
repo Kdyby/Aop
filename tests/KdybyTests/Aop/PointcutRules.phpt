@@ -63,6 +63,41 @@ class PointcutRulesTest extends Tester\TestCase
 			$this->createDefinition('KdybyTests\Aop\SmegHead'),
 		);
 
+		$data[] = array(TRUE,
+			new Pointcut\Rules(array(new Matcher\MethodMatcher('injectFoo'))),
+			$this->createDefinition('KdybyTests\Aop\SmegHead'),
+		);
+
+		$data[] = array(TRUE,
+			new Pointcut\Rules(array(new Matcher\MethodMatcher('public injectFoo'))),
+			$this->createDefinition('KdybyTests\Aop\SmegHead'),
+		);
+
+		$data[] = array(FALSE,
+			new Pointcut\Rules(array(new Matcher\MethodMatcher('protected injectFoo'))),
+			$this->createDefinition('KdybyTests\Aop\SmegHead'),
+		);
+
+		$data[] = array(FALSE,
+			new Pointcut\Rules(array(new Matcher\MethodMatcher('private injectFoo'))),
+			$this->createDefinition('KdybyTests\Aop\SmegHead'),
+		);
+
+		$data[] = array(TRUE,
+			new Pointcut\Rules(array(new Matcher\MethodMatcher('*Calculation'))),
+			$this->createDefinition('KdybyTests\Aop\Legie'),
+		);
+
+		$data[] = array(TRUE,
+			new Pointcut\Rules(array(new Matcher\MethodMatcher('protected *Calculation'))),
+			$this->createDefinition('KdybyTests\Aop\Legie'),
+		);
+
+		$data[] = array(TRUE,
+			new Pointcut\Rules(array(new Matcher\MethodMatcher('inject*'))),
+			$this->createDefinition('KdybyTests\Aop\Legie'),
+		);
+
 		$reader = new AnnotationReader();
 
 		$data[] = array(TRUE,
