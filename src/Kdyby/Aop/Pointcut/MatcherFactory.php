@@ -10,10 +10,10 @@
 
 namespace Kdyby\Aop\Pointcut;
 
+use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\Reader;
 use Kdyby;
 use Nette;
-use Nette\ObjectMixin;
 
 
 
@@ -40,10 +40,10 @@ class MatcherFactory extends Nette\Object
 
 
 
-	public function __construct(Nette\DI\ContainerBuilder $builder, Reader $annotationReader)
+	public function __construct(Nette\DI\ContainerBuilder $builder, Reader $annotationReader = NULL)
 	{
 		$this->builder = $builder;
-		$this->annotationReader = $annotationReader;
+		$this->annotationReader = $annotationReader ?: new AnnotationReader();
 	}
 
 
