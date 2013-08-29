@@ -106,6 +106,17 @@ class Test extends Annotation
 
 
 
+class CustomTemplate implements Nette\Templating\ITemplate
+{
+
+	public function render()
+	{
+	}
+
+}
+
+
+
 class MyPointcutFilter implements Filter
 {
 
@@ -113,5 +124,10 @@ class MyPointcutFilter implements Filter
 	{
 		return $method->getClassName() === 'KdybyTests\Aop\Legie';
 	}
+
+}
+
+interface LoggerInterface
+{
 
 }

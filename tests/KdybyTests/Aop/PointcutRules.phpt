@@ -82,6 +82,21 @@ class PointcutRulesTest extends Tester\TestCase
 			$this->createDefinition('KdybyTests\Aop\SmegHead'),
 		);
 
+		$data[] = array(TRUE,
+			new Pointcut\Rules(array(new Matcher\WithinMatcher('Nette\Templating\*'))),
+			$this->createDefinition('KdybyTests\Aop\CustomTemplate'),
+		);
+
+		$data[] = array(TRUE,
+			new Pointcut\Rules(array(new Matcher\WithinMatcher('Nette\Templating\I*'))),
+			$this->createDefinition('Nette\Templating\FileTemplate'),
+		);
+
+		$data[] = array(FALSE,
+			new Pointcut\Rules(array(new Matcher\WithinMatcher('Nette\Templating\*'))),
+			$this->createDefinition('KdybyTests\Aop\SmegHead'),
+		);
+
 		return $data;
 	}
 
