@@ -37,7 +37,7 @@ class ClassMatcher extends Nette\Object implements Kdyby\Aop\Pointcut\Filter
 
 	public function matches(Kdyby\Aop\Pointcut\Method $method)
 	{
-		return preg_match('~^' . $this->class . '\z~i', $method->getClassName());
+		return preg_match('~^' . $this->class . '\z~i', $method->getClassName()) > 0;
 	}
 
 }
