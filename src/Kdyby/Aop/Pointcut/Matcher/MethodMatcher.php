@@ -43,7 +43,16 @@ class MethodMatcher extends Nette\Object implements Kdyby\Aop\Pointcut\Filter
 			}
 		}
 
-		$this->method = str_replace('\\*', '.*', preg_quote($method));
+		// preg_replace($pattern, $replacement, $subject, $limit);
+		$this->method = preg_replace(array(
+			'~\\\\\\*~',
+			'~\\\\\\[\\\\\\!(.*?)\\\\\\]~', // restrict
+			'~\\\\\\[(.*?)\\\\\\]~', // optional
+		), array(
+			'.*?',
+			'(?!$1)',
+			'(?:$1)?',
+		), preg_quote($method));
 	}
 
 
@@ -54,7 +63,7 @@ class MethodMatcher extends Nette\Object implements Kdyby\Aop\Pointcut\Filter
 			return FALSE;
 		}
 
-		return preg_match('~^' . $this->method . '\z~i', $method->getName());
+		return preg_match('~^' . $this->method . '\z~i', $method->getName()) > 0;
 	}
 
 }

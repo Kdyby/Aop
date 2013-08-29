@@ -91,6 +91,13 @@ class SmegHead
 
 	}
 
+
+
+	public function bar()
+	{
+
+	}
+
 }
 
 

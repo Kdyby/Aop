@@ -151,6 +151,36 @@ class PointcutRulesTest extends Tester\TestCase
 			$this->createDefinition('KdybyTests\Aop\Legie'),
 		);
 
+		$data[] = array(TRUE,
+			new Pointcut\Rules(array(new Matcher\MethodMatcher('[inject]Bar'))),
+			$this->createDefinition('KdybyTests\Aop\Legie'),
+		);
+
+		$data[] = array(TRUE,
+			new Pointcut\Rules(array(new Matcher\MethodMatcher('[inject]Bar'))),
+			$this->createDefinition('KdybyTests\Aop\SmegHead'),
+		);
+
+		$data[] = array(FALSE,
+			new Pointcut\Rules(array(new Matcher\MethodMatcher('[inject]Bar'))),
+			$this->createDefinition('KdybyTests\Aop\CustomTemplate'),
+		);
+
+		$data[] = array(FALSE,
+			new Pointcut\Rules(array(new Matcher\MethodMatcher('[!inject]Bar'))),
+			$this->createDefinition('KdybyTests\Aop\Legie'),
+		);
+
+		$data[] = array(TRUE,
+			new Pointcut\Rules(array(new Matcher\MethodMatcher('[!inject]Bar'))),
+			$this->createDefinition('KdybyTests\Aop\SmegHead'),
+		);
+
+		$data[] = array(FALSE,
+			new Pointcut\Rules(array(new Matcher\MethodMatcher('[!inject]Bar'))),
+			$this->createDefinition('KdybyTests\Aop\CustomTemplate'),
+		);
+
 		return $data;
 	}
 
