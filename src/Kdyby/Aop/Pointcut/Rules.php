@@ -92,6 +92,30 @@ class Rules extends Nette\Object implements Filter
 
 
 
+	/**
+	 * @param array|string|Filter $filter
+	 * @param string $operator
+	 * @return Filter
+	 */
+	public static function unwrap($filter, $operator = self::OP_AND)
+	{
+		if (is_array($filter)) {
+			if (count($filter) > 1) {
+				return new Rules($filter, $operator);
+			}
+
+			$filter = reset($filter);
+		}
+
+		if ($filter instanceof Rules && count($filter->rules) === 1) {
+			return self::unwrap($filter->rules);
+		}
+
+		return $filter;
+	}
+
+
+
 	private function isMatching(array $result)
 	{
 		if ($this->operator === self::OP_AND) {

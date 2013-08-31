@@ -131,10 +131,6 @@ class Parser extends Nette\Object
 			}
 		}
 
-		if (count($rules) === 1) {
-			return reset($rules);
-		}
-
 		if ($operator === ',' || $operator === '&&') {
 			$operator = Rules::OP_AND;
 
@@ -142,7 +138,7 @@ class Parser extends Nette\Object
 			$operator = Rules::OP_OR;
 		}
 
-		return new Rules($rules, $operator ? : Rules::OP_AND);
+		return Rules::unwrap($rules, $operator ? : Rules::OP_AND);
 	}
 
 
