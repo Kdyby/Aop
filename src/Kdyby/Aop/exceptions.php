@@ -69,3 +69,15 @@ class NoRulesExceptions extends InvalidStateException
 {
 
 }
+
+
+
+/**
+ * @author Filip Procházka <filip@prochazka.su>
+ */
+class ParserException extends \LogicException implements Exception
+{
+
+
+
+}

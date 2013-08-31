@@ -21,9 +21,23 @@ use Nette;
 class SettingMatcher extends Nette\Object implements Kdyby\Aop\Pointcut\Filter
 {
 
+	/**
+	 * @var Criteria
+	 */
+	private $settings;
+
+
+
+	public function __construct(Criteria $criteria)
+	{
+		$this->settings = $criteria;
+	}
+
+
+
 	public function matches(Kdyby\Aop\Pointcut\Method $method)
 	{
-
+		return TRUE; // todo: implement
 	}
 
 }

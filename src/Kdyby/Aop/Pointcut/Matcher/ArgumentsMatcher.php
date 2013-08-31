@@ -18,19 +18,19 @@ use Nette;
 /**
  * @author Filip Procházka <filip@prochazka.su>
  */
-class EvaluateMatcher extends Nette\Object implements Kdyby\Aop\Pointcut\Filter
+class ArgumentsMatcher extends Nette\Object implements Kdyby\Aop\Pointcut\Filter
 {
 
 	/**
 	 * @var Criteria
 	 */
-	private $evaluate;
+	private $arguments;
 
 
 
 	public function __construct(Criteria $criteria)
 	{
-		$this->evaluate = $criteria;
+		$this->arguments = $criteria;
 	}
 
 

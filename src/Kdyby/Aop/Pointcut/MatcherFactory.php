@@ -55,11 +55,11 @@ class MatcherFactory extends Nette\Object
 	 */
 	public function getMatcher($type, $arg)
 	{
-		if (!isset($this->cache[$type][$arg])) {
-			$this->cache[$type][$arg] = call_user_func(array($this, 'create' . ucfirst($type)), $arg);
+		if (!isset($this->cache[$type][(string) $arg])) {
+			$this->cache[$type][(string) $arg] = call_user_func(array($this, 'create' . ucfirst($type)), $arg);
 		}
 
-		return $this->cache[$type][$arg];
+		return $this->cache[$type][(string) $arg];
 	}
 
 
@@ -74,6 +74,13 @@ class MatcherFactory extends Nette\Object
 	public function createMethod($method)
 	{
 		return new Matcher\MethodMatcher($method);
+	}
+
+
+
+	public function createArguments($criteria)
+	{
+		return new Matcher\ArgumentsMatcher($criteria);
 	}
 
 
