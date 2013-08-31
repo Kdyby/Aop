@@ -20,6 +20,7 @@ use Nette;
  *
  * @author Filip Procházka <filip@prochazka.su>
  *
+ * @property string $serviceId
  * @property array|Method[] $openMethods
  * @property Nette\Reflection\ClassType $typeReflection
  * @property-read Nette\Reflection\ClassType $typeReflection
@@ -47,9 +48,14 @@ class ServiceDefinition extends Nette\Object
 	 */
 	private $typesWithing;
 
+	/**
+	 * @var string
+	 */
+	private $serviceId;
 
 
-	public function __construct(Nette\DI\ServiceDefinition $def)
+
+	public function __construct(Nette\DI\ServiceDefinition $def, $serviceId)
 	{
 		$this->serviceDefinition = $def;
 
@@ -58,6 +64,17 @@ class ServiceDefinition extends Nette\Object
 		}
 
 		$this->originalType = Nette\Reflection\ClassType::from($def->class);
+		$this->serviceId = $serviceId;
+	}
+
+
+
+	/**
+	 * @return string
+	 */
+	public function getServiceId()
+	{
+		return $this->serviceId;
 	}
 
 
@@ -115,14 +132,14 @@ class ServiceDefinition extends Nette\Object
 
 	/**
 	 * @param Filter $rule
-	 * @return array|Nette\Reflection\Method[]
+	 * @return array|Method[]
 	 */
 	public function match(Filter $rule)
 	{
 		$matching = array();
 		foreach ($this->getOpenMethods() as $method) {
 			if ($rule->matches($method)) {
-				$matching[] = $method->unwrap();
+				$matching[] = $method;
 			}
 		}
 

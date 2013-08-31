@@ -44,6 +44,11 @@ class AspectAnalyzer extends Nette\Object
 
 
 
+	/**
+	 * @param ServiceDefinition $service
+	 * @throws \Kdyby\Aop\InvalidAspectExceptions
+	 * @return array|Filter[]
+	 */
 	public function analyze(ServiceDefinition $service)
 	{
 		$pointcuts = array();

@@ -277,7 +277,7 @@ class PointcutRulesTest extends Tester\TestCase
 		$def = new Nette\DI\ServiceDefinition();
 		$def->setClass($class);
 
-		return new Pointcut\ServiceDefinition($def);
+		return new Pointcut\ServiceDefinition($def, 'abc');
 	}
 
 }
