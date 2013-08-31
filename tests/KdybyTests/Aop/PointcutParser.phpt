@@ -135,7 +135,7 @@ class PointcutParserTest extends Tester\TestCase
 
 		$data[] = array(
 			$mf->getMatcher('class', 'KdybyTests\Aop\CommonClass'),
-			'class(KdybyTests\Aop\CommonClass)',
+			'class(\KdybyTests\Aop\CommonClass)',
 		);
 
 		$data[] = array(
