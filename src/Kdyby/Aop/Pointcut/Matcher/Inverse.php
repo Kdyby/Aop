@@ -40,4 +40,14 @@ class Inverse extends Nette\Object implements Kdyby\Aop\Pointcut\Filter
 		return ! $this->filter->matches($method);
 	}
 
+
+
+	/**
+	 * @return array|bool
+	 */
+	public function listAcceptedTypes()
+	{
+		return $this->filter->listAcceptedTypes();
+	}
+
 }

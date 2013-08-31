@@ -55,4 +55,14 @@ class MethodAnnotateWithMatcher extends Nette\Object implements Kdyby\Aop\Pointc
 		return FALSE;
 	}
 
+
+
+	/**
+	 * @return array|bool
+	 */
+	public function listAcceptedTypes()
+	{
+		return FALSE;
+	}
+
 }

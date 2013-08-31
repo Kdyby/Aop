@@ -77,6 +77,21 @@ class Rules extends Nette\Object implements Filter
 
 
 
+	/**
+	 * @return array
+	 */
+	public function listAcceptedTypes()
+	{
+		$types = array();
+		foreach ($this->rules as $rule) {
+			$types[] = $rule->listAcceptedTypes();
+		}
+
+		return array_filter($types);
+	}
+
+
+
 	private function isMatching(array $result)
 	{
 		if ($this->operator === self::OP_AND) {

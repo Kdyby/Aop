@@ -60,4 +60,18 @@ class WithinMatcher extends Nette\Object implements Kdyby\Aop\Pointcut\Filter
 		return FALSE;
 	}
 
+
+
+	/**
+	 * @return array|bool
+	 */
+	public function listAcceptedTypes()
+	{
+		if ($this->type) {
+			return array($this->type);
+		}
+
+		return FALSE;
+	}
+
 }

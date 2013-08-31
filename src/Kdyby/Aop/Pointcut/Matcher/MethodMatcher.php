@@ -66,4 +66,14 @@ class MethodMatcher extends Nette\Object implements Kdyby\Aop\Pointcut\Filter
 		return preg_match('~^' . $this->method . '\z~i', $method->getName()) > 0;
 	}
 
+
+
+	/**
+	 * @return array|bool
+	 */
+	public function listAcceptedTypes()
+	{
+		return FALSE;
+	}
+
 }

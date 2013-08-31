@@ -65,39 +65,39 @@ class PointcutParserTest extends Tester\TestCase
 
 		$data[] = array(
 			new Pointcut\Rules(array(
-				$mf->getMatcher('class', 'Examples\Forum\Domain\Model\Forum'),
+				$mf->getMatcher('class', 'KdybyTests\Aop\CommonClass'),
 				$mf->getMatcher('method', 'deletePost'),
 			)),
-			'method(Examples\Forum\Domain\Model\Forum->deletePost())',
+			'method(KdybyTests\Aop\CommonClass->deletePost())',
 		);
 
 		$data[] = array(
 			new Pointcut\Rules(array(
-				$mf->getMatcher('class', 'ClassName'),
+				$mf->getMatcher('class', 'KdybyTests\Aop\CommonClass'),
 				$mf->getMatcher('method', 'public methodName'),
 			)),
-			'method(public ClassName->methodName())',
+			'method(public KdybyTests\Aop\CommonClass->methodName())',
 		);
 
 		$data[] = array(
 			new Pointcut\Rules(array(
-				$mf->getMatcher('class', 'ClassName'),
+				$mf->getMatcher('class', 'KdybyTests\Aop\CommonClass'),
 				$mf->getMatcher('method', 'protected methodName'),
 			)),
-			'method(protected ClassName->methodName())',
+			'method(protected KdybyTests\Aop\CommonClass->methodName())',
 		);
 
 		$data[] = array(
-			$mf->getMatcher('class', 'Example\MyPackage\MyObject'),
-			'method(Example\MyPackage\MyObject->*())',
+			$mf->getMatcher('class', 'KdybyTests\Aop\CommonClass'),
+			'method(KdybyTests\Aop\CommonClass->*())',
 		);
 
 		$data[] = array(
 			new Pointcut\Rules(array(
-				$mf->getMatcher('class', 'Example\MyPackage\MyObject'),
+				$mf->getMatcher('class', 'KdybyTests\Aop\CommonClass'),
 				$mf->getMatcher('method', 'public *'),
 			)),
-			'method(public Example\MyPackage\MyObject->*())',
+			'method(public KdybyTests\Aop\CommonClass->*())',
 		);
 
 		$data[] = array(
@@ -115,27 +115,27 @@ class PointcutParserTest extends Tester\TestCase
 
 		$data[] = array(
 			new Pointcut\Rules(array(
-				$mf->getMatcher('class', 'Example\MyPackage\MyObject'),
+				$mf->getMatcher('class', 'KdybyTests\Aop\CommonClass'),
 				$mf->getMatcher('method', '[!inject]*'),
 			)),
-			'method(Example\MyPackage\MyObject->[!inject]*())',
+			'method(KdybyTests\Aop\CommonClass->[!inject]*())',
 		);
 
 		$data[] = array(
 			new Pointcut\Rules(array(
-				$mf->getMatcher('class', 'Example\MyPackage\MyClass'),
+				$mf->getMatcher('class', 'KdybyTests\Aop\PackageClass'),
 				$mf->getMatcher('method', 'update'),
 				$mf->getMatcher('arguments', Criteria::create()
 					->where('title', Criteria::EQ, new PhpLiteral('"Kdyby"'))
 					->where('override', Criteria::EQ, new PhpLiteral('TRUE'))
 				),
 			)),
-			'method(Example\MyPackage\MyClass->update(title == "Kdyby", override == TRUE))',
+			'method(KdybyTests\Aop\PackageClass->update(title == "Kdyby", override == TRUE))',
 		);
 
 		$data[] = array(
-			$mf->getMatcher('class', 'Example\MyPackage\MyObject'),
-			'class(Example\MyPackage\MyObject)',
+			$mf->getMatcher('class', 'KdybyTests\Aop\CommonClass'),
+			'class(KdybyTests\Aop\CommonClass)',
 		);
 
 		$data[] = array(
@@ -214,41 +214,41 @@ class PointcutParserTest extends Tester\TestCase
 		$data[] = array(
 			new Pointcut\Rules(array(
 				$mf->getMatcher('class', 'Example\TestPackage\PointcutTestingTargetClass*'),
-				new Pointcut\Matcher\Inverse($mf->getMatcher('class', 'Example\TestPackage\PointcutTestingTargetClass3')),
+				new Pointcut\Matcher\Inverse($mf->getMatcher('class', 'KdybyTests\Aop\PackageClass')),
 			)),
-			'method(Example\TestPackage\PointcutTestingTargetClass*->*()) && !method(Example\TestPackage\PointcutTestingTargetClass3->*())',
+			'method(Example\TestPackage\PointcutTestingTargetClass*->*()) && !method(KdybyTests\Aop\PackageClass->*())',
 		);
 
 		$data[] = array(
 			new Pointcut\Rules(array(
 				new Pointcut\Rules(array(
-					$mf->getMatcher('class', 'Example\TestPackage\PointcutTestingAspect'),
+					$mf->getMatcher('class', 'KdybyTests\Aop\PointcutTestingAspect'),
 					$mf->getMatcher('method', 'pointcutTestingTargetClasses'),
 				)),
 				new Pointcut\Rules(array(
-					$mf->getMatcher('class', 'Example\TestPackage\PointcutTestingAspect'),
+					$mf->getMatcher('class', 'KdybyTests\Aop\PointcutTestingAspect'),
 					$mf->getMatcher('method', 'otherPointcutTestingTargetClass'),
 				)),
 			), Pointcut\Rules::OP_OR),
-			'Example\TestPackage\PointcutTestingAspect->pointcutTestingTargetClasses || Example\TestPackage\PointcutTestingAspect->otherPointcutTestingTargetClass',
+			'KdybyTests\Aop\PointcutTestingAspect->pointcutTestingTargetClasses || KdybyTests\Aop\PointcutTestingAspect->otherPointcutTestingTargetClass',
 		);
 
 		$data[] = array(
 			new Pointcut\Rules(array(
 				new Pointcut\Rules(array(
 					new Pointcut\Rules(array(
-						$mf->getMatcher('class', 'Example\TestPackage\PointcutTestingAspect'),
+						$mf->getMatcher('class', 'KdybyTests\Aop\PointcutTestingAspect'),
 						$mf->getMatcher('method', 'pointcutTestingTargetClasses'),
 					)),
 					$mf->getMatcher('within', 'KdybyTests\Aop\LoggerInterface'),
 				)),
 				new Pointcut\Rules(array(
-					$mf->getMatcher('class', 'Example\TestPackage\PointcutTestingAspect'),
+					$mf->getMatcher('class', 'KdybyTests\Aop\PointcutTestingAspect'),
 					$mf->getMatcher('method', 'otherPointcutTestingTargetClass'),
 				)),
 			), Pointcut\Rules::OP_OR),
-			'(Example\TestPackage\PointcutTestingAspect->pointcutTestingTargetClasses && within(KdybyTests\Aop\LoggerInterface))' . # intentionally no space after )
-				'|| Example\TestPackage\PointcutTestingAspect->otherPointcutTestingTargetClass',
+			'(KdybyTests\Aop\PointcutTestingAspect->pointcutTestingTargetClasses && within(KdybyTests\Aop\LoggerInterface))' . # intentionally no space after )
+				'|| KdybyTests\Aop\PointcutTestingAspect->otherPointcutTestingTargetClass',
 		);
 
 		$data[] = array(
@@ -262,15 +262,15 @@ class PointcutParserTest extends Tester\TestCase
 		$data[] = array(
 			new Pointcut\Rules(array(
 				new Pointcut\Rules(array(
-					$mf->getMatcher('class', 'Example\News\FeedAggregator'),
+					$mf->getMatcher('class', 'KdybyTests\Aop\FeedAggregator'),
 					$mf->getMatcher('method', 'public [import|update]*'),
 				)),
 				new Pointcut\Rules(array(
-					$mf->getMatcher('class', 'Example\MyPackage\MyAspect'),
+					$mf->getMatcher('class', 'KdybyTests\Aop\PointcutTestingAspect'),
 					$mf->getMatcher('method', 'someOtherPointcut'),
 				)),
 			), Pointcut\Rules::OP_OR),
-			'method(public Example\News\FeedAggregator->[import|update]*()) || Example\MyPackage\MyAspect->someOtherPointcut',
+			'method(public KdybyTests\Aop\FeedAggregator->[import|update]*()) || KdybyTests\Aop\PointcutTestingAspect->someOtherPointcut',
 		);
 
 		return $data;

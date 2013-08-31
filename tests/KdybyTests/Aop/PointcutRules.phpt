@@ -29,48 +29,29 @@ require_once __DIR__ . '/files/pointcut-examples.php';
 class PointcutRulesTest extends Tester\TestCase
 {
 
-	public function dataMatchClass()
+	public function dataMatchWithin()
 	{
 		$data = array();
 
 		$data[] = array(TRUE,
-			new Pointcut\Rules(array(new Matcher\ClassMatcher('KdybyTests\Aop\SmegHead'))),
+			new Pointcut\Rules(array(new Matcher\WithinMatcher('KdybyTests\Aop\SmegHead'))),
 			$this->createDefinition('KdybyTests\Aop\SmegHead'),
 		);
 
 		$data[] = array(TRUE,
-			new Pointcut\Rules(array(new Matcher\ClassMatcher('KdybyTests\Aop\*'))),
+			new Pointcut\Rules(array(new Matcher\WithinMatcher('KdybyTests\Aop\*'))),
 			$this->createDefinition('KdybyTests\Aop\SmegHead'),
 		);
 
 		$data[] = array(TRUE,
-			new Pointcut\Rules(array(new Matcher\ClassMatcher('*'))),
+			new Pointcut\Rules(array(new Matcher\WithinMatcher('*'))),
 			$this->createDefinition('KdybyTests\Aop\SmegHead'),
 		);
 
 		$data[] = array(FALSE,
-			new Pointcut\Rules(array(new Matcher\ClassMatcher('KdybyTests\Aop\SmegHead'))),
+			new Pointcut\Rules(array(new Matcher\WithinMatcher('KdybyTests\Aop\SmegHead'))),
 			$this->createDefinition('KdybyTests\Aop\Legie'),
 		);
-
-		return $data;
-	}
-
-
-
-	/**
-	 * @dataProvider dataMatchClass
-	 */
-	public function testMatchClass($expected, Kdyby\Aop\Pointcut\Filter $rules, Kdyby\Aop\Pointcut\ServiceDefinition $def)
-	{
-		Assert::same($expected, (bool) $def->match($rules));
-	}
-
-
-
-	public function dataMatchWithin()
-	{
-		$data = array();
 
 		$data[] = array(TRUE,
 			new Pointcut\Rules(array(new Matcher\WithinMatcher('KdybyTests\Aop\Cat'))),

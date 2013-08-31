@@ -40,4 +40,14 @@ class ArgumentsMatcher extends Nette\Object implements Kdyby\Aop\Pointcut\Filter
 		return TRUE; // todo: implement
 	}
 
+
+
+	/**
+	 * @return array|bool
+	 */
+	public function listAcceptedTypes()
+	{
+		return FALSE;
+	}
+
 }

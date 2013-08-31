@@ -66,7 +66,7 @@ class MatcherFactory extends Nette\Object
 
 	public function createClass($class)
 	{
-		return new Matcher\ClassMatcher($class);
+		return new Matcher\WithinMatcher($class);
 	}
 
 

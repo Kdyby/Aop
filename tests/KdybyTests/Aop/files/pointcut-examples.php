@@ -132,9 +132,36 @@ class MyPointcutFilter implements Filter
 		return $method->getClassName() === 'KdybyTests\Aop\Legie';
 	}
 
+
+
+	public function listAcceptedTypes()
+	{
+		return FALSE;
+	}
+
 }
 
 interface LoggerInterface
+{
+
+}
+
+class CommonClass
+{
+
+}
+
+class PackageClass
+{
+
+}
+
+class PointcutTestingAspect
+{
+
+}
+
+class FeedAggregator
 {
 
 }
