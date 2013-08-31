@@ -16,8 +16,21 @@ use Doctrine\Common\Annotations\Annotation as BaseAnnotation;
 
 /**
  * @author Filip Procházka <filip@prochazka.su>
+ *
+ * @property string $value
+ * @property-read string $value
  */
 interface Annotation
+{
+
+}
+
+
+
+/**
+ * @author Filip Procházka <filip@prochazka.su>
+ */
+interface AdviceAnnotation extends Annotation
 {
 
 }
@@ -43,7 +56,7 @@ class Aspect extends BaseAnnotation implements Annotation
  * @Annotation
  * @Target("METHOD")
  */
-class Before extends BaseAnnotation implements Annotation
+class Before extends BaseAnnotation implements AdviceAnnotation
 {
 
 }
@@ -56,7 +69,7 @@ class Before extends BaseAnnotation implements Annotation
  * @Annotation
  * @Target("METHOD")
  */
-class AfterReturning extends BaseAnnotation implements Annotation
+class AfterReturning extends BaseAnnotation implements AdviceAnnotation
 {
 
 }
@@ -69,7 +82,7 @@ class AfterReturning extends BaseAnnotation implements Annotation
  * @Annotation
  * @Target("METHOD")
  */
-class AfterThrowing extends BaseAnnotation implements Annotation
+class AfterThrowing extends BaseAnnotation implements AdviceAnnotation
 {
 
 }
@@ -82,7 +95,7 @@ class AfterThrowing extends BaseAnnotation implements Annotation
  * @Annotation
  * @Target("METHOD")
  */
-class After extends BaseAnnotation implements Annotation
+class After extends BaseAnnotation implements AdviceAnnotation
 {
 
 }
@@ -95,7 +108,7 @@ class After extends BaseAnnotation implements Annotation
  * @Annotation
  * @Target("METHOD")
  */
-class Around extends BaseAnnotation implements Annotation
+class Around extends BaseAnnotation implements AdviceAnnotation
 {
 
 }
@@ -108,7 +121,7 @@ class Around extends BaseAnnotation implements Annotation
  * @Annotation
  * @Target({"METHOD", "CLASS", "PROPERTY"})
  */
-class Introduce extends BaseAnnotation implements Annotation
+class Introduce extends BaseAnnotation implements AdviceAnnotation
 {
 
 }

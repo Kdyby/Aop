@@ -19,6 +19,10 @@ use Nette;
  * Wraps the Nette's ServiceDefinition, allowing safer manipulation and analysis.
  *
  * @author Filip Procházka <filip@prochazka.su>
+ *
+ * @property array|Method[] $openMethods
+ * @property Nette\Reflection\ClassType $typeReflection
+ * @property-read Nette\Reflection\ClassType $typeReflection
  */
 class ServiceDefinition extends Nette\Object
 {
