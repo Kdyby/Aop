@@ -12,7 +12,9 @@ namespace Kdyby\Aop\Pointcut;
 
 use Doctrine\Common\Annotations\Reader;
 use Kdyby;
+use Kdyby\Aop\PhpGenerator\PointcutMethod;
 use Nette;
+use Nette\PhpGenerator as Code;
 
 
 
@@ -122,11 +124,21 @@ class Method extends Nette\Object
 
 
 	/**
-	 * @return Kdyby\Aop\PhpGenerator\PointcutMethod
+	 * @return Code\Method
 	 */
 	public function getCode()
 	{
-		return Kdyby\Aop\PhpGenerator\PointcutMethod::from($this->method);
+		return PointcutMethod::expandTypeHints($this->method, Code\Method::from($this->method));
+	}
+
+
+
+	/**
+	 * @return PointcutMethod
+	 */
+	public function getPointcutCode()
+	{
+		return PointcutMethod::expandTypeHints($this->method, PointcutMethod::from($this->method));
 	}
 
 

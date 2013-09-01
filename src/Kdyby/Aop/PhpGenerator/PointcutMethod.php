@@ -172,13 +172,12 @@ class PointcutMethod extends Code\Method
 
 	/**
 	 * @param \ReflectionMethod $from
+	 * @param Code\Method $method
 	 * @throws \Exception|\ReflectionException
-	 * @return PointcutMethod
+	 * @return Code\Method
 	 */
-	public static function from($from)
+	public static function expandTypeHints(\ReflectionMethod $from, Code\Method $method)
 	{
-		$method = parent::from($from);
-
 		$parameters = $method->getParameters();
 		/** @var Code\Parameter[] $parameters */
 
