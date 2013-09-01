@@ -24,7 +24,7 @@ use Nette;
  * {
  * 	public function getAspectsConfiguration()
  * 	{
- * 		return \Kdyby\Aop\DI\AopExtension::loadAspects(__DIR__ . '/aspects.neon', $this);
+ * 		return \Kdyby\Aop\DI\AspectsExtension::loadAspects(__DIR__ . '/aspects.neon', $this);
  * 	}
  * }
  * </code>

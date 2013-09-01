@@ -65,7 +65,7 @@ class AspectsConfig extends Nette\Object
 				}
 				$def = array('factory' => $def);
 			}
-			$def['tags'][] = AopExtension::ASPECT_TAG;
+			$def['tags'][] = AspectsExtension::ASPECT_TAG;
 			$aspects[] = $def;
 		}
 

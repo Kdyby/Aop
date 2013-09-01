@@ -35,8 +35,6 @@ if (isset(Nette\Loaders\NetteLoader::getInstance()->renamed['Nette\Configurator'
 class AopExtension extends Nette\DI\CompilerExtension
 {
 
-	const ASPECT_TAG = 'kdyby.aspect';
-
 	/**
 	 * @var array
 	 */
@@ -51,22 +49,20 @@ class AopExtension extends Nette\DI\CompilerExtension
 
 	public function loadConfiguration()
 	{
-		$builder = $this->getContainerBuilder();
-		$this->compiler->parseServices($builder, $this->getConfig());
+		$this->registerAspectsExtension();
+	}
 
+
+
+	private function registerAspectsExtension()
+	{
 		foreach ($this->compiler->getExtensions() as $extension) {
-			if (!$extension instanceof IAspectsProvider) {
-				continue;
+			if ($extension instanceof AspectsExtension) {
+				return;
 			}
-
-			if (!($config = $extension->getAspectsConfiguration()) || !$config instanceof AspectsConfig) {
-				$refl = new Nette\Reflection\Method($extension, 'getAspectsConfiguration');
-				$given = is_object($config) ? 'instance of ' . get_class($config) : gettype($config);
-				throw new Kdyby\Aop\UnexpectedValueException("Method $refl is expected to return instance of Kdyby\\Aop\\DI\\AspectsConfig, but $given given.");
-			}
-
-			$config->load($this->compiler, $builder);
 		}
+
+		$this->compiler->addExtension('aspects', new AspectsExtension());
 	}
 
 
@@ -206,18 +202,6 @@ class AopExtension extends Nette\DI\CompilerExtension
 		}
 
 		return $this->serviceDefinitions[$id];
-	}
-
-
-
-	/**
-	 * @param string $configFile
-	 * @param Nette\DI\CompilerExtension $extension
-	 * @return AspectsConfig
-	 */
-	public static function loadAspects($configFile, Nette\DI\CompilerExtension $extension)
-	{
-		return new AspectsConfig($extension->loadFromFile($configFile), $extension);
 	}
 
 
