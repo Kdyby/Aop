@@ -49,7 +49,6 @@ class AspectsConfig extends Nette\Object
 	public function disablePrefixing()
 	{
 		$this->prefix = FALSE;
-
 		return $this;
 	}
 
@@ -60,7 +59,7 @@ class AspectsConfig extends Nette\Object
 		$aspects = array();
 		foreach ($this->aspectsList as $def) {
 			if (!is_array($def)) {
-				if (!$def instanceof \stdClass || empty($def->entity)) {
+				if (!is_string($def) && (!$def instanceof \stdClass || empty($def->entity))) {
 					$serialised = Nette\Utils\Json::encode($def);
 					throw new Kdyby\Aop\UnexpectedValueException("The service definition $serialised is expected to be an array or Neon entity.");
 				}
@@ -70,7 +69,7 @@ class AspectsConfig extends Nette\Object
 			$aspects[] = $def;
 		}
 
-		$compiler->parseServices($containerBuilder, $aspects, $this->prefix ? substr($this->extension->prefix('self'), 0, -5) : NULL);
+		$compiler->parseServices($containerBuilder, array('services' => $aspects), $this->prefix ? substr($this->extension->prefix('self'), 0, -5) : NULL);
 	}
 
 }
