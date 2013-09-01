@@ -59,10 +59,10 @@ class AspectAnalyzer extends Nette\Object
 
 			$rules = array();
 			foreach ($annotations as $annotation) {
-				$rules[] = $this->pointcutParser->parse($annotation->value);
+				$rules[get_class($annotation)] = $this->pointcutParser->parse($annotation->value);
 			}
 
-			$pointcuts[$method->getName()] = Rules::unwrap($rules);
+			$pointcuts[$method->getName()] = $rules;
 		}
 
 		if (empty($pointcuts)) {

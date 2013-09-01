@@ -38,20 +38,24 @@ class AspectAnalyzerTest extends Tester\TestCase
 
 		$data[] = array(
 			array(
-				'log' => new Pointcut\Rules(array(
-					new Pointcut\Matcher\WithinMatcher('Nette\Application\Application'),
-					new Pointcut\Matcher\MethodMatcher('processRequest'),
-				)),
+				'log' => array(
+					'Kdyby\Aop\Before' => new Pointcut\Rules(array(
+						new Pointcut\Matcher\WithinMatcher('Nette\Application\Application'),
+						new Pointcut\Matcher\MethodMatcher('processRequest'),
+					))
+				),
 			),
 			$this->createDefinition('KdybyTests\Aop\LoggingAspect'),
 		);
 
 		$data[] = array(
 			array(
-				'protect' => new Pointcut\Rules(array(
-					new Pointcut\Matcher\WithinMatcher('Nette\Application\IPresenter'),
-					new Pointcut\Matcher\MethodMatcher('[render|action|handle]*'),
-				)),
+				'protect' => array(
+					'Kdyby\Aop\Around' => new Pointcut\Rules(array(
+						new Pointcut\Matcher\WithinMatcher('Nette\Application\IPresenter'),
+						new Pointcut\Matcher\MethodMatcher('[render|action|handle]*'),
+					)),
+				),
 			),
 			$this->createDefinition('KdybyTests\Aop\AclAspect'),
 		);
