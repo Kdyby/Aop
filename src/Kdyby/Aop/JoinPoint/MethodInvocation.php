@@ -60,20 +60,6 @@ abstract class MethodInvocation extends Nette\Object
 
 
 	/**
-	 * @return callable
-	 */
-	public function getTargetCallback()
-	{
-		$target = array($this->targetObject, $this->targetMethod);
-		$args = $this->arguments;
-		return function () use ($target, $args) {
-			return call_user_func_array($target, $args);
-		};
-	}
-
-
-
-	/**
 	 * @return array
 	 */
 	public function getArguments()

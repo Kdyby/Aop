@@ -18,7 +18,7 @@ use Nette;
 /**
  * @author Filip Procházka <filip@prochazka.su>
  */
-class AfterMethodThrow extends MethodInvocation
+class AfterThrowing extends MethodInvocation
 {
 
 	/**

@@ -18,7 +18,7 @@ use Nette;
 /**
  * @author Filip Procházka <filip@prochazka.su>
  */
-class AfterMethod extends MethodInvocation
+class AfterReturning extends MethodInvocation
 {
 
 	/**
@@ -26,38 +26,32 @@ class AfterMethod extends MethodInvocation
 	 */
 	private $result;
 
-	/**
-	 * @var \Exception|NULL
-	 */
-	private $exception;
 
 
-
-	public function __construct($targetObject, $targetMethod, $arguments = array(), $result = NULL, \Exception $exception = NULL)
+	public function __construct($targetObject, $targetMethod, $arguments = array(), $result = NULL)
 	{
 		parent::__construct($targetObject, $targetMethod, $arguments);
 		$this->result = $result;
-		$this->exception = $exception;
 	}
 
 
 
 	/**
-	 * @return mixed|NULL
+	 * @param mixed $result
+	 */
+	public function setResult($result)
+	{
+		$this->result = $result;
+	}
+
+
+
+	/**
+	 * @return mixed
 	 */
 	public function getResult()
 	{
 		return $this->result;
-	}
-
-
-
-	/**
-	 * @return \Exception|NULL
-	 */
-	public function getException()
-	{
-		return $this->exception;
 	}
 
 }
