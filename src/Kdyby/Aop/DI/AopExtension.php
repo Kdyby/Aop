@@ -11,7 +11,11 @@
 namespace Kdyby\Aop\DI;
 
 use Doctrine\Common\Annotations\AnnotationReader;
+use Doctrine\Common\Annotations\AnnotationRegistry;
 use Kdyby;
+use Kdyby\Aop\PhpGenerator\AdvisedClassType;
+use Kdyby\Aop\PhpGenerator\NamespaceBlock;
+use Kdyby\Aop\PhpGenerator\PhpFile;
 use Kdyby\Aop\Pointcut;
 use Nette;
 use Nette\PhpGenerator as Code;
@@ -34,6 +38,7 @@ if (isset(Nette\Loaders\NetteLoader::getInstance()->renamed['Nette\Configurator'
  */
 class AopExtension extends Nette\DI\CompilerExtension
 {
+	const CG_INJECT_METHOD = '__injectAopContainer';
 
 	/**
 	 * @var array
@@ -69,60 +74,68 @@ class AopExtension extends Nette\DI\CompilerExtension
 
 	public function beforeCompile()
 	{
-		$builder = $this->getContainerBuilder();
-
-		$file = new Kdyby\Aop\PhpGenerator\PhpFile();
+		$file = new PhpFile();
 		$cg = $file->getNamespace('Kdyby\Aop_CG');
 
-		foreach ($this->findAdvisedMethods() as $name => $advices) {
-			$service = $this->getWrappedDefinition($name);
-			$advisedClass = $cg->addClass($this->prepareAdvisedClass($service));
+		foreach ($this->findAdvisedMethods() as $serviceId => $pointcuts) {
+			$service = $this->getWrappedDefinition($serviceId);
+			$advisedClass = AdvisedClassType::fromServiceDefinition($service);
 
-			/** @var array|AdviceDefinition[] $advices */
-			foreach ($advices as $advice) {
+			foreach ($pointcuts as $methodAdvices) {
+				/** @var Pointcut\Method $targetMethod */
+				$targetMethod = reset($methodAdvices)->getTargetMethod();
 
+				$newMethod = $targetMethod->getCode();
+				$advisedClass->setMethodInstance($newMethod);
+
+				/** @var AdviceDefinition[] $methodAdvices */
+				foreach ($methodAdvices as $adviceDef) {
+					$newMethod->addAdvice($adviceDef);
+				}
 			}
 
-			$def = $builder->getDefinition($name);
-			$def->setClass($cg->name . '\\' . $advisedClass->getName());
+			$cg->addClass($advisedClass);
+			$this->patchService($serviceId, $advisedClass, $cg);
 		}
 
-		// write php file to cache
+		require_once $this->writeGeneratedCode($file);
 	}
 
 
 
-	/**
-	 * @param Pointcut\ServiceDefinition $service
-	 * @return Code\ClassType
-	 */
-	private function prepareAdvisedClass(Pointcut\ServiceDefinition $service)
+	private function patchService($serviceId, Code\ClassType $advisedClass, NamespaceBlock $cg)
 	{
-		$originalType = $service->getTypeReflection();
+		$def = $this->getContainerBuilder()->getDefinition($serviceId);
+		if ($def->factory) {
+			$def->factory->entity = $cg->name . '\\' . $advisedClass->getName();
 
-		$advisedClass = new Code\ClassType();
-		$advisedClass->setName(str_replace(array('\\', '.'), '_', "{$originalType}Class_{$service->serviceId}"))
-			->setExtends('\\' . $originalType->getName())
-			->setFinal(TRUE);
+		} else {
+			$def->setFactory($cg->name . '\\' . $advisedClass->getName());
+		}
 
-		$advisedClass->addProperty('_kdyby_aopContainer')
-			->setVisibility('private')
-			->addDocument('@var \Nette\DI\Container|\SystemContainer');
-		$advisedClass->addProperty('_kdyby_aopAdvices', array())
-			->setVisibility('private');
+		array_unshift($def->setup, new Nette\DI\Statement(AdvisedClassType::CG_INJECT_METHOD, array('@Nette\DI\Container')));
+	}
 
-		$injectMethod = $advisedClass->addMethod('__injectAopContainer');
-		$injectMethod->addParameter('container')->setTypeHint('Nette\DI\Container');
-		$injectMethod->addDocument('@internal');
-		$injectMethod->addBody('$this->_kdyby_aopContainer = $container;');
 
-		return $advisedClass;
+
+	private function writeGeneratedCode(PhpFile $file)
+	{
+		$builder = $this->getContainerBuilder();
+
+		if (!is_dir($tempDir = $builder->expand('%tempDir%/cache/_Kdyby.Aop'))) {
+			mkdir($tempDir, 0777, TRUE);
+		}
+
+		$key = md5(serialize($builder->parameters) . serialize(array_keys(reset($file->namespaces)->classes)));
+		file_put_contents($cached = $tempDir . '/' . $key . '.php', (string) $file);
+
+		return $cached;
 	}
 
 
 
 	/**
-	 * @return array|AdviceDefinition[][]
+	 * @return array
 	 */
 	private function findAdvisedMethods()
 	{
@@ -136,20 +149,23 @@ class AopExtension extends Nette\DI\CompilerExtension
 		$advisedMethods = array();
 		$this->classes = NULL;
 
-		foreach ($builder->findByTag(self::ASPECT_TAG) as $aspectId => $meta) {
+		foreach ($builder->findByTag(AspectsExtension::ASPECT_TAG) as $aspectId => $meta) {
 			$advices = $analyzer->analyze($aspectService = $this->getWrappedDefinition($aspectId));
 
-			foreach ($advices as $advice => $filter) {
-				if ($types = $filter->listAcceptedTypes()) {
-					$services = $this->findByTypes($types);
+			foreach ($advices as $advice => $filters) {
+				/** @var Pointcut\Filter[] $filters */
+				foreach ($filters as $adviceType => $filter) {
+					if ($types = $filter->listAcceptedTypes()) {
+						$services = $this->findByTypes($types);
 
-				} else { // this cannot be done in any other way sadly...
-					$services = array_keys($builder->getDefinitions());
-				}
+					} else { // this cannot be done in any other way sadly...
+						$services = array_keys($builder->getDefinitions());
+					}
 
-				foreach ($services as $serviceId) {
-					foreach ($this->getWrappedDefinition($serviceId)->match($filter) as $method) {
-						$advisedMethods[$serviceId][] = new AdviceDefinition($method, $aspectService->openMethods[$advice]);
+					foreach ($services as $serviceId) {
+						foreach ($this->getWrappedDefinition($serviceId)->match($filter) as $method) {
+							$advisedMethods[$serviceId][$method->getName()][$adviceType] = new AdviceDefinition($adviceType, $method, $aspectService->openMethods[$advice]);
+						}
 					}
 				}
 			}
@@ -197,7 +213,7 @@ class AopExtension extends Nette\DI\CompilerExtension
 	 */
 	private function getWrappedDefinition($id)
 	{
-		if (isset($this->serviceDefinitions[$id])) {
+		if (!isset($this->serviceDefinitions[$id])) {
 			$this->serviceDefinitions[$id] = new Pointcut\ServiceDefinition($this->getContainerBuilder()->getDefinition($id), $id);
 		}
 

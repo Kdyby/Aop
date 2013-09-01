@@ -13,7 +13,6 @@ namespace Kdyby\Aop\Pointcut;
 use Doctrine\Common\Annotations\Reader;
 use Kdyby;
 use Nette;
-use Nette\PhpGenerator as Code;
 
 
 
@@ -113,29 +112,21 @@ class Method extends Nette\Object
 
 
 	/**
-	 * @throws \Exception|\ReflectionException
-	 * @return Code\Method
+	 * @return \Kdyby\Aop\Pointcut\ServiceDefinition
+	 */
+	public function getServiceDefinition()
+	{
+		return $this->serviceDefinition;
+	}
+
+
+
+	/**
+	 * @return Kdyby\Aop\PhpGenerator\PointcutMethod
 	 */
 	public function getCode()
 	{
-		$method = Code\Method::from($this->method);
-		$parameters = $method->getParameters();
-		/** @var Code\Parameter[] $parameters */
-
-		foreach ($this->method->getParameters() as $paramRefl) {
-			try {
-				$parameters[$paramRefl->getName()]->setTypeHint($paramRefl->isArray() ? 'array' : ($paramRefl->getClass() ? '\\' . $paramRefl->getClass()->getName() : ''));
-			} catch (\ReflectionException $e) {
-				if (preg_match('#Class (.+) does not exist#', $e->getMessage(), $m)) {
-					$parameters[$paramRefl->getName()]->setTypeHint('\\' . $m[1]);
-				} else {
-					throw $e;
-				}
-			}
-		}
-		$method->setParameters($parameters);
-
-		return $method;
+		return Kdyby\Aop\PhpGenerator\PointcutMethod::from($this->method);
 	}
 
 
