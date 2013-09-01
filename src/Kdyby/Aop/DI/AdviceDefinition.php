@@ -32,12 +32,28 @@ class AdviceDefinition extends Nette\Object
 	 */
 	private $advice;
 
+	/**
+	 * @var string
+	 */
+	private $adviceType;
 
 
-	public function __construct(Method $targetMethod, Method $advice)
+
+	public function __construct($adviceType, Method $targetMethod, Method $advice)
 	{
 		$this->targetMethod = $targetMethod;
 		$this->advice = $advice;
+		$this->adviceType = $adviceType;
+	}
+
+
+
+	/**
+	 * @return string
+	 */
+	public function getAdviceType()
+	{
+		return $this->adviceType;
 	}
 
 
