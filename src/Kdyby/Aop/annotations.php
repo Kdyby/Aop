@@ -10,7 +10,7 @@
 
 namespace Kdyby\Aop;
 
-use Doctrine\Common\Annotations\Annotation as BaseAnnotation;
+use Doctrine;
 
 
 
@@ -39,11 +39,29 @@ interface AdviceAnnotation extends Annotation
 
 /**
  * @author Filip Procházka <filip@prochazka.su>
+ */
+abstract class BaseAnnotation extends Doctrine\Common\Annotations\Annotation implements Annotation
+{
+
+	/**
+	 * @return string
+	 */
+	public static function getClassName()
+	{
+		return get_called_class();
+	}
+
+}
+
+
+
+/**
+ * @author Filip Procházka <filip@prochazka.su>
  *
  * @Annotation
  * @Target("CLASS")
  */
-class Aspect extends BaseAnnotation implements Annotation
+class Aspect extends BaseAnnotation
 {
 
 }
