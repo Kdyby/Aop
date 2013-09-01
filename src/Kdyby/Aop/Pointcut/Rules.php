@@ -84,7 +84,7 @@ class Rules extends Nette\Object implements Filter
 	{
 		$types = array();
 		foreach ($this->rules as $rule) {
-			$types[] = $rule->listAcceptedTypes();
+			$types = array_merge($types, (array)$rule->listAcceptedTypes());
 		}
 
 		return array_filter($types);
