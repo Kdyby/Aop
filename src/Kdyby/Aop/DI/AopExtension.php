@@ -85,8 +85,9 @@ class AopExtension extends Nette\DI\CompilerExtension
 				/** @var Pointcut\Method $targetMethod */
 				$targetMethod = reset($methodAdvices)->getTargetMethod();
 
-				$newMethod = $targetMethod->getCode();
+				$newMethod = $targetMethod->getPointcutCode();
 				$advisedClass->setMethodInstance($newMethod);
+				$advisedClass->generatePublicProxyMethod($targetMethod->getCode());
 
 				/** @var AdviceDefinition[] $methodAdvices */
 				foreach ($methodAdvices as $adviceDef) {

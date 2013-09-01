@@ -23,6 +23,7 @@ class AdvisedClassType extends Code\ClassType
 {
 
 	const CG_INJECT_METHOD = '__injectAopContainer';
+	const CG_PUBLIC_PROXY_PREFIX = '__publicAopProxy_';
 
 
 
@@ -30,12 +31,30 @@ class AdvisedClassType extends Code\ClassType
 	 * @param Code\Method $method
 	 * @return Code\Method
 	 */
-	public function setMethodInstance(Code\Method $method = NULL)
+	public function setMethodInstance(Code\Method $method)
 	{
 		$methods = array($method->getName() => $method) + $this->getMethods();
 		$this->setMethods($methods);
 
 		return $method;
+	}
+
+
+
+	public function generatePublicProxyMethod(Code\Method $method)
+	{
+		$originalName = $method->getName();
+		$method->setName(self::CG_PUBLIC_PROXY_PREFIX . $originalName);
+		$method->setVisibility('public');
+
+		$argumentsPass = array();
+		foreach ($method->getParameters() as $parameter) {
+			/** @var Code\Parameter $parameter */
+			$argumentsPass[] = '$' . $parameter->getName();
+		}
+		$method->addBody('return parent::?(?);', array($method->getName(), new Code\PhpLiteral(implode(', ', $argumentsPass))));
+
+		$this->setMethodInstance($method);
 	}
 
 
