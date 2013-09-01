@@ -60,7 +60,7 @@ class NamespaceBlock extends Nette\Object
 		$s = 'namespace ' . $this->name . " {\n\n";
 
 		foreach ($this->classes as $class) {
-			$s .= "$class\n\n";
+			$s .= Nette\Utils\Strings::indent((string)$class) . "\n\n";
 		}
 
 		return $s . '}';
