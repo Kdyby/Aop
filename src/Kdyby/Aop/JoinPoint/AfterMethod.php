@@ -18,7 +18,7 @@ use Nette;
 /**
  * @author Filip Procházka <filip@prochazka.su>
  */
-class AfterMethod extends MethodInvocation
+class AfterMethod extends MethodInvocation implements ResultAware, ExceptionAware
 {
 
 	/**

@@ -102,12 +102,12 @@ class ExtensionTest extends Tester\TestCase
 		Assert::same($joinPoint->getTargetObject(), $call->getTargetObject());
 		Assert::same($joinPoint->getTargetReflection()->getName(), $call->getTargetReflection()->getName());
 
-		if ($joinPoint instanceof AfterReturning || $joinPoint instanceof AfterMethod) {
+		if ($joinPoint instanceof Kdyby\Aop\JoinPoint\ResultAware) {
 			/** @var AfterReturning $call */
 			Assert::same($joinPoint->getResult(), $call->getResult());
 		}
 
-		if ($joinPoint instanceof AfterThrowing || $joinPoint instanceof AfterMethod) {
+		if ($joinPoint instanceof Kdyby\Aop\JoinPoint\ExceptionAware) {
 			/** @var AfterThrowing $call */
 			Assert::same($joinPoint->getException(), $call->getException());
 		}
