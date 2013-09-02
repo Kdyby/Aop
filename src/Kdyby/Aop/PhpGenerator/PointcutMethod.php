@@ -146,7 +146,7 @@ class PointcutMethod extends Code\Method
 		}
 
 		if ($this->afterThrowing) {
-			$this->addBody('} catch (\Exception $e) {');
+			$this->addBody('} catch (\Exception $exception) {');
 			foreach ($this->afterThrowing as $afterThrowing) {
 				$this->addBody("\t" . 'try {');
 				$this->addBody(Nette\Utils\Strings::indent($afterThrowing));
@@ -163,6 +163,7 @@ class PointcutMethod extends Code\Method
 			}
 		}
 
+		$this->addBody('if ($exception) { throw $exception; }');
 		$this->addBody('return $result;');
 
 		return parent::__toString();

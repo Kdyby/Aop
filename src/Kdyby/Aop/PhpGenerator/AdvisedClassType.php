@@ -52,7 +52,7 @@ class AdvisedClassType extends Code\ClassType
 			/** @var Code\Parameter $parameter */
 			$argumentsPass[] = '$' . $parameter->getName();
 		}
-		$method->addBody('return parent::?(?);', array($method->getName(), new Code\PhpLiteral(implode(', ', $argumentsPass))));
+		$method->addBody('return parent::?(?);', array($originalName, new Code\PhpLiteral(implode(', ', $argumentsPass))));
 
 		$this->setMethodInstance($method);
 	}

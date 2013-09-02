@@ -1,0 +1,5 @@
+aspects:
+	- KdybyTests\Aop\BeforeAspect
+
+services:
+	- KdybyTests\Aop\CommonService

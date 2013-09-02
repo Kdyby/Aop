@@ -10,56 +10,204 @@
 
 namespace KdybyTests\Aop;
 
-use Doctrine\Common\Annotations\Reader;
 use Nette;
 use Kdyby\Aop;
 
 
-
-class LoggingAspect extends Nette\Object
+class CommonService
 {
 
-	/**
-	 * @Aop\Before("method(Nette\Application\Application::processRequest)")
-	 */
-	public function log(Aop\JoinPoint\BeforeMethod $before)
+	public $calls = array();
+
+	public $throw = FALSE;
+
+	public $return = 2;
+
+
+
+	public function magic($argument)
 	{
-		list($request) = $before->getArguments();
-		// log it somewhere
+		$this->calls[] = func_get_args();
+
+		if ($this->throw) {
+			throw new \RuntimeException("Something's fucky");
+		}
+
+		return $this->return * $argument;
 	}
 
 }
 
 
 
-class AclAspect extends Nette\Object
+class BeforeAspect extends Nette\Object
 {
 
 	/**
-	 * @var Reader
+	 * @var array|Aop\JoinPoint\BeforeMethod[]
 	 */
-	private $annotationReader;
+	public $calls = array();
 
-
-
-	public function __construct(Reader $reader)
-	{
-		$this->annotationReader = $reader;
-	}
+	public $modifyArgs = FALSE;
 
 
 
 	/**
-	 * @Aop\Around("method(Nette\Application\IPresenter->[render|action|handle]*())")
+	 * @Aop\Before("method(KdybyTests\Aop\CommonService->magic)")
 	 */
-	public function protect(Aop\JoinPoint\AroundMethod $around)
+	public function log(Aop\JoinPoint\BeforeMethod $before)
 	{
-		$annotations = $this->annotationReader->getMethodAnnotations($around->getTargetReflection());
-		// rules check an
+		$this->calls[] = $before;
 
-		if (FALSE) {
-			throw new Nette\Application\ForbiddenRequestException();
+		if (is_array($this->modifyArgs)) {
+			foreach ($this->modifyArgs as $i => $val) {
+				$before->setArgument($i, $val);
+			}
 		}
+	}
+
+}
+
+
+
+class AroundAspect extends Nette\Object
+{
+
+	/**
+	 * @var array|Aop\JoinPoint\AroundMethod[]
+	 */
+	public $calls = array();
+
+	public $modifyArgs = FALSE;
+
+	public $modifyReturn = FALSE;
+
+
+
+	/**
+	 * @Aop\Around("method(KdybyTests\Aop\CommonService->magic)")
+	 */
+	public function log(Aop\JoinPoint\AroundMethod $around)
+	{
+		$this->calls[] = $around;
+
+		if (is_array($this->modifyArgs)) {
+			foreach ($this->modifyArgs as $i => $val) {
+				$around->setArgument($i, $val);
+			}
+		}
+
+		$result = $around->proceed();
+
+		if ($this->modifyReturn !== FALSE) {
+			$result = $this->modifyReturn;
+		}
+
+		return $result;
+	}
+
+}
+
+
+
+class AroundBlockingAspect extends Nette\Object
+{
+
+	/**
+	 * @var array|Aop\JoinPoint\AroundMethod[]
+	 */
+	public $calls = array();
+
+	public $modifyArgs = FALSE;
+
+
+
+	/**
+	 * @Aop\Around("method(KdybyTests\Aop\CommonService->magic)")
+	 */
+	public function log(Aop\JoinPoint\AroundMethod $around)
+	{
+		$this->calls[] = $around;
+
+		if (is_array($this->modifyArgs)) {
+			foreach ($this->modifyArgs as $i => $val) {
+				$around->setArgument($i, $val);
+			}
+		}
+
+		// do not call proceed
+	}
+
+}
+
+
+
+class AfterReturningAspect extends Nette\Object
+{
+
+	/**
+	 * @var array|Aop\JoinPoint\AfterReturning[]
+	 */
+	public $calls = array();
+
+	public $modifyReturn = FALSE;
+
+
+
+	/**
+	 * @Aop\AfterReturning("method(KdybyTests\Aop\CommonService->magic)")
+	 */
+	public function log(Aop\JoinPoint\AfterReturning $after)
+	{
+		$this->calls[] = $after;
+
+		if ($this->modifyReturn !== FALSE) {
+			$after->setResult($this->modifyReturn);
+		}
+	}
+
+}
+
+
+
+class AfterThrowingAspect extends Nette\Object
+{
+
+	/**
+	 * @var array|Aop\JoinPoint\AfterThrowing[]
+	 */
+	public $calls = array();
+
+
+
+	/**
+	 * @Aop\AfterThrowing("method(KdybyTests\Aop\CommonService->magic)")
+	 */
+	public function log(Aop\JoinPoint\AfterThrowing $after)
+	{
+		$this->calls[] = $after;
+	}
+
+}
+
+
+
+class AfterAspect extends Nette\Object
+{
+
+	/**
+	 * @var array|Aop\JoinPoint\AfterMethod[]
+	 */
+	public $calls = array();
+
+
+
+	/**
+	 * @Aop\After("method(KdybyTests\Aop\CommonService->magic)")
+	 */
+	public function log(Aop\JoinPoint\AfterMethod $after)
+	{
+		$this->calls[] = $after;
 	}
 
 }

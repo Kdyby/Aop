@@ -26,12 +26,12 @@ abstract class MethodInvocation extends Nette\Object
 	/**
 	 * @var object
 	 */
-	private $targetObject;
+	protected $targetObject;
 
 	/**
 	 * @var string
 	 */
-	private $targetMethod;
+	protected $targetMethod;
 
 	/**
 	 * @var array
