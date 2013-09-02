@@ -10,7 +10,6 @@
 
 namespace KdybyTests\Aop;
 
-use Doctrine\Common\Annotations\AnnotationException;
 use Kdyby;
 use Kdyby\Aop\JoinPoint\AfterMethod;
 use Kdyby\Aop\JoinPoint\AfterReturning;
