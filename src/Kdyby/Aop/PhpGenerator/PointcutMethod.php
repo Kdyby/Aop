@@ -79,7 +79,7 @@ class PointcutMethod extends Code\Method
 				break;
 
 			case Kdyby\Aop\AfterThrowing::getClassName():
-				$this->afterReturning[] = Code\Helpers::format(
+				$this->afterThrowing[] = Code\Helpers::format(
 					'$this->__getAdvice(?)->?(new \Kdyby\Aop\JoinPoint\AfterThrowing($this, __FUNCTION__, $arguments, $exception));',
 					$adviceMethod->getServiceDefinition()->getServiceId(),
 					$adviceMethod->getName()
@@ -87,7 +87,7 @@ class PointcutMethod extends Code\Method
 				break;
 
 			case Kdyby\Aop\After::getClassName():
-				$this->afterReturning[] = Code\Helpers::format(
+				$this->after[] = Code\Helpers::format(
 					'$this->__getAdvice(?)->?(new \Kdyby\Aop\JoinPoint\AfterMethod($this, __FUNCTION__, $arguments, $result, $exception));',
 					$adviceMethod->getServiceDefinition()->getServiceId(),
 					$adviceMethod->getName()
@@ -125,17 +125,26 @@ class PointcutMethod extends Code\Method
 			}
 		}
 
-		$argumentsPass = array();
-		foreach (array_values($this->getParameters()) as $i => $parameter) {
-			$argumentsPass[] = '$arguments[' . $i . ']';
-		}
-		$parentCall = Code\Helpers::format('$result = parent::?(?);', $this->getName(), new Code\PhpLiteral(implode(', ', $argumentsPass)));
-
-		if ($this->afterThrowing) {
+		if ($this->afterThrowing || $this->after) {
 			$this->addBody('try {');
 		}
 
-		$this->addBody($parentCall);
+		if (!$this->around) {
+			$argumentsPass = array();
+			foreach (array_values($this->getParameters()) as $i => $parameter) {
+				$argumentsPass[] = '$arguments[' . $i . ']';
+			}
+			$parentCall = Code\Helpers::format('$result = parent::?(?);', $this->getName(), new Code\PhpLiteral(implode(', ', $argumentsPass)));
+
+		} else {
+			$parentCall = Code\Helpers::format('$around = new \Kdyby\Aop\JoinPoint\AroundMethod($this, __FUNCTION__, $arguments)');
+			foreach ($this->around as $around) {
+				$parentCall .= "\n" . $around;
+			}
+			$parentCall .= "\n" . Code\Helpers::format('$result = $around->proceed();');
+		}
+
+		$this->addBody(($this->afterThrowing || $this->after) ? Nette\Utils\Strings::indent($parentCall) : $parentCall);
 
 		if ($this->afterReturning) {
 			foreach ($this->afterReturning as $afterReturning) {
@@ -145,13 +154,19 @@ class PointcutMethod extends Code\Method
 			}
 		}
 
-		if ($this->afterThrowing) {
+		if ($this->afterThrowing || $this->after) {
 			$this->addBody('} catch (\Exception $exception) {');
+		}
+
+		if ($this->afterThrowing) {
 			foreach ($this->afterThrowing as $afterThrowing) {
 				$this->addBody("\t" . 'try {');
 				$this->addBody(Nette\Utils\Strings::indent($afterThrowing));
 				$this->addBody("\t" . $safeCatch);
 			}
+		}
+
+		if ($this->afterThrowing || $this->after) {
 			$this->addBody('}');
 		}
 

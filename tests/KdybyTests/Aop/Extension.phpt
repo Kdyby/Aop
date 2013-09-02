@@ -100,6 +100,44 @@ class ExtensionTest extends Tester\TestCase
 
 
 
+	public function testFunctionalAfterThrowing()
+	{
+		$dic = $this->createContainer('afterThrowing');
+		$service = $dic->getByType('KdybyTests\Aop\CommonService');
+		/** @var CommonService $service */
+
+		$service->throw = TRUE;
+		Assert::throws(function () use ($service) {
+			$service->magic(2);
+		}, 'RuntimeException', "Something's fucky");
+
+		Assert::same(array(2), $service->calls[0]);
+		self::assertAspectInvocation($service, 'KdybyTests\Aop\AfterThrowingAspect', 0, new AfterThrowing($service, 'magic', array(2), new \RuntimeException("Something's fucky")));
+	}
+
+
+
+	public function testFunctionalAfter()
+	{
+		$dic = $this->createContainer('after');
+		$service = $dic->getByType('KdybyTests\Aop\CommonService');
+		/** @var CommonService $service */
+
+		Assert::same(4, $service->magic(2));
+		Assert::same(array(2), $service->calls[0]);
+		self::assertAspectInvocation($service, 'KdybyTests\Aop\AfterAspect', 0, new AfterMethod($service, 'magic', array(2), 4));
+
+		$service->throw = TRUE;
+		Assert::throws(function () use ($service) {
+			$service->magic(2);
+		}, 'RuntimeException', "Something's fucky");
+
+		Assert::same(array(2), $service->calls[1]);
+		self::assertAspectInvocation($service, 'KdybyTests\Aop\AfterAspect', 1, new AfterMethod($service, 'magic', array(2), NULL, new \RuntimeException("Something's fucky")));
+	}
+
+
+
 	/**
 	 * @param object $service
 	 * @param string $adviceClass
@@ -133,7 +171,8 @@ class ExtensionTest extends Tester\TestCase
 
 		if ($joinPoint instanceof Kdyby\Aop\JoinPoint\ExceptionAware) {
 			/** @var AfterThrowing $call */
-			Assert::same($joinPoint->getException(), $call->getException());
+			Assert::equal($joinPoint->getException() ? get_class($joinPoint->getException()) : NULL, $call->getException() ? get_class($call->getException()) : NULL);
+			Assert::equal($joinPoint->getException() ? $joinPoint->getException()->getMessage() : '', $call->getException() ? $call->getException()->getMessage() : '');
 		}
 
 		return $advice;
