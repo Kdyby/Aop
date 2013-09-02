@@ -32,6 +32,11 @@ class NamespaceBlock extends Nette\Object
 	 */
 	public $classes = array();
 
+	/**
+	 * @var array
+	 */
+	public $imports = array();
+
 
 
 	public function __construct($namespace)
@@ -59,8 +64,16 @@ class NamespaceBlock extends Nette\Object
 	{
 		$s = 'namespace ' . $this->name . " {\n\n";
 
+		foreach ($this->imports as $import => $alias) {
+			$s .= 'use ' . (is_numeric($import) ? $alias : $import . ' as ' . $alias) . ";\n";
+		}
+
+		if ($this->imports) {
+			$s .= "\n";
+		}
+
 		foreach ($this->classes as $class) {
-			$s .= Nette\Utils\Strings::indent((string)$class) . "\n\n";
+			$s .= "$class\n\n";
 		}
 
 		return $s . '}';
