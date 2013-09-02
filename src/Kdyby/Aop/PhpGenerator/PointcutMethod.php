@@ -216,6 +216,10 @@ class PointcutMethod extends Code\Method
 		}
 		$method->setParameters($parameters);
 
+		if (!$method->getVisibility()) {
+			$method->setVisibility('public');
+		}
+
 		return $method;
 	}
 
