@@ -76,6 +76,30 @@ class ExtensionTest extends Tester\TestCase
 
 
 
+	public function testFunctionalAfterReturning()
+	{
+		$dic = $this->createContainer('afterReturning');
+		$service = $dic->getByType('KdybyTests\Aop\CommonService');
+		/** @var CommonService $service */
+
+		Assert::same(4, $service->magic(2));
+		Assert::same(array(2), $service->calls[0]);
+		$advice = self::assertAspectInvocation($service, 'KdybyTests\Aop\AfterReturningAspect', 0, new AfterReturning($service, 'magic', array(2), 4));
+		/** @var AfterReturningAspect $advice */
+
+		$service->return = 3;
+		Assert::same(6, $service->magic(2));
+		Assert::same(array(2), $service->calls[1]);
+		self::assertAspectInvocation($service, 'KdybyTests\Aop\AfterReturningAspect', 1, new AfterReturning($service, 'magic', array(2), 6));
+
+		$advice->modifyReturn = 9;
+		Assert::same(9, $service->magic(2));
+		Assert::same(array(2), $service->calls[2]);
+		self::assertAspectInvocation($service, 'KdybyTests\Aop\AfterReturningAspect', 2, new AfterReturning($service, 'magic', array(2), 9));
+	}
+
+
+
 	/**
 	 * @param object $service
 	 * @param string $adviceClass
