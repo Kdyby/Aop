@@ -213,7 +213,7 @@ class ExtensionTest extends Tester\TestCase
 	private static function assertAspectInvocation($service, $adviceClass, $adviceCallIndex, MethodInvocation $joinPoint)
 	{
 		$advices = array_filter(self::getAspects($service), function ($advice) use ($adviceClass) {
-			return $advice instanceof $adviceClass;
+			return get_class($advice) === $adviceClass;
 		});
 		Assert::true(!empty($advices));
 		$advice = reset($advices);
