@@ -15,6 +15,7 @@ use Kdyby;
 use Kdyby\Aop\JoinPoint\AfterMethod;
 use Kdyby\Aop\JoinPoint\AfterReturning;
 use Kdyby\Aop\JoinPoint\AfterThrowing;
+use Kdyby\Aop\JoinPoint\AroundMethod;
 use Kdyby\Aop\JoinPoint\BeforeMethod;
 use Kdyby\Aop\JoinPoint\MethodInvocation;
 use Nette;
@@ -72,6 +73,71 @@ class ExtensionTest extends Tester\TestCase
 		Assert::same(9, $service->magic(2));
 		Assert::same(array(3), $service->calls[2]);
 		self::assertAspectInvocation($service, 'KdybyTests\Aop\BeforeAspect', 2, new BeforeMethod($service, 'magic', array(3)));
+	}
+
+
+
+	public function testFunctionalAround()
+	{
+		$dic = $this->createContainer('around');
+		$service = $dic->getByType('KdybyTests\Aop\CommonService');
+		/** @var CommonService $service */
+
+		Assert::same(4, $service->magic(2));
+		Assert::same(array(2), $service->calls[0]);
+		$advice = self::assertAspectInvocation($service, 'KdybyTests\Aop\AroundAspect', 0, new AroundMethod($service, 'magic', array(2)));
+		/** @var AroundAspect $advice */
+
+		$service->return = 3;
+		Assert::same(6, $service->magic(2));
+		Assert::same(array(2), $service->calls[1]);
+		self::assertAspectInvocation($service, 'KdybyTests\Aop\AroundAspect', 1, new AroundMethod($service, 'magic', array(2)));
+
+		$advice->modifyArgs = array(3);
+		Assert::same(9, $service->magic(2));
+		Assert::same(array(3), $service->calls[2]);
+		self::assertAspectInvocation($service, 'KdybyTests\Aop\AroundAspect', 2, new AroundMethod($service, 'magic', array(3)));
+	}
+
+
+
+	public function testFunctionalAround_blocking()
+	{
+		$dic = $this->createContainer('around.blocking');
+		$service = $dic->getByType('KdybyTests\Aop\CommonService');
+		/** @var CommonService $service */
+
+		Assert::null($service->magic(2));
+		Assert::true(empty($service->calls));
+		$advice = self::assertAspectInvocation($service, 'KdybyTests\Aop\AroundBlockingAspect', 0, new AroundMethod($service, 'magic', array(2)));
+		/** @var AroundBlockingAspect $advice */
+
+		$service->return = 3;
+		Assert::null($service->magic(2));
+		Assert::true(empty($service->calls));
+		self::assertAspectInvocation($service, 'KdybyTests\Aop\AroundBlockingAspect', 1, new AroundMethod($service, 'magic', array(2)));
+
+		$service->throw = TRUE;
+		Assert::null($service->magic(2));
+		Assert::true(empty($service->calls));
+		self::assertAspectInvocation($service, 'KdybyTests\Aop\AroundBlockingAspect', 2, new AroundMethod($service, 'magic', array(2)));
+
+		$advice->modifyArgs = array(3);
+		Assert::null($service->magic(2));
+		Assert::true(empty($service->calls));
+		self::assertAspectInvocation($service, 'KdybyTests\Aop\AroundBlockingAspect', 3, new AroundMethod($service, 'magic', array(3)));
+
+		$advice->modifyReturn = 9;
+		Assert::same(9, $service->magic(2));
+		Assert::true(empty($service->calls));
+		self::assertAspectInvocation($service, 'KdybyTests\Aop\AroundBlockingAspect', 4, new AroundMethod($service, 'magic', array(3)));
+
+		$advice->modifyThrow = TRUE;
+		Assert::throws(function () use ($service) {
+			$service->magic(2);
+		}, 'RuntimeException', "Everybody is dead Dave.");
+		Assert::true(empty($service->calls));
+		self::assertAspectInvocation($service, 'KdybyTests\Aop\AroundBlockingAspect', 5, new AroundMethod($service, 'magic', array(3)));
 	}
 
 

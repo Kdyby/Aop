@@ -46,6 +46,8 @@ class AdvisedClassType extends Code\ClassType
 		$originalName = $method->getName();
 		$method->setName(self::CG_PUBLIC_PROXY_PREFIX . $originalName);
 		$method->setVisibility('public');
+		$method->addDocument('@internal');
+		$method->addDocument('@deprecated');
 
 		$argumentsPass = array();
 		foreach ($method->getParameters() as $parameter) {

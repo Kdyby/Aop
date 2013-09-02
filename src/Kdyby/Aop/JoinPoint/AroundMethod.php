@@ -11,6 +11,7 @@
 namespace Kdyby\Aop\JoinPoint;
 
 use Kdyby;
+use Kdyby\Aop\PhpGenerator\AdvisedClassType;
 use Nette;
 
 
@@ -22,16 +23,15 @@ class AroundMethod extends MethodInvocation
 {
 
 	/**
-	 * @var array
+	 * @var array|callable[]
 	 */
-	private $aroundChain = array();
+	private $callChain = array();
 
 
 
-	public function __construct($targetObject, $targetMethod, $arguments = array(), $aroundChain = array())
+	public function __construct($targetObject, $targetMethod, $arguments = array())
 	{
 		parent::__construct($targetObject, $targetMethod, $arguments);
-		$this->aroundChain = $aroundChain;
 	}
 
 
@@ -42,13 +42,24 @@ class AroundMethod extends MethodInvocation
 	}
 
 
+
+	public function addChainLink($object, $method)
+	{
+		return $this->callChain[] = array($object, $method);
+	}
+
+
+
+	/**
+	 * @return mixed
+	 */
 	public function proceed()
 	{
-		if ($nextAround = array_shift($this->aroundChain)) {
-			return call_user_func(array($nextAround[0], $nextAround[1]), $this);
+		if ($callback = array_shift($this->callChain)) {
+			return call_user_func(array($callback[0], $callback[1]), $this);
 		}
 
-		return call_user_func($this->getTargetCallback());
+		return call_user_func_array(array($this->targetObject, AdvisedClassType::CG_PUBLIC_PROXY_PREFIX . $this->targetMethod), $this->getArguments());
 	}
 
 }

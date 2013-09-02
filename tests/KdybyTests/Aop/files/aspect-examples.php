@@ -120,6 +120,10 @@ class AroundBlockingAspect extends Nette\Object
 
 	public $modifyArgs = FALSE;
 
+	public $modifyReturn = FALSE;
+
+	public $modifyThrow = FALSE;
+
 
 
 	/**
@@ -135,7 +139,17 @@ class AroundBlockingAspect extends Nette\Object
 			}
 		}
 
-		// do not call proceed
+		if ($this->modifyThrow) {
+			throw new \RuntimeException("Everybody is dead Dave.");
+		}
+
+		$result = NULL; // do not call proceed
+
+		if ($this->modifyReturn !== FALSE) {
+			$result = $this->modifyReturn;
+		}
+
+		return $result;
 	}
 
 }

@@ -65,7 +65,11 @@ class PointcutMethod extends Code\Method
 				break;
 
 			case Kdyby\Aop\Around::getClassName():
-				// todo: implement
+				$this->around[] = Code\Helpers::format(
+					'$around->addChainLink($this->__getAdvice(?), ?);',
+					$adviceMethod->getServiceDefinition()->getServiceId(),
+					$adviceMethod->getName()
+				);
 				break;
 
 			case Kdyby\Aop\AfterReturning::getClassName():
@@ -137,7 +141,7 @@ class PointcutMethod extends Code\Method
 			$parentCall = Code\Helpers::format('$result = parent::?(?);', $this->getName(), new Code\PhpLiteral(implode(', ', $argumentsPass)));
 
 		} else {
-			$parentCall = Code\Helpers::format('$around = new \Kdyby\Aop\JoinPoint\AroundMethod($this, __FUNCTION__, $arguments)');
+			$parentCall = Code\Helpers::format('$around = new \Kdyby\Aop\JoinPoint\AroundMethod($this, __FUNCTION__, $arguments);');
 			foreach ($this->around as $around) {
 				$parentCall .= "\n" . $around;
 			}
