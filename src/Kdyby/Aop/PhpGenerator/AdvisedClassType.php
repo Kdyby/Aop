@@ -96,6 +96,20 @@ class AdvisedClassType extends Code\ClassType
 			'return $this->_kdyby_aopAdvices[$name];'
 		);
 
+		if (!$originalType->hasMethod('__sleep')) {
+			$properties = array();
+			foreach ($originalType->getProperties() as $property) {
+				if ($property->isStatic()) {
+					continue;
+				}
+
+				$properties[] = "'" . $property->getName() . "'";
+			}
+
+			$sleep = $class->addMethod('__sleep');
+			$sleep->setBody('return array(?);', array(new Code\PhpLiteral(implode(', ', $properties))));
+		}
+
 		return $class;
 	}
 
