@@ -74,8 +74,10 @@ class AopExtension extends Nette\DI\CompilerExtension
 
 	public function beforeCompile()
 	{
+		$builder = $this->getContainerBuilder();
+
 		$file = new PhpFile();
-		$cg = $file->getNamespace('Kdyby\Aop_CG');
+		$cg = $file->getNamespace('Kdyby\Aop_CG\\' . $builder->parameters['container']['class']);
 
 		foreach ($this->findAdvisedMethods() as $serviceId => $pointcuts) {
 			$service = $this->getWrappedDefinition($serviceId);
