@@ -40,7 +40,7 @@ class ExtensionTest extends Tester\TestCase
 	{
 		$config = new Nette\Configurator();
 		$config->setTempDirectory(TEMP_DIR);
-		$config->addParameters(array('container' => array('class' => 'SystemContainer_' . md5($configFile))));
+		$config->addParameters(array('container' => array('class' => 'SystemContainer_' . md5($configFile . microtime()))));
 		$config->addConfig(__DIR__ . '/../nette-reset.neon');
 		$config->addConfig(__DIR__ . '/config/' . $configFile . '.neon');
 
