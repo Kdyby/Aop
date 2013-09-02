@@ -40,24 +40,60 @@ class AspectAnalyzerTest extends Tester\TestCase
 			array(
 				'log' => array(
 					'Kdyby\Aop\Before' => new Pointcut\Rules(array(
-						new Pointcut\Matcher\WithinMatcher('Nette\Application\Application'),
-						new Pointcut\Matcher\MethodMatcher('processRequest'),
+						new Pointcut\Matcher\WithinMatcher('KdybyTests\Aop\CommonService'),
+						new Pointcut\Matcher\MethodMatcher('magic'),
 					))
 				),
 			),
-			$this->createDefinition('KdybyTests\Aop\LoggingAspect'),
+			$this->createDefinition('KdybyTests\Aop\BeforeAspect'),
 		);
 
 		$data[] = array(
 			array(
-				'protect' => array(
+				'log' => array(
 					'Kdyby\Aop\Around' => new Pointcut\Rules(array(
-						new Pointcut\Matcher\WithinMatcher('Nette\Application\IPresenter'),
-						new Pointcut\Matcher\MethodMatcher('[render|action|handle]*'),
+						new Pointcut\Matcher\WithinMatcher('KdybyTests\Aop\CommonService'),
+						new Pointcut\Matcher\MethodMatcher('magic'),
 					)),
 				),
 			),
-			$this->createDefinition('KdybyTests\Aop\AclAspect'),
+			$this->createDefinition('KdybyTests\Aop\AroundAspect'),
+		);
+
+		$data[] = array(
+			array(
+				'log' => array(
+					'Kdyby\Aop\AfterReturning' => new Pointcut\Rules(array(
+						new Pointcut\Matcher\WithinMatcher('KdybyTests\Aop\CommonService'),
+						new Pointcut\Matcher\MethodMatcher('magic'),
+					)),
+				),
+			),
+			$this->createDefinition('KdybyTests\Aop\AfterReturningAspect'),
+		);
+
+		$data[] = array(
+			array(
+				'log' => array(
+					'Kdyby\Aop\AfterThrowing' => new Pointcut\Rules(array(
+						new Pointcut\Matcher\WithinMatcher('KdybyTests\Aop\CommonService'),
+						new Pointcut\Matcher\MethodMatcher('magic'),
+					)),
+				),
+			),
+			$this->createDefinition('KdybyTests\Aop\AfterThrowingAspect'),
+		);
+
+		$data[] = array(
+			array(
+				'log' => array(
+					'Kdyby\Aop\After' => new Pointcut\Rules(array(
+						new Pointcut\Matcher\WithinMatcher('KdybyTests\Aop\CommonService'),
+						new Pointcut\Matcher\MethodMatcher('magic'),
+					)),
+				),
+			),
+			$this->createDefinition('KdybyTests\Aop\AfterAspect'),
 		);
 
 		return $data;
