@@ -14,6 +14,7 @@ use Nette;
 use Kdyby\Aop;
 
 
+
 class CommonService
 {
 
@@ -70,6 +71,13 @@ class BeforeAspect extends Nette\Object
 
 
 
+class SecondBeforeAspect extends BeforeAspect
+{
+
+}
+
+
+
 class AroundAspect extends Nette\Object
 {
 
@@ -105,6 +113,13 @@ class AroundAspect extends Nette\Object
 
 		return $result;
 	}
+
+}
+
+
+
+class SecondAroundAspect extends AroundAspect
+{
 
 }
 
@@ -156,6 +171,13 @@ class AroundBlockingAspect extends Nette\Object
 
 
 
+class SecondAroundBlockingAspect extends AroundBlockingAspect
+{
+
+}
+
+
+
 class AfterReturningAspect extends Nette\Object
 {
 
@@ -184,6 +206,13 @@ class AfterReturningAspect extends Nette\Object
 
 
 
+class SecondAfterReturningAspect extends AfterReturningAspect
+{
+
+}
+
+
+
 class AfterThrowingAspect extends Nette\Object
 {
 
@@ -206,6 +235,13 @@ class AfterThrowingAspect extends Nette\Object
 
 
 
+class SecondAfterThrowingAspect extends AfterThrowingAspect
+{
+
+}
+
+
+
 class AfterAspect extends Nette\Object
 {
 
@@ -223,5 +259,12 @@ class AfterAspect extends Nette\Object
 	{
 		$this->calls[] = $after;
 	}
+
+}
+
+
+
+class SecondAfterAspect extends AfterAspect
+{
 
 }

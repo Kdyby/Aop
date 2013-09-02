@@ -1,0 +1,9 @@
+aspects:
+	- KdybyTests\Aop\AroundAspect
+	- KdybyTests\Aop\BeforeAspect
+	- KdybyTests\Aop\AfterAspect
+	- KdybyTests\Aop\AfterReturningAspect
+	- KdybyTests\Aop\AfterThrowingAspect
+
+services:
+	- KdybyTests\Aop\CommonService
