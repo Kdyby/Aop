@@ -110,22 +110,12 @@ class PointcutMethod extends Code\Method
 	 */
 	public function __toString()
 	{
-		static $safeCatch;
-		if (!$safeCatch) {
-			$safeCatch = '} catch (\Exception $e) { ' .
-				'if (!\Nette\Diagnostics\Debugger::$productionMode) { throw $e; } ' .
-				'else { \Nette\Diagnostics\Debugger::log($e, \Nette\Diagnostics\Debugger::ERROR); } ' .
-			'}';
-		}
-
 		$this->setBody('');
 		$this->addBody('$arguments = func_get_args(); $exception = $result = NULL;');
 
 		if ($this->before) {
 			foreach ($this->before as $before) {
-				$this->addBody('try {');
-				$this->addBody(Nette\Utils\Strings::indent($before));
-				$this->addBody($safeCatch);
+				$this->addBody($before);
 			}
 		}
 
@@ -150,23 +140,13 @@ class PointcutMethod extends Code\Method
 
 		$this->addBody(($this->afterThrowing || $this->after) ? Nette\Utils\Strings::indent($parentCall) : $parentCall);
 
-		if ($this->afterReturning) {
-			foreach ($this->afterReturning as $afterReturning) {
-				$this->addBody('try {');
-				$this->addBody(Nette\Utils\Strings::indent($afterReturning));
-				$this->addBody($safeCatch);
-			}
-		}
-
 		if ($this->afterThrowing || $this->after) {
 			$this->addBody('} catch (\Exception $exception) {');
 		}
 
 		if ($this->afterThrowing) {
 			foreach ($this->afterThrowing as $afterThrowing) {
-				$this->addBody("\t" . 'try {');
 				$this->addBody(Nette\Utils\Strings::indent($afterThrowing));
-				$this->addBody("\t" . $safeCatch);
 			}
 		}
 
@@ -174,11 +154,23 @@ class PointcutMethod extends Code\Method
 			$this->addBody('}');
 		}
 
+		if ($this->afterReturning) {
+			if ($this->afterThrowing || $this->after) {
+				$this->addBody('if (empty($exception)) {');
+			}
+
+			foreach ($this->afterReturning as $afterReturning) {
+				$this->addBody(($this->afterThrowing || $this->after) ? Nette\Utils\Strings::indent($afterReturning) : $afterReturning);
+			}
+
+			if ($this->afterThrowing || $this->after) {
+				$this->addBody('}');
+			}
+		}
+
 		if ($this->after) {
 			foreach ($this->after as $after) {
-				$this->addBody('try {');
-				$this->addBody(Nette\Utils\Strings::indent($after));
-				$this->addBody($safeCatch);
+				$this->addBody($after);
 			}
 		}
 
