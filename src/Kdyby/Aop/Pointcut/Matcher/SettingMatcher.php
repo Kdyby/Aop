@@ -26,18 +26,24 @@ class SettingMatcher extends Nette\Object implements Kdyby\Aop\Pointcut\Filter
 	 */
 	private $settings;
 
+	/**
+	 * @var \Nette\DI\ContainerBuilder
+	 */
+	private $builder;
 
 
-	public function __construct(Criteria $criteria)
+
+	public function __construct(Criteria $criteria, Nette\DI\ContainerBuilder $builder)
 	{
 		$this->settings = $criteria;
+		$this->builder = $builder;
 	}
 
 
 
 	public function matches(Kdyby\Aop\Pointcut\Method $method)
 	{
-		return TRUE; // todo: implement
+		return $this->settings->evaluate($this->builder);
 	}
 
 

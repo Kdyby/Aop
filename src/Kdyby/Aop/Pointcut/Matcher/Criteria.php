@@ -12,6 +12,8 @@ namespace Kdyby\Aop\Pointcut\Matcher;
 
 use Kdyby;
 use Nette;
+use Nette\PhpGenerator as Code;
+use Nette\DI\ContainerBuilder;
 
 
 
@@ -97,16 +99,69 @@ class Criteria extends Nette\Object
 
 
 
-	public function evaluate()
+	public function evaluate(ContainerBuilder $builder)
 	{
-		// todo: implement
+		if (empty($this->expressions)) {
+			throw new Kdyby\Aop\NoRulesExceptions();
+		}
+
+		$logical = array();
+		foreach ($this->expressions as $expression) {
+			$logical[] = $this->doEvaluate($builder, $expression);
+			if (!$this->isMatching($logical)) {
+				return FALSE;
+			}
+		}
+
+		return $this->isMatching($logical);
 	}
 
 
 
-	public function serialize()
+	/**
+	 * @param ContainerBuilder $builder
+	 * @param array|Criteria $expression
+	 * @return bool
+	 */
+	private function doEvaluate(ContainerBuilder $builder, $expression)
+	{
+		if ($expression instanceof self) {
+			return $expression->evaluate($builder);
+		}
+
+		if ($expression[0] instanceof Code\PhpLiteral) {
+			$expression[0] = self::resolveExpression($expression[0]);
+
+		} else {
+			$expression[0] = $builder->expand('%' . $expression[0] . '%');
+		}
+
+		if ($expression[2] instanceof Code\PhpLiteral) {
+			$expression[2] = self::resolveExpression($expression[2]);
+
+		} else {
+			$expression[2] = $builder->expand('%' . $expression[2] . '%');
+		}
+
+		return self::compare($expression[0], $expression[1], $expression[2]);
+	}
+
+
+
+	public function serialize(ContainerBuilder $builder = NULL)
 	{
 		return ''; // todo: implement
+	}
+
+
+
+	private function isMatching(array $result)
+	{
+		if ($this->operator === self::TYPE_AND) {
+			return array_filter($result) === $result; // all values are TRUE
+		}
+
+		return (bool) array_filter($result); // at least one is TRUE
 	}
 
 
@@ -134,6 +189,74 @@ class Criteria extends Nette\Object
 			self::IS, self::IN, self::NIN,
 			self::CONTAINS, self::MATCHES
 		), TRUE);
+	}
+
+
+
+	/**
+	 * @param $expression
+	 * @throws Kdyby\Aop\ParserException
+	 * @return mixed
+	 */
+	private static function resolveExpression($expression)
+	{
+		set_error_handler(function ($severenity, $message) {
+			restore_error_handler();
+			throw new Kdyby\Aop\ParserException($message, $severenity);
+		});
+		$result = eval("return $expression;");
+		restore_error_handler();
+
+		return $result;
+	}
+
+
+
+	public static function compare($left, $operator, $right)
+	{
+		switch (strtoupper($operator)) {
+			case self::EQ:
+				return $left == $right;
+
+			case self::NEQ;
+			case '!=';
+				return !self::compare($left, self::EQ, $right);
+
+			case self::GT:
+				return $left > $right;
+
+			case self::GTE;
+				return $left >= $right;
+
+			case self::LT;
+				return $left < $right;
+
+			case self::LTE;
+				return $left <= $right;
+
+			case self::IS;
+			case 'IS';
+				return $left === $right;
+
+			case self::IN;
+				if (is_array($left)) {
+					return self::compare($left, self::CONTAINS, $right);
+				}
+
+				return Nette\Utils\Strings::contains($left, $right);
+
+			case self::NIN;
+				return !self::compare($left, self::IN, $right);
+
+			case self::MATCHES:
+				return Nette\Utils\Strings::contains($left, $right); // todo: smarter!
+
+			case self::CONTAINS:
+				return in_array($left, $right, TRUE);
+
+			default:
+				throw new Kdyby\Aop\NotImplementedException();
+		}
 	}
 
 }

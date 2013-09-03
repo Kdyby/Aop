@@ -45,7 +45,7 @@ class InvalidArgumentException extends \InvalidArgumentException implements Exce
 /**
  * @author Filip Procházka <filip@prochazka.su>
  */
-class UnexpectedValueException extends \UnexpectedValueException
+class UnexpectedValueException extends \UnexpectedValueException implements Exception
 {
 
 }
@@ -65,7 +65,7 @@ class InvalidAspectExceptions extends \LogicException implements Exception
 /**
  * @author Filip Procházka <filip@prochazka.su>
  */
-class NoRulesExceptions extends InvalidStateException
+class NoRulesExceptions extends InvalidStateException implements Exception
 {
 
 }
@@ -78,6 +78,14 @@ class NoRulesExceptions extends InvalidStateException
 class ParserException extends \LogicException implements Exception
 {
 
+}
 
+
+
+/**
+ * @author Filip Procházka <filip@prochazka.su>
+ */
+class NotImplementedException extends \LogicException implements Exception
+{
 
 }
