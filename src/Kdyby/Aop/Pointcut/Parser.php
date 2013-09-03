@@ -179,7 +179,7 @@ class Parser extends Nette\Object
 
 		if ($tokens->isNext('(')) {
 			if ($criteria = $this->parseArguments($tokens)) {
-				$arguments = array(new Matcher\ArgumentsMatcher($criteria));
+				$arguments = array($this->matcherFactory->getMatcher('arguments', $criteria));
 			}
 		}
 		$tokens->nextToken(); // method end )
@@ -228,7 +228,7 @@ class Parser extends Nette\Object
 			throw new Kdyby\Aop\ParserException('Settings criteria cannot be empty.');
 		}
 
-		return new Matcher\SettingMatcher($criteria);
+		return $this->matcherFactory->getMatcher('setting', $criteria);
 	}
 
 
@@ -240,7 +240,7 @@ class Parser extends Nette\Object
 			throw new Kdyby\Aop\ParserException('Evaluate expression cannot be empty.');
 		}
 
-		return new Matcher\EvaluateMatcher($criteria);
+		return $this->matcherFactory->getMatcher('evaluate', $criteria);
 	}
 
 
@@ -382,7 +382,7 @@ class Parser extends Nette\Object
 
 	protected static function sanitizeArgumentExpression($value, $token)
 	{
-		if ($token[Tokenizer::TYPE] === self::TOK_STRING || preg_match('~^(TRUE|FALSE)\z~', $value)) {
+		if ($token[Tokenizer::TYPE] === self::TOK_STRING || preg_match('~^(TRUE|FALSE)\z~i', $value)) {
 			return new PhpLiteral($value);
 		}
 
