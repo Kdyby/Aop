@@ -47,9 +47,22 @@ class Rules extends Nette\Object implements Filter
 
 
 
+	/**
+	 * @param Filter $rule
+	 */
 	public function addRule(Filter $rule)
 	{
 		$this->rules[] = $rule;
+	}
+
+
+
+	/**
+	 * @return array|\Kdyby\Aop\Pointcut\Filter[]
+	 */
+	public function getRules()
+	{
+		return $this->rules;
 	}
 
 
