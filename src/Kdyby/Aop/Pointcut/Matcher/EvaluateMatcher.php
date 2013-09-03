@@ -18,7 +18,7 @@ use Nette;
 /**
  * @author Filip Procházka <filip@prochazka.su>
  */
-class EvaluateMatcher extends Nette\Object implements Kdyby\Aop\Pointcut\Filter
+class EvaluateMatcher extends Nette\Object implements Kdyby\Aop\Pointcut\Filter, Kdyby\Aop\Pointcut\RuntimeFilter
 {
 
 	/**
@@ -37,7 +37,17 @@ class EvaluateMatcher extends Nette\Object implements Kdyby\Aop\Pointcut\Filter
 
 	public function matches(Kdyby\Aop\Pointcut\Method $method)
 	{
-		return TRUE; // todo: implement
+		return TRUE;
+	}
+
+
+
+	/**
+	 * @return string
+	 */
+	public function createCondition()
+	{
+		return $this->settings->serialize($this->builder);
 	}
 
 
