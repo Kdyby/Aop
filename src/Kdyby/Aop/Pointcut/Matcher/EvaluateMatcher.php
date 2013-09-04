@@ -49,7 +49,7 @@ class EvaluateMatcher extends Nette\Object implements Kdyby\Aop\Pointcut\Filter,
 
 
 	/**
-	 * @return string
+	 * @return Nette\PhpGenerator\PhpLiteral|NULL
 	 */
 	public function createCondition()
 	{

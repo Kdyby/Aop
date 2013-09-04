@@ -55,52 +55,66 @@ class PointcutMethod extends Code\Method
 
 		switch ($adviceDef->getAdviceType()) {
 			case Kdyby\Aop\Before::getClassName():
-				$this->before[] = Code\Helpers::format(
+				$this->before[] = $this->generateRuntimeCondition($adviceDef, Code\Helpers::format(
 					'$this->__getAdvice(?)->?($before = new \Kdyby\Aop\JoinPoint\BeforeMethod($this, __FUNCTION__, $arguments));' . "\n" .
 					'$arguments = $before->getArguments();',
 					$adviceMethod->getServiceDefinition()->getServiceId(),
 					$adviceMethod->getName()
-				);
+				));
 
 				break;
 
 			case Kdyby\Aop\Around::getClassName():
-				$this->around[] = Code\Helpers::format(
+				$this->around[] = $this->generateRuntimeCondition($adviceDef, Code\Helpers::format(
 					'$around->addChainLink($this->__getAdvice(?), ?);',
 					$adviceMethod->getServiceDefinition()->getServiceId(),
 					$adviceMethod->getName()
-				);
+				));
 				break;
 
 			case Kdyby\Aop\AfterReturning::getClassName():
-				$this->afterReturning[] = Code\Helpers::format(
+				$this->afterReturning[] = $this->generateRuntimeCondition($adviceDef, Code\Helpers::format(
 					'$this->__getAdvice(?)->?($afterReturning = new \Kdyby\Aop\JoinPoint\AfterReturning($this, __FUNCTION__, $arguments, $result));' . "\n" .
 					'$result = $afterReturning->getResult();',
 					$adviceMethod->getServiceDefinition()->getServiceId(),
 					$adviceMethod->getName()
-				);
-
+				));
 				break;
 
 			case Kdyby\Aop\AfterThrowing::getClassName():
-				$this->afterThrowing[] = Code\Helpers::format(
+				$this->afterThrowing[] = $this->generateRuntimeCondition($adviceDef, Code\Helpers::format(
 					'$this->__getAdvice(?)->?(new \Kdyby\Aop\JoinPoint\AfterThrowing($this, __FUNCTION__, $arguments, $exception));',
 					$adviceMethod->getServiceDefinition()->getServiceId(),
 					$adviceMethod->getName()
-				);
+				));
 				break;
 
 			case Kdyby\Aop\After::getClassName():
-				$this->after[] = Code\Helpers::format(
+				$this->after[] = $this->generateRuntimeCondition($adviceDef, Code\Helpers::format(
 					'$this->__getAdvice(?)->?(new \Kdyby\Aop\JoinPoint\AfterMethod($this, __FUNCTION__, $arguments, $result, $exception));',
 					$adviceMethod->getServiceDefinition()->getServiceId(),
 					$adviceMethod->getName()
-				);
+				));
 				break;
 
 			default:
 				throw new Kdyby\Aop\InvalidArgumentException("Unknown advice type " . $adviceDef->getAdviceType());
 		}
+	}
+
+
+
+	private function generateRuntimeCondition(Kdyby\Aop\DI\AdviceDefinition $adviceDef, $code)
+	{
+		$filter = $adviceDef->getFilter();
+		if (!$filter instanceof Kdyby\Aop\Pointcut\RuntimeFilter) {
+			return $code;
+
+		} elseif (!$condition = $filter->createCondition()) {
+			return $code;
+		}
+
+		return Code\Helpers::format("if ? {\n?\n}", $condition, Nette\Utils\Strings::indent($code));
 	}
 
 

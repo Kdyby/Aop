@@ -12,13 +12,14 @@ namespace Kdyby\Aop\Pointcut;
 
 use Kdyby;
 use Nette;
+use Nette\PhpGenerator as Code;
 
 
 
 /**
  * @author Filip Procházka <filip@prochazka.su>
  */
-class Rules extends Nette\Object implements Filter
+class Rules extends Nette\Object implements Filter, RuntimeFilter
 {
 
 	const OP_AND = 'AND';
@@ -101,6 +102,35 @@ class Rules extends Nette\Object implements Filter
 		}
 
 		return array_filter($types);
+	}
+
+
+
+	/**
+	 * @return Code\PhpLiteral|null
+	 */
+	public function createCondition()
+	{
+		$conds = array();
+		foreach ($this->rules as $rule) {
+			if (!$rule instanceof RuntimeFilter) {
+				continue;
+			}
+
+			$conds[] = $rule->createCondition();
+		}
+
+		if (count($conds) > 1) {
+			$conds = implode(' ' . $this->operator . ' ', $conds);
+
+		} elseif (count($conds) == 1) {
+			$conds = reset($conds);
+
+		} else {
+			return NULL;
+		}
+
+		return new Code\PhpLiteral('(' . $conds . ')');
 	}
 
 

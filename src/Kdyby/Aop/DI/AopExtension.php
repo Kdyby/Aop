@@ -169,7 +169,7 @@ class AopExtension extends Nette\DI\CompilerExtension
 
 					foreach ($services as $serviceId) {
 						foreach ($this->getWrappedDefinition($serviceId)->match($filter) as $method) {
-							$advisedMethods[$serviceId][$method->getName()][] = new AdviceDefinition($adviceType, $method, $aspectService->openMethods[$advice]);
+							$advisedMethods[$serviceId][$method->getName()][] = new AdviceDefinition($adviceType, $method, $aspectService->openMethods[$advice], $filter);
 						}
 					}
 				}

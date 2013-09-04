@@ -22,7 +22,7 @@ interface RuntimeFilter
 {
 
 	/**
-	 * @return string
+	 * @return Nette\PhpGenerator\PhpLiteral|NULL
 	 */
 	function createCondition();
 

@@ -57,7 +57,7 @@ class Parser extends Nette\Object
 			self::TOK_LOGIC => '(?:\\&\\&|\\|\\||,)',
 			self::TOK_NOT => '!',
 			self::TOK_METHOD => '(?:-\\>|::)[_a-z0-9\\*\\[\\]\\|\\!]+(?=(?:\\(|\\)|\s|\z))', # including wildcard
-			self::TOK_IDENTIFIER => '[_a-z0-9\x7F-\xFF\\*\\.\\%\\\\-]+(?<!\\-)', # including wildcard
+			self::TOK_IDENTIFIER => '[_a-z0-9\x7F-\xFF\\*\\.\\$\\%\\\\-]+(?<!\\-)', # including wildcard
 			self::TOK_WHITESPACE => '[\n\r\s]+',
 			self::TOK_STRING => '\'(?:\\\\.|[^\'\\\\])*\'|"(?:\\\\.|[^"\\\\])*"',
 			self::TOK_WILDCARD => '\\*',

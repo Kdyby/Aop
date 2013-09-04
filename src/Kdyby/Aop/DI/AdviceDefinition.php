@@ -11,6 +11,7 @@
 namespace Kdyby\Aop\DI;
 
 use Kdyby;
+use Kdyby\Aop\Pointcut\Filter;
 use Kdyby\Aop\Pointcut\Method;
 use Nette;
 
@@ -37,13 +38,19 @@ class AdviceDefinition extends Nette\Object
 	 */
 	private $adviceType;
 
+	/**
+	 * @var \Kdyby\Aop\Pointcut\Filter
+	 */
+	private $filter;
 
 
-	public function __construct($adviceType, Method $targetMethod, Method $advice)
+
+	public function __construct($adviceType, Method $targetMethod, Method $advice, Filter $filter)
 	{
 		$this->targetMethod = $targetMethod;
 		$this->advice = $advice;
 		$this->adviceType = $adviceType;
+		$this->filter = $filter;
 	}
 
 
@@ -74,6 +81,16 @@ class AdviceDefinition extends Nette\Object
 	public function getAdvice()
 	{
 		return $this->advice;
+	}
+
+
+
+	/**
+	 * @return \Kdyby\Aop\Pointcut\Filter
+	 */
+	public function getFilter()
+	{
+		return $this->filter;
 	}
 
 }
