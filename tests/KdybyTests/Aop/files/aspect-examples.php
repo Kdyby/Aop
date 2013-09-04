@@ -71,6 +71,36 @@ class BeforeAspect extends Nette\Object
 
 
 
+class ConditionalBeforeAspect extends Nette\Object
+{
+
+	/**
+	 * @var array|Aop\JoinPoint\BeforeMethod[]
+	 */
+	public $calls = array();
+
+	public $modifyArgs = FALSE;
+
+
+
+	/**
+	 * @Aop\Before("method(KdybyTests\Aop\CommonService->magic($argument == 1))")
+	 */
+	public function log(Aop\JoinPoint\BeforeMethod $before)
+	{
+		$this->calls[] = $before;
+
+		if (is_array($this->modifyArgs)) {
+			foreach ($this->modifyArgs as $i => $val) {
+				$before->setArgument($i, $val);
+			}
+		}
+	}
+
+}
+
+
+
 class SecondBeforeAspect extends BeforeAspect
 {
 

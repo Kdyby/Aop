@@ -144,6 +144,16 @@ class Method extends Nette\Object
 
 
 	/**
+	 * @return array
+	 */
+	public function getParameterNames()
+	{
+		return array_keys($this->method->getParameters());
+	}
+
+
+
+	/**
 	 * @return Nette\Reflection\Method
 	 */
 	public function unwrap()

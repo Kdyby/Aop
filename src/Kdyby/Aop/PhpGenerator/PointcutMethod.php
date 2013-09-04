@@ -114,7 +114,11 @@ class PointcutMethod extends Code\Method
 			return $code;
 		}
 
-		return Code\Helpers::format("if ? {\n?\n}", $condition, Nette\Utils\Strings::indent($code));
+		foreach ($adviceDef->getTargetMethod()->getParameterNames() as $i => $name) {
+			$condition = str_replace('$' . $name, '$__arguments[' . $i . ']', $condition);
+		}
+
+		return Code\Helpers::format("if ? {\n?\n}", new Code\PhpLiteral($condition), new Code\PhpLiteral(Nette\Utils\Strings::indent($code)));
 	}
 
 

@@ -76,6 +76,27 @@ class ExtensionTest extends Tester\TestCase
 
 
 
+	public function testFunctionalBefore_conditional()
+	{
+		$dic = $this->createContainer('before.conditional');
+		$service = $dic->getByType('KdybyTests\Aop\CommonService');
+		/** @var CommonService $service */
+
+		Assert::same(0, $service->magic(0));
+		Assert::same(2, $service->magic(1));
+		Assert::same(4, $service->magic(2));
+
+		Assert::same(array(0), $service->calls[0]);
+		Assert::same(array(1), $service->calls[1]);
+		Assert::same(array(2), $service->calls[2]);
+
+		self::assertAspectInvocation($service, 'KdybyTests\Aop\ConditionalBeforeAspect', 0, new BeforeMethod($service, 'magic', array(1)));
+		self::assertAspectInvocation($service, 'KdybyTests\Aop\ConditionalBeforeAspect', 1, NULL);
+		self::assertAspectInvocation($service, 'KdybyTests\Aop\ConditionalBeforeAspect', 2, NULL);
+	}
+
+
+
 	public function testFunctionalAround()
 	{
 		$dic = $this->createContainer('around');
@@ -270,7 +291,7 @@ class ExtensionTest extends Tester\TestCase
 	 * @param MethodInvocation $joinPoint
 	 * @return object
 	 */
-	private static function assertAspectInvocation($service, $adviceClass, $adviceCallIndex, MethodInvocation $joinPoint)
+	private static function assertAspectInvocation($service, $adviceClass, $adviceCallIndex, MethodInvocation $joinPoint = NULL)
 	{
 		$advices = array_filter(self::getAspects($service), function ($advice) use ($adviceClass) {
 			return get_class($advice) === $adviceClass;
@@ -278,6 +299,12 @@ class ExtensionTest extends Tester\TestCase
 		Assert::true(!empty($advices));
 		$advice = reset($advices);
 		Assert::true($advice instanceof $adviceClass);
+
+		if ($joinPoint === NULL) {
+			Assert::true(empty($advice->calls[$adviceCallIndex]));
+
+			return $advice;
+		}
 
 		Assert::true(!empty($advice->calls[$adviceCallIndex]));
 		$call = $advice->calls[$adviceCallIndex];
