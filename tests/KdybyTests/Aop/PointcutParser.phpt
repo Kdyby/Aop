@@ -207,6 +207,11 @@ class PointcutParserTest extends Tester\TestCase
 		);
 
 		$data[] = array(
+			$mf->getMatcher('evaluate', Criteria::create()->where('%foo.dave%', Criteria::EQ, new PhpLiteral('TRUE'))),
+			'evaluate(%foo.dave%)',
+		);
+
+		$data[] = array(
 			$mf->getMatcher('filter', 'KdybyTests\Aop\MyPointcutFilter'),
 			'filter(KdybyTests\Aop\MyPointcutFilter)', # implements \Kdyby\Aop\Pointcut\Rule
 		);

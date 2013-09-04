@@ -10,6 +10,7 @@
 
 namespace Kdyby\Aop\Pointcut\Matcher;
 
+use Doctrine\Common\Collections\Collection;
 use Kdyby;
 use Nette;
 use Nette\PhpGenerator as Code;
@@ -118,6 +119,17 @@ class Criteria extends Nette\Object
 
 
 
+	private function isMatching(array $result)
+	{
+		if ($this->operator === self::TYPE_AND) {
+			return array_filter($result) === $result; // all values are TRUE
+		}
+
+		return (bool) array_filter($result); // at least one is TRUE
+	}
+
+
+
 	/**
 	 * @param ContainerBuilder $builder
 	 * @param array|Criteria $expression
@@ -150,18 +162,62 @@ class Criteria extends Nette\Object
 
 	public function serialize(ContainerBuilder $builder = NULL)
 	{
-		return ''; // todo: implement
+		if (empty($this->expressions)) {
+			throw new Kdyby\Aop\NoRulesExceptions();
+		}
+
+		$serialised = array();
+		foreach ($this->expressions as $expression) {
+			$serialised[] = $this->doSerialize($builder, $expression);
+		}
+
+		return new Code\PhpLiteral('(' . implode(' ' . $this->operator . ' ', $serialised) . ')');
 	}
 
 
 
-	private function isMatching(array $result)
+	/**
+	 * @param ContainerBuilder $builder
+	 * @param array|Criteria $expression
+	 * @return bool
+	 */
+	private function doSerialize(ContainerBuilder $builder, $expression)
 	{
-		if ($this->operator === self::TYPE_AND) {
-			return array_filter($result) === $result; // all values are TRUE
+		if ($expression instanceof self) {
+			return $expression->evaluate($builder);
 		}
 
-		return (bool) array_filter($result); // at least one is TRUE
+		return self::compare(
+			$this->doSerializeValueResolve($builder, $expression[0]),
+			$expression[1],
+			$this->doSerializeValueResolve($builder, $expression[2])
+		);
+	}
+
+
+
+	private function doSerializeValueResolve(ContainerBuilder $builder, $expression)
+	{
+		if ($expression instanceof Code\PhpLiteral) {
+			$expression = self::resolveExpression($expression);
+
+		} elseif (substr($expression, 0, 1) === '%') {
+			$expression = $builder->expand($expression);
+
+		} else {
+			$expr = explode('.', $expression, 2);
+			if (count($expr) == 2) {
+				if ($expr[0] === 'this') {
+
+				} elseif ($expr[0] === 'context') {
+
+				} elseif ($expr[0] === 'current') {
+
+				}
+			}
+		}
+
+		return $expression;
 	}
 
 
@@ -183,10 +239,10 @@ class Criteria extends Nette\Object
 	public static function isValidComparison($comparison)
 	{
 		return in_array(strtoupper($comparison), array(
-			self::EQ, self::NEQ,
+			self::EQ, self::NEQ, '!=',
 			self::LT, self::LTE,
 			self::GT, self::GTE,
-			self::IS, self::IN, self::NIN,
+			self::IS, 'IS', self::IN, self::NIN,
 			self::CONTAINS, self::MATCHES
 		), TRUE);
 	}
@@ -238,21 +294,44 @@ class Criteria extends Nette\Object
 			case 'IS';
 				return $left === $right;
 
-			case self::IN;
-				if (is_array($left)) {
-					return self::compare($left, self::CONTAINS, $right);
-				}
-
-				return Nette\Utils\Strings::contains($left, $right);
-
 			case self::NIN;
 				return !self::compare($left, self::IN, $right);
 
-			case self::MATCHES:
-				return Nette\Utils\Strings::contains($left, $right); // todo: smarter!
+			case self::IN;
+				if ($right instanceof \SplObjectStorage || $right instanceof Collection) {
+					/** @var Collection $right */
+					return $left !== NULL && $right->contains($left);
+
+				} else {
+					if ($right instanceof \Traversable) {
+						$right = iterator_to_array($right);
+
+					} elseif (!is_array($right)) {
+						throw new Kdyby\Aop\InvalidArgumentException('Right value is expected to be array or instance of Traversable');
+					}
+
+					return in_array($left, $right, TRUE);
+				}
 
 			case self::CONTAINS:
-				return in_array($left, $right, TRUE);
+				return self::compare($right, self::IN, $left);
+
+			case self::MATCHES:
+				if ($right instanceof \Traversable) {
+					$right = iterator_to_array($right);
+
+				} elseif (!is_array($right)) {
+					throw new Kdyby\Aop\InvalidArgumentException('Right value is expected to be array or Traversable');
+				}
+
+				if ($left instanceof \Traversable) {
+					$left = iterator_to_array($left);
+
+				} elseif (!is_array($left)) {
+					throw new Kdyby\Aop\InvalidArgumentException('Left value is expected to be array or Traversable');
+				}
+
+				return !empty(array_intersect($left, $right));
 
 			default:
 				throw new Kdyby\Aop\NotImplementedException();

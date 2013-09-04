@@ -14,7 +14,10 @@ use Doctrine\Common\Annotations\AnnotationReader;
 use Kdyby;
 use Kdyby\Aop\Pointcut;
 use Kdyby\Aop\Pointcut\Matcher;
+use Kdyby\Aop\Pointcut\Matcher\Criteria;
+use Kdyby\Aop\Pointcut\Matcher\SettingMatcher;
 use Nette;
+use Nette\PhpGenerator as Code;
 use Tester;
 use Tester\Assert;
 
@@ -264,6 +267,35 @@ class PointcutRulesTest extends Tester\TestCase
 	public function testMatchMethodAnnotateWith($expected, Kdyby\Aop\Pointcut\Filter $rules, Kdyby\Aop\Pointcut\ServiceDefinition $def)
 	{
 		Assert::same($expected, (bool) $def->match($rules));
+	}
+
+
+
+	public function testMatchesSetting()
+	{
+		$builder = new Nette\DI\ContainerBuilder();
+		$builder->parameters['foo']['dave'] = TRUE;
+		$builder->parameters['foo']['kryten'] = FALSE;
+		$builder->parameters['friendship'] = 'Is magic';
+
+		$args = new SettingMatcher(Criteria::create()->where('foo.dave', Criteria::EQ, new Code\PhpLiteral('TRUE')), $builder);
+		Assert::true($args->matches($this->mockMethod()));
+
+		$args = new SettingMatcher(Criteria::create()->where('foo.kryten', Criteria::EQ, new Code\PhpLiteral('FALSE')), $builder);
+		Assert::true($args->matches($this->mockMethod()));
+
+		$args = new SettingMatcher(Criteria::create()->where('friendship', Criteria::EQ, new Code\PhpLiteral("'Is magic'")), $builder);
+		Assert::true($args->matches($this->mockMethod()));
+	}
+
+
+
+	/**
+	 * @return Kdyby\Aop\Pointcut\Method
+	 */
+	private function mockMethod()
+	{
+		return Nette\Reflection\ClassType::from('Kdyby\Aop\Pointcut\Method')->newInstanceWithoutConstructor();
 	}
 
 

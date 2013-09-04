@@ -20,7 +20,8 @@
 		"kdyby/annotations": "@dev"
 	},
 	"require-dev": {
-		"nette/tester": "@dev"
+		"nette/tester": "@dev",
+		"doctrine/collections": "~1.1"
 	},
 	"conflict": {
 		"kdyby/doctrine": "0.9.*"
