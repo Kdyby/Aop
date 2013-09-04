@@ -26,11 +26,17 @@ class EvaluateMatcher extends Nette\Object implements Kdyby\Aop\Pointcut\Filter,
 	 */
 	private $evaluate;
 
+	/**
+	 * @var \Nette\DI\ContainerBuilder
+	 */
+	private $builder;
 
 
-	public function __construct(Criteria $criteria)
+
+	public function __construct(Criteria $criteria, Nette\DI\ContainerBuilder $builder)
 	{
 		$this->evaluate = $criteria;
+		$this->builder = $builder;
 	}
 
 
@@ -47,7 +53,7 @@ class EvaluateMatcher extends Nette\Object implements Kdyby\Aop\Pointcut\Filter,
 	 */
 	public function createCondition()
 	{
-		return $this->settings->serialize($this->builder);
+		return $this->evaluate->serialize($this->builder);
 	}
 
 

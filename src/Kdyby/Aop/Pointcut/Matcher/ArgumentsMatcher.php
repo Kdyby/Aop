@@ -26,11 +26,17 @@ class ArgumentsMatcher extends Nette\Object implements Kdyby\Aop\Pointcut\Filter
 	 */
 	private $arguments;
 
+	/**
+	 * @var \Nette\DI\ContainerBuilder
+	 */
+	private $builder;
 
 
-	public function __construct(Criteria $criteria)
+
+	public function __construct(Criteria $criteria, Nette\DI\ContainerBuilder $builder)
 	{
 		$this->arguments = $criteria;
+		$this->builder = $builder;
 	}
 
 
@@ -47,7 +53,7 @@ class ArgumentsMatcher extends Nette\Object implements Kdyby\Aop\Pointcut\Filter
 	 */
 	public function createCondition()
 	{
-		return $this->arguments->serialize();
+		return $this->arguments->serialize($this->builder);
 	}
 
 

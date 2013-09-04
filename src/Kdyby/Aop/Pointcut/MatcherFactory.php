@@ -80,7 +80,7 @@ class MatcherFactory extends Nette\Object
 
 	public function createArguments($criteria)
 	{
-		return new Matcher\ArgumentsMatcher($criteria);
+		return new Matcher\ArgumentsMatcher($criteria, $this->builder);
 	}
 
 
