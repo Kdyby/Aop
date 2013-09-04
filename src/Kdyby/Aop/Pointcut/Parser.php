@@ -382,7 +382,7 @@ class Parser extends Nette\Object
 
 	protected static function sanitizeArgumentExpression($value, $token)
 	{
-		if ($token[Tokenizer::TYPE] === self::TOK_STRING || preg_match('~^(TRUE|FALSE)\z~i', $value)) {
+		if ($token[Tokenizer::TYPE] === self::TOK_STRING || is_numeric($value) || preg_match('~^(TRUE|FALSE)\z~i', $value)) {
 			return new PhpLiteral($value);
 		}
 

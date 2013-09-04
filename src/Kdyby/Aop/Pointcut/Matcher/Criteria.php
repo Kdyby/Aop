@@ -214,7 +214,7 @@ class Criteria extends Nette\Object
 
 		} else {
 			if (!$m = self::shiftAccessPath($expression)) {
-				$expression = '$' . $expression; // todo: what else could it be?
+				return $expression; // it's probably some kind of expression
 
 			} else {
 				if ($m['context'] === 'this') {
