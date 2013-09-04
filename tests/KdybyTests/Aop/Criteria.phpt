@@ -154,6 +154,31 @@ class CriteriaTest extends Tester\TestCase
 		}, 'Kdyby\Aop\InvalidArgumentException', 'Left value is expected to be array or Traversable');
 	}
 
+
+
+	public function testSerialize()
+	{
+		$criteria = Criteria::create()->where('this.foo.bar', Criteria::EQ, new Code\PhpLiteral('TRUE'));
+		Assert::same(
+			"(Criteria::compare(PropertyAccess::getPropertyAccessor()->getValue(\$this, 'foo.bar'), '==', TRUE))",
+			(string) $criteria->serialize(new Nette\DI\ContainerBuilder())
+		);
+
+		$criteria = Criteria::create()->where('$arg', Criteria::EQ, new Code\PhpLiteral('TRUE'));
+		Assert::same(
+			"(Criteria::compare(\$arg, '==', TRUE))",
+			(string) $criteria->serialize(new Nette\DI\ContainerBuilder())
+		);
+
+		$builder = new Nette\DI\ContainerBuilder();
+		$builder->parameters['foo']['bar'] = 'complicated value!';
+		$criteria = Criteria::create()->where('%foo.bar%', Criteria::EQ, new Code\PhpLiteral('TRUE'));
+		Assert::same(
+			"(Criteria::compare('complicated value!', '==', TRUE))",
+			(string) $criteria->serialize($builder)
+		);
+	}
+
 }
 
 \run(new CriteriaTest());

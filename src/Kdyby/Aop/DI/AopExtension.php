@@ -78,6 +78,8 @@ class AopExtension extends Nette\DI\CompilerExtension
 
 		$file = new PhpFile();
 		$cg = $file->getNamespace('Kdyby\Aop_CG\\' . $builder->parameters['container']['class']);
+		$cg->imports[] = 'Kdyby\Aop\Pointcut\Matcher\Criteria';
+		$cg->imports[] = 'Symfony\Component\PropertyAccess\PropertyAccess';
 
 		foreach ($this->findAdvisedMethods() as $serviceId => $pointcuts) {
 			$service = $this->getWrappedDefinition($serviceId);

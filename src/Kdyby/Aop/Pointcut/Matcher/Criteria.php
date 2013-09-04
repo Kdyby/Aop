@@ -141,26 +141,30 @@ class Criteria extends Nette\Object
 			return $expression->evaluate($builder);
 		}
 
-		if ($expression[0] instanceof Code\PhpLiteral) {
-			$expression[0] = self::resolveExpression($expression[0]);
-
-		} else {
-			$expression[0] = $builder->expand('%' . $expression[0] . '%');
-		}
-
-		if ($expression[2] instanceof Code\PhpLiteral) {
-			$expression[2] = self::resolveExpression($expression[2]);
-
-		} else {
-			$expression[2] = $builder->expand('%' . $expression[2] . '%');
-		}
-
-		return self::compare($expression[0], $expression[1], $expression[2]);
+		return self::compare(
+			$this->doEvaluateValueResolve($builder, $expression[0]),
+			$expression[1],
+			$this->doEvaluateValueResolve($builder, $expression[2])
+		);
 	}
 
 
 
-	public function serialize(ContainerBuilder $builder = NULL)
+	private function doEvaluateValueResolve(ContainerBuilder $builder, $expression)
+	{
+		if ($expression instanceof Code\PhpLiteral) {
+			$expression = self::resolveExpression($expression);
+
+		} else {
+			$expression = $builder->expand('%' . $expression . '%');
+		}
+
+		return $expression;
+	}
+
+
+
+	public function serialize(ContainerBuilder $builder)
 	{
 		if (empty($this->expressions)) {
 			throw new Kdyby\Aop\NoRulesExceptions();
@@ -184,10 +188,11 @@ class Criteria extends Nette\Object
 	private function doSerialize(ContainerBuilder $builder, $expression)
 	{
 		if ($expression instanceof self) {
-			return $expression->evaluate($builder);
+			return $expression->serialize($builder);
 		}
 
-		return self::compare(
+		return Code\Helpers::format(
+			'Criteria::compare(?, ?, ?)',
 			$this->doSerializeValueResolve($builder, $expression[0]),
 			$expression[1],
 			$this->doSerializeValueResolve($builder, $expression[2])
@@ -204,17 +209,35 @@ class Criteria extends Nette\Object
 		} elseif (substr($expression, 0, 1) === '%') {
 			$expression = $builder->expand($expression);
 
+		} elseif (substr($expression, 0, 1) === '$') {
+			$expression = new Code\PhpLiteral($expression);
+
 		} else {
-			$expr = explode('.', $expression, 2);
-			if (count($expr) == 2) {
-				if ($expr[0] === 'this') {
+			if (!$m = self::shiftAccessPath($expression)) {
+				$expression = '$' . $expression; // todo: what else could it be?
 
-				} elseif ($expr[0] === 'context') {
+			} else {
+				if ($m['context'] === 'this') {
+					$targetObject = '$this';
 
-				} elseif ($expr[0] === 'current') {
+				} elseif ($m['context'] === 'context' && ($p = self::shiftAccessPath($m['path']))) {
+					if (class_exists($m['context']) || interface_exists($m['context'])) {
+						$targetObject = Code\Helpers::format('$this->_kdyby_aopContainer->getByType(?)', $m['context']);
 
+					} else {
+						$targetObject = Code\Helpers::format('$this->_kdyby_aopContainer->getService(?)', $m['context']);
+					}
+
+					$m['path'] = $p['path'];
+
+				} else {
+					throw new Kdyby\Aop\NotImplementedException();
 				}
+
+				$expression = Code\Helpers::format('PropertyAccess::getPropertyAccessor()->getValue(?, ?)', new Code\PhpLiteral($targetObject), $m['path']);
 			}
+
+			$expression = new Code\PhpLiteral($expression);
 		}
 
 		return $expression;
@@ -264,6 +287,22 @@ class Criteria extends Nette\Object
 		restore_error_handler();
 
 		return $result;
+	}
+
+
+
+	/**
+	 * @param string $path
+	 * @return array|NULL
+	 */
+	private static function shiftAccessPath($path)
+	{
+		$shifted = Nette\Utils\Strings::match($path, '~^(?P<context>[a-z0-9]+)(?P<path>[^a-z0-9].*)\z~');
+		if ($shifted && substr($shifted['path'], 0, 1) === '.') {
+			$shifted['path'] = substr($shifted['path'], 1);
+		}
+
+		return $shifted;
 	}
 
 
