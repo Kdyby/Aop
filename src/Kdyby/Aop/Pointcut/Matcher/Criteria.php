@@ -221,11 +221,11 @@ class Criteria extends Nette\Object
 					$targetObject = '$this';
 
 				} elseif ($m['context'] === 'context' && ($p = self::shiftAccessPath($m['path']))) {
-					if (class_exists($m['context']) || interface_exists($m['context'])) {
-						$targetObject = Code\Helpers::format('$this->_kdyby_aopContainer->getByType(?)', $m['context']);
+					if (class_exists($p['context']) || interface_exists($p['context'])) {
+						$targetObject = Code\Helpers::format('$this->_kdyby_aopContainer->getByType(?)', $p['context']);
 
 					} else {
-						$targetObject = Code\Helpers::format('$this->_kdyby_aopContainer->getService(?)', $m['context']);
+						$targetObject = Code\Helpers::format('$this->_kdyby_aopContainer->getService(?)', $p['context']);
 					}
 
 					$m['path'] = $p['path'];
@@ -297,7 +297,7 @@ class Criteria extends Nette\Object
 	 */
 	private static function shiftAccessPath($path)
 	{
-		$shifted = Nette\Utils\Strings::match($path, '~^(?P<context>[a-z0-9]+)(?P<path>[^a-z0-9].*)\z~');
+		$shifted = Nette\Utils\Strings::match($path, '~^(?P<context>[^\\[\\]\\.]+)(?P<path>(\\[|\\.).*)\z~i');
 		if ($shifted && substr($shifted['path'], 0, 1) === '.') {
 			$shifted['path'] = substr($shifted['path'], 1);
 		}

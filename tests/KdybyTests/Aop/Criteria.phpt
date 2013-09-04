@@ -156,26 +156,64 @@ class CriteriaTest extends Tester\TestCase
 
 
 
-	public function testSerialize()
+	public function testSerialize_propertyAccess()
 	{
 		$criteria = Criteria::create()->where('this.foo.bar', Criteria::EQ, new Code\PhpLiteral('TRUE'));
 		Assert::same(
 			"(Criteria::compare(PropertyAccess::getPropertyAccessor()->getValue(\$this, 'foo.bar'), '==', TRUE))",
 			(string) $criteria->serialize(new Nette\DI\ContainerBuilder())
 		);
+	}
 
+
+
+	public function testSerialize_arguments()
+	{
 		$criteria = Criteria::create()->where('$arg', Criteria::EQ, new Code\PhpLiteral('TRUE'));
 		Assert::same(
 			"(Criteria::compare(\$arg, '==', TRUE))",
 			(string) $criteria->serialize(new Nette\DI\ContainerBuilder())
 		);
+	}
 
+
+
+	public function testSerialize_parameter()
+	{
 		$builder = new Nette\DI\ContainerBuilder();
 		$builder->parameters['foo']['bar'] = 'complicated value!';
 		$criteria = Criteria::create()->where('%foo.bar%', Criteria::EQ, new Code\PhpLiteral('TRUE'));
 		Assert::same(
 			"(Criteria::compare('complicated value!', '==', TRUE))",
 			(string) $criteria->serialize($builder)
+		);
+	}
+
+
+
+	public function testSerialize_service_byName()
+	{
+		$criteria = Criteria::create()->where('context.foo.bar', Criteria::EQ, new Code\PhpLiteral('TRUE'));
+		Assert::same(
+			"(Criteria::compare(PropertyAccess::getPropertyAccessor()->getValue(\$this->_kdyby_aopContainer->getService('foo'), 'bar'), '==', TRUE))",
+			(string) $criteria->serialize(new Nette\DI\ContainerBuilder())
+		);
+	}
+
+
+
+	public function testSerialize_service_byType()
+	{
+		$criteria = Criteria::create()->where('context.stdClass.bar', Criteria::EQ, new Code\PhpLiteral('TRUE'));
+		Assert::same(
+			"(Criteria::compare(PropertyAccess::getPropertyAccessor()->getValue(\$this->_kdyby_aopContainer->getByType('stdClass'), 'bar'), '==', TRUE))",
+			(string) $criteria->serialize(new Nette\DI\ContainerBuilder())
+		);
+
+		$criteria = Criteria::create()->where('context.KdybyTests\Aop\CriteriaTest.bar', Criteria::EQ, new Code\PhpLiteral('TRUE'));
+		Assert::same(
+			"(Criteria::compare(PropertyAccess::getPropertyAccessor()->getValue(\$this->_kdyby_aopContainer->getByType('KdybyTests\\\\Aop\\\\CriteriaTest'), 'bar'), '==', TRUE))",
+			(string) $criteria->serialize(new Nette\DI\ContainerBuilder())
 		);
 	}
 
