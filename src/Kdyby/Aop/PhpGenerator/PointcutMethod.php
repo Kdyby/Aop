@@ -56,8 +56,8 @@ class PointcutMethod extends Code\Method
 		switch ($adviceDef->getAdviceType()) {
 			case Kdyby\Aop\Before::getClassName():
 				$this->before[] = $this->generateRuntimeCondition($adviceDef, Code\Helpers::format(
-					'$this->__getAdvice(?)->?($before = new \Kdyby\Aop\JoinPoint\BeforeMethod($this, __FUNCTION__, $arguments));' . "\n" .
-					'$arguments = $before->getArguments();',
+					'$this->__getAdvice(?)->?($__before = new \Kdyby\Aop\JoinPoint\BeforeMethod($this, __FUNCTION__, $__arguments));' . "\n" .
+					'$__arguments = $__before->getArguments();',
 					$adviceMethod->getServiceDefinition()->getServiceId(),
 					$adviceMethod->getName()
 				));
@@ -66,7 +66,7 @@ class PointcutMethod extends Code\Method
 
 			case Kdyby\Aop\Around::getClassName():
 				$this->around[] = $this->generateRuntimeCondition($adviceDef, Code\Helpers::format(
-					'$around->addChainLink($this->__getAdvice(?), ?);',
+					'$__around->addChainLink($this->__getAdvice(?), ?);',
 					$adviceMethod->getServiceDefinition()->getServiceId(),
 					$adviceMethod->getName()
 				));
@@ -74,8 +74,8 @@ class PointcutMethod extends Code\Method
 
 			case Kdyby\Aop\AfterReturning::getClassName():
 				$this->afterReturning[] = $this->generateRuntimeCondition($adviceDef, Code\Helpers::format(
-					'$this->__getAdvice(?)->?($afterReturning = new \Kdyby\Aop\JoinPoint\AfterReturning($this, __FUNCTION__, $arguments, $result));' . "\n" .
-					'$result = $afterReturning->getResult();',
+					'$this->__getAdvice(?)->?($__afterReturning = new \Kdyby\Aop\JoinPoint\AfterReturning($this, __FUNCTION__, $__arguments, $__result));' . "\n" .
+					'$__result = $__afterReturning->getResult();',
 					$adviceMethod->getServiceDefinition()->getServiceId(),
 					$adviceMethod->getName()
 				));
@@ -83,7 +83,7 @@ class PointcutMethod extends Code\Method
 
 			case Kdyby\Aop\AfterThrowing::getClassName():
 				$this->afterThrowing[] = $this->generateRuntimeCondition($adviceDef, Code\Helpers::format(
-					'$this->__getAdvice(?)->?(new \Kdyby\Aop\JoinPoint\AfterThrowing($this, __FUNCTION__, $arguments, $exception));',
+					'$this->__getAdvice(?)->?(new \Kdyby\Aop\JoinPoint\AfterThrowing($this, __FUNCTION__, $__arguments, $__exception));',
 					$adviceMethod->getServiceDefinition()->getServiceId(),
 					$adviceMethod->getName()
 				));
@@ -91,7 +91,7 @@ class PointcutMethod extends Code\Method
 
 			case Kdyby\Aop\After::getClassName():
 				$this->after[] = $this->generateRuntimeCondition($adviceDef, Code\Helpers::format(
-					'$this->__getAdvice(?)->?(new \Kdyby\Aop\JoinPoint\AfterMethod($this, __FUNCTION__, $arguments, $result, $exception));',
+					'$this->__getAdvice(?)->?(new \Kdyby\Aop\JoinPoint\AfterMethod($this, __FUNCTION__, $__arguments, $__result, $__exception));',
 					$adviceMethod->getServiceDefinition()->getServiceId(),
 					$adviceMethod->getName()
 				));
@@ -125,7 +125,7 @@ class PointcutMethod extends Code\Method
 	public function __toString()
 	{
 		$this->setBody('');
-		$this->addBody('$arguments = func_get_args(); $exception = $result = NULL;');
+		$this->addBody('$__arguments = func_get_args(); $__exception = $__result = NULL;');
 
 		if ($this->before) {
 			foreach ($this->before as $before) {
@@ -140,22 +140,22 @@ class PointcutMethod extends Code\Method
 		if (!$this->around) {
 			$argumentsPass = array();
 			foreach (array_values($this->getParameters()) as $i => $parameter) {
-				$argumentsPass[] = '$arguments[' . $i . ']';
+				$argumentsPass[] = '$__arguments[' . $i . ']';
 			}
-			$parentCall = Code\Helpers::format('$result = parent::?(?);', $this->getName(), new Code\PhpLiteral(implode(', ', $argumentsPass)));
+			$parentCall = Code\Helpers::format('$__result = parent::?(?);', $this->getName(), new Code\PhpLiteral(implode(', ', $argumentsPass)));
 
 		} else {
-			$parentCall = Code\Helpers::format('$around = new \Kdyby\Aop\JoinPoint\AroundMethod($this, __FUNCTION__, $arguments);');
+			$parentCall = Code\Helpers::format('$__around = new \Kdyby\Aop\JoinPoint\AroundMethod($this, __FUNCTION__, $__arguments);');
 			foreach ($this->around as $around) {
 				$parentCall .= "\n" . $around;
 			}
-			$parentCall .= "\n" . Code\Helpers::format('$result = $around->proceed();');
+			$parentCall .= "\n" . Code\Helpers::format('$__result = $__around->proceed();');
 		}
 
 		$this->addBody(($this->afterThrowing || $this->after) ? Nette\Utils\Strings::indent($parentCall) : $parentCall);
 
 		if ($this->afterThrowing || $this->after) {
-			$this->addBody('} catch (\Exception $exception) {');
+			$this->addBody('} catch (\Exception $__exception) {');
 		}
 
 		if ($this->afterThrowing) {
@@ -170,7 +170,7 @@ class PointcutMethod extends Code\Method
 
 		if ($this->afterReturning) {
 			if ($this->afterThrowing || $this->after) {
-				$this->addBody('if (empty($exception)) {');
+				$this->addBody('if (empty($__exception)) {');
 			}
 
 			foreach ($this->afterReturning as $afterReturning) {
@@ -189,9 +189,9 @@ class PointcutMethod extends Code\Method
 		}
 
 		if ($this->afterThrowing || $this->after) {
-			$this->addBody('if ($exception) { throw $exception; }');
+			$this->addBody('if ($__exception) { throw $__exception; }');
 		}
-		$this->addBody('return $result;');
+		$this->addBody('return $__result;');
 
 		return parent::__toString();
 	}
