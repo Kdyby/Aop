@@ -85,6 +85,7 @@ class AdvisedClassType extends Code\ClassType
 		$injectMethod = $class->addMethod(self::CG_INJECT_METHOD);
 		$injectMethod->addParameter('container')->setTypeHint('\Nette\DI\Container');
 		$injectMethod->addDocument('@internal');
+		$injectMethod->addDocument('@deprecated');
 		$injectMethod->addBody('$this->_kdyby_aopContainer = $container;');
 
 		$providerMethod = $class->addMethod('__getAdvice');
