@@ -30,111 +30,86 @@ class CriteriaTest extends Tester\TestCase
 
 	public function testEqual()
 	{
-		$builder = new Nette\DI\ContainerBuilder();
-		$builder->parameters['foo'] = TRUE;
-		$builder->parameters['bar'] = FALSE;
-
-		Assert::true(Criteria::create()->where('foo', Criteria::EQ, 'foo')->evaluate($builder));
-		Assert::false(Criteria::create()->where('foo', Criteria::EQ, 'bar')->evaluate($builder));
-		Assert::false(Criteria::create()->where('foo', Criteria::NEQ, 'foo')->evaluate($builder));
-		Assert::true(Criteria::create()->where('foo', Criteria::NEQ, 'bar')->evaluate($builder));
+		Assert::true(Criteria::compare(TRUE, Criteria::EQ, TRUE));
+		Assert::false(Criteria::compare(TRUE, Criteria::EQ, FALSE));
+		Assert::false(Criteria::compare(TRUE, Criteria::NEQ, TRUE));
+		Assert::true(Criteria::compare(TRUE, Criteria::NEQ, FALSE));
 	}
 
 
 
 	public function testGreater()
 	{
-		$builder = new Nette\DI\ContainerBuilder();
-		$builder->parameters['foo'] = 1;
-		$builder->parameters['bar'] = 2;
-
-		Assert::true(Criteria::create()->where('bar', Criteria::GT, 'foo')->evaluate($builder));
-		Assert::false(Criteria::create()->where('foo', Criteria::GT, 'foo')->evaluate($builder));
-		Assert::false(Criteria::create()->where('foo', Criteria::GT, 'bar')->evaluate($builder));
+		Assert::true(Criteria::compare(2, Criteria::GT, 1));
+		Assert::false(Criteria::compare(1, Criteria::GT, 1));
+		Assert::false(Criteria::compare(1, Criteria::GT, 2));
 	}
 
 
 
 	public function testGreaterOrEqual()
 	{
-		$builder = new Nette\DI\ContainerBuilder();
-		$builder->parameters['foo'] = 1;
-		$builder->parameters['bar'] = 2;
-
-		Assert::true(Criteria::create()->where('bar', Criteria::GTE, 'foo')->evaluate($builder));
-		Assert::true(Criteria::create()->where('foo', Criteria::GTE, 'foo')->evaluate($builder));
-		Assert::false(Criteria::create()->where('foo', Criteria::GTE, 'bar')->evaluate($builder));
+		Assert::true(Criteria::compare(2, Criteria::GTE, 1));
+		Assert::true(Criteria::compare(1, Criteria::GTE, 1));
+		Assert::false(Criteria::compare(1, Criteria::GTE, 2));
 	}
 
 
 
 	public function testLower()
 	{
-		$builder = new Nette\DI\ContainerBuilder();
-		$builder->parameters['foo'] = 2;
-		$builder->parameters['bar'] = 1;
-
-		Assert::true(Criteria::create()->where('bar', Criteria::LT, 'foo')->evaluate($builder));
-		Assert::false(Criteria::create()->where('foo', Criteria::LT, 'foo')->evaluate($builder));
-		Assert::false(Criteria::create()->where('foo', Criteria::LT, 'bar')->evaluate($builder));
+		Assert::true(Criteria::compare(1, Criteria::LT, 2));
+		Assert::false(Criteria::compare(2, Criteria::LT, 2));
+		Assert::false(Criteria::compare(2, Criteria::LT, 1));
 	}
 
 
 
 	public function testLowerOrEqual()
 	{
-		$builder = new Nette\DI\ContainerBuilder();
-		$builder->parameters['foo'] = 2;
-		$builder->parameters['bar'] = 1;
-
-		Assert::true(Criteria::create()->where('bar', Criteria::LTE, 'foo')->evaluate($builder));
-		Assert::true(Criteria::create()->where('foo', Criteria::LTE, 'foo')->evaluate($builder));
-		Assert::false(Criteria::create()->where('foo', Criteria::LTE, 'bar')->evaluate($builder));
+		Assert::true(Criteria::compare(1, Criteria::LTE, 2));
+		Assert::true(Criteria::compare(2, Criteria::LTE, 2));
+		Assert::false(Criteria::compare(2, Criteria::LTE, 1));
 	}
 
 
 
 	public function testIs()
 	{
-		$builder = new Nette\DI\ContainerBuilder();
-		$builder->parameters['foo'] = new \stdClass;
-		$builder->parameters['bar'] = new \stdClass;
-		$builder->parameters['baz'] = $builder->parameters['foo'];
+		$foo = new \stdClass;
+		$bar = new \stdClass;
 
-		Assert::true(Criteria::create()->where('foo', Criteria::IS, 'foo')->evaluate($builder));
-		Assert::false(Criteria::create()->where('foo', Criteria::IS, 'bar')->evaluate($builder));
-		Assert::true(Criteria::create()->where('bar', Criteria::IS, 'bar')->evaluate($builder));
-		Assert::false(Criteria::create()->where('bar', Criteria::IS, 'baz')->evaluate($builder));
-		Assert::true(Criteria::create()->where('baz', Criteria::IS, 'baz')->evaluate($builder));
-		Assert::true(Criteria::create()->where('baz', Criteria::IS, 'foo')->evaluate($builder));
+		Assert::true(Criteria::compare($foo, Criteria::IS, $foo));
+		Assert::false(Criteria::compare($foo, Criteria::IS, $bar));
+		Assert::true(Criteria::compare($bar, Criteria::IS, $bar));
+		Assert::false(Criteria::compare($bar, Criteria::IS, $foo));
 	}
 
 
 
 	public function testIn()
 	{
-		$builder = new Nette\DI\ContainerBuilder();
-		$builder->parameters['dave'] = new \stdClass;
-		$builder->parameters['cat'] = new \stdClass;
-		$builder->parameters['lister'] = new ArrayCollection(array($builder->parameters['dave']));
-		$builder->parameters['kryten'] = $sos = new \SplObjectStorage();
-		$sos->attach($builder->parameters['dave']);
+		$dave = new \stdClass;
+		$lister = new ArrayCollection(array($dave));
+		$kryten = new \SplObjectStorage();
+		$kryten->attach($dave);
+		$cat = new \stdClass;
 
-		Assert::true(Criteria::create()->where('dave', Criteria::IN, 'lister')->evaluate($builder));
-		Assert::false(Criteria::create()->where('dave', Criteria::NIN, 'lister')->evaluate($builder));
-		Assert::true(Criteria::create()->where('dave', Criteria::IN, 'kryten')->evaluate($builder));
-		Assert::false(Criteria::create()->where('dave', Criteria::NIN, 'kryten')->evaluate($builder));
-		Assert::false(Criteria::create()->where('cat', Criteria::IN, 'lister')->evaluate($builder));
-		Assert::true(Criteria::create()->where('cat', Criteria::NIN, 'lister')->evaluate($builder));
-		Assert::false(Criteria::create()->where('cat', Criteria::IN, 'kryten')->evaluate($builder));
-		Assert::true(Criteria::create()->where('cat', Criteria::NIN, 'kryten')->evaluate($builder));
+		Assert::true(Criteria::compare($dave, Criteria::IN, $lister));
+		Assert::false(Criteria::compare($dave, Criteria::NIN, $lister));
+		Assert::true(Criteria::compare($dave, Criteria::IN, $kryten));
+		Assert::false(Criteria::compare($dave, Criteria::NIN, $kryten));
+		Assert::false(Criteria::compare($cat, Criteria::IN, $lister));
+		Assert::true(Criteria::compare($cat, Criteria::NIN, $lister));
+		Assert::false(Criteria::compare($cat, Criteria::IN, $kryten));
+		Assert::true(Criteria::compare($cat, Criteria::NIN, $kryten));
 
-		Assert::throws(function () use ($builder) {
-			Criteria::create()->where('dave', Criteria::IN, 'dave')->evaluate($builder);
+		Assert::throws(function () use ($dave) {
+			Criteria::compare($dave, Criteria::IN, $dave);
 		}, 'Kdyby\Aop\InvalidArgumentException', 'Right value is expected to be array or instance of Traversable');
 
-		Assert::throws(function () use ($builder) {
-			Criteria::create()->where('dave', Criteria::NIN, 'dave')->evaluate($builder);
+		Assert::throws(function () use ($dave) {
+			Criteria::compare($dave, Criteria::NIN, $dave);
 		}, 'Kdyby\Aop\InvalidArgumentException', 'Right value is expected to be array or instance of Traversable');
 	}
 
@@ -142,20 +117,19 @@ class CriteriaTest extends Tester\TestCase
 
 	public function testContains()
 	{
-		$builder = new Nette\DI\ContainerBuilder();
-		$builder->parameters['dave'] = new \stdClass;
-		$builder->parameters['cat'] = new \stdClass;
-		$builder->parameters['lister'] = new ArrayCollection(array($builder->parameters['dave']));
-		$builder->parameters['kryten'] = $sos = new \SplObjectStorage();
-		$sos->attach($builder->parameters['dave']);
+		$dave = new \stdClass;
+		$lister = new ArrayCollection(array($dave));
+		$kryten = new \SplObjectStorage();
+		$kryten->attach($dave);
+		$cat = new \stdClass;
 
-		Assert::true(Criteria::create()->where('lister', Criteria::CONTAINS, 'dave')->evaluate($builder));
-		Assert::true(Criteria::create()->where('kryten', Criteria::CONTAINS, 'dave')->evaluate($builder));
-		Assert::false(Criteria::create()->where('lister', Criteria::CONTAINS, 'cat')->evaluate($builder));
-		Assert::false(Criteria::create()->where('kryten', Criteria::CONTAINS, 'cat')->evaluate($builder));
+		Assert::true(Criteria::compare($lister, Criteria::CONTAINS, $dave));
+		Assert::true(Criteria::compare($kryten, Criteria::CONTAINS, $dave));
+		Assert::false(Criteria::compare($lister, Criteria::CONTAINS, $cat));
+		Assert::false(Criteria::compare($kryten, Criteria::CONTAINS, $cat));
 
-		Assert::throws(function () use ($builder) {
-			Criteria::create()->where('dave', Criteria::CONTAINS, 'dave')->evaluate($builder);
+		Assert::throws(function () use ($dave) {
+			Criteria::compare($dave, Criteria::CONTAINS, $dave);
 		}, 'Kdyby\Aop\InvalidArgumentException', 'Right value is expected to be array or instance of Traversable');
 	}
 
@@ -163,22 +137,20 @@ class CriteriaTest extends Tester\TestCase
 
 	public function testMatches()
 	{
-		$builder = new Nette\DI\ContainerBuilder();
-		$builder->parameters['dave'] = array('a', 'b', 'c');
-		$builder->parameters['cat'] = array('c', 'd', 'e');
-		$builder->parameters['lister'] = array('e', 'f', 'g');
-		$builder->parameters['misc'] = 'h';
+		$dave = array('a', 'b', 'c');
+		$cat = array('c', 'd', 'e');
+		$lister = array('e', 'f', 'g');
 
-		Assert::true(Criteria::create()->where('dave', Criteria::MATCHES, 'cat')->evaluate($builder));
-		Assert::true(Criteria::create()->where('cat', Criteria::MATCHES, 'lister')->evaluate($builder));
-		Assert::false(Criteria::create()->where('lister', Criteria::MATCHES, 'dave')->evaluate($builder));
+		Assert::true(Criteria::compare($dave, Criteria::MATCHES, $cat));
+		Assert::true(Criteria::compare($cat, Criteria::MATCHES, $lister));
+		Assert::false(Criteria::compare($lister, Criteria::MATCHES, $dave));
 
-		Assert::throws(function () use ($builder) {
-			Criteria::create()->where('dave', Criteria::MATCHES, 'misc')->evaluate($builder);
+		Assert::throws(function () use ($dave) {
+			Criteria::compare($dave, Criteria::MATCHES, 'h');
 		}, 'Kdyby\Aop\InvalidArgumentException', 'Right value is expected to be array or Traversable');
 
-		Assert::throws(function () use ($builder) {
-			Criteria::create()->where('misc', Criteria::MATCHES, 'dave')->evaluate($builder);
+		Assert::throws(function () use ($dave) {
+			Criteria::compare('h', Criteria::MATCHES, $dave);
 		}, 'Kdyby\Aop\InvalidArgumentException', 'Left value is expected to be array or Traversable');
 	}
 
