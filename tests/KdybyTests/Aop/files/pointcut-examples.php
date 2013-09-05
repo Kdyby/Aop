@@ -165,3 +165,23 @@ class FeedAggregator
 {
 
 }
+
+class MockPresenter extends Nette\Application\UI\Presenter
+{
+
+	public function renderDefault()
+	{
+
+	}
+
+	public function actionDefault()
+	{
+
+	}
+
+	public function handleSort()
+	{
+
+	}
+
+}

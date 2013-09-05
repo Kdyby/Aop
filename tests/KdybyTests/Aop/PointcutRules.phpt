@@ -141,12 +141,17 @@ class PointcutRulesTest extends Tester\TestCase
 		);
 
 		$data[] = array(TRUE,
-			new Pointcut\Rules(array(new Matcher\MethodMatcher('[inject]Bar'))),
+			new Pointcut\Rules(array(new Matcher\MethodMatcher('[?inject]Bar'))),
+			$this->createDefinition('KdybyTests\Aop\Legie'),
+		);
+
+		$data[] = array(TRUE,
+			new Pointcut\Rules(array(new Matcher\MethodMatcher('[?inject]Bar'))),
 			$this->createDefinition('KdybyTests\Aop\SmegHead'),
 		);
 
 		$data[] = array(FALSE,
-			new Pointcut\Rules(array(new Matcher\MethodMatcher('[inject]Bar'))),
+			new Pointcut\Rules(array(new Matcher\MethodMatcher('[?inject]Bar'))),
 			$this->createDefinition('KdybyTests\Aop\CustomTemplate'),
 		);
 
@@ -176,6 +181,20 @@ class PointcutRulesTest extends Tester\TestCase
 	public function testMatchMethod($expected, Kdyby\Aop\Pointcut\Filter $rules, Kdyby\Aop\Pointcut\ServiceDefinition $def)
 	{
 		Assert::same($expected, (bool) $def->match($rules));
+	}
+
+
+
+	public function testMatchMethod_or()
+	{
+		$rules = new Pointcut\Rules(array(new Matcher\MethodMatcher('public [render|action|handle]*')));
+		$def = $this->createDefinition('KdybyTests\Aop\MockPresenter');
+
+		Assert::same(array(
+			$def->openMethods['renderDefault'],
+			$def->openMethods['actionDefault'],
+			$def->openMethods['handleSort'],
+		), $def->match($rules));
 	}
 
 
