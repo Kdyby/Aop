@@ -8,7 +8,8 @@ Requirements
 Kdyby/Aop requires PHP 5.3.2 or higher.
 
 - [Nette Framework 2.1.x](https://github.com/nette/nette)
-- [Kdyby/Annotations](https://github.com/kdyby/annotations)
+- [Kdyby/Annotations](https://github.com/Kdyby/Annotations)
+- [Symfony/PropertyAccess](https://github.com/symfony/PropertyAccess)
 
 
 
@@ -24,4 +25,4 @@ $ composer require kdyby/aop:@dev
 
 -----
 
-Homepage [http://www.kdyby.org](http://www.kdyby.org) and repository [http://github.com/kdyby/Aop](http://github.com/kdyby/Aop).
+Homepage [http://www.kdyby.org](http://www.kdyby.org) and repository [http://github.com/Kdyby/Aop](http://github.com/Kdyby/Aop).

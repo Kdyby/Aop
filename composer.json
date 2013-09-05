@@ -24,9 +24,6 @@
 		"nette/tester": "@dev",
 		"doctrine/collections": "~1.1"
 	},
-	"conflict": {
-		"kdyby/doctrine": "0.9.*"
-	},
 	"autoload": {
 		"psr-0": {
 			"Kdyby\\Aop\\": "src/"
