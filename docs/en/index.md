@@ -218,7 +218,7 @@ class AroundAspect extends Nette\Object
 {
 
 	/**
-	 * @Aop\Around("method(KdybyTests\Aop\CommonService->magic)")
+	 * @Aop\Around("method(CommonService->magic)")
 	 */
 	public function log(Aop\JoinPoint\AroundMethod $around)
 	{
