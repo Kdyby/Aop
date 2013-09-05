@@ -1,6 +1,6 @@
 # Documentation
 
-This extension is here to provide "AOP functionality":http://en.wikipedia.org/wiki/Aspect-oriented_programming into [Nette Framework](http://nette.org/) [DI Container](http://doc.nette.org/en/dependency-injection#toc-nette-di-container).
+This extension is here to provide [AOP functionality](http://en.wikipedia.org/wiki/Aspect-oriented_programming) into [Nette Framework](http://nette.org/) [DI Container](http://doc.nette.org/en/dependency-injection#toc-nette-di-container).
 
 
 ## Installation
