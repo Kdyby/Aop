@@ -314,7 +314,12 @@ class PointcutRulesTest extends Tester\TestCase
 	 */
 	private function mockMethod()
 	{
-		return Nette\Reflection\ClassType::from('Kdyby\Aop\Pointcut\Method')->newInstanceWithoutConstructor();
+		if (method_exists('Nette\Reflection\ClassType', 'newInstanceWithoutConstructor')) {
+			return Nette\Reflection\ClassType::from('Kdyby\Aop\Pointcut\Method')->newInstanceWithoutConstructor();
+
+		} else {
+			return unserialize(sprintf('O:%d:"%s":0:{}', strlen('Kdyby\Aop\Pointcut\Method'), 'Kdyby\Aop\Pointcut\Method'));
+		}
 	}
 
 
