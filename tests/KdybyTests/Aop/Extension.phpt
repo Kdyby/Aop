@@ -121,6 +121,27 @@ class ExtensionTest extends Tester\TestCase
 
 
 
+	public function testFunctionalAround_conditional()
+	{
+		$dic = $this->createContainer('around.conditional');
+		$service = $dic->getByType('KdybyTests\Aop\CommonService');
+		/** @var CommonService $service */
+
+		Assert::same(0, $service->magic(0));
+		Assert::same(2, $service->magic(1));
+		Assert::same(4, $service->magic(2));
+
+		Assert::same(array(0), $service->calls[0]);
+		Assert::same(array(1), $service->calls[1]);
+		Assert::same(array(2), $service->calls[2]);
+
+		self::assertAspectInvocation($service, 'KdybyTests\Aop\ConditionalAroundAspect', 0, new AroundMethod($service, 'magic', array(1)));
+		self::assertAspectInvocation($service, 'KdybyTests\Aop\ConditionalAroundAspect', 1, NULL);
+		self::assertAspectInvocation($service, 'KdybyTests\Aop\ConditionalAroundAspect', 2, NULL);
+	}
+
+
+
 	public function testFunctionalAround_blocking()
 	{
 		$dic = $this->createContainer('around.blocking');
@@ -182,6 +203,31 @@ class ExtensionTest extends Tester\TestCase
 		Assert::same(9, $service->magic(2));
 		Assert::same(array(2), $service->calls[2]);
 		self::assertAspectInvocation($service, 'KdybyTests\Aop\AfterReturningAspect', 2, new AfterReturning($service, 'magic', array(2), 9));
+	}
+
+
+
+	public function testFunctionalAfterReturning_conditional()
+	{
+		$dic = $this->createContainer('afterReturning.conditional');
+		$service = $dic->getByType('KdybyTests\Aop\CommonService');
+		/** @var CommonService $service */
+
+		Assert::same(0, $service->magic(0));
+
+		$service->return = 3;
+		Assert::same(3, $service->magic(1));
+
+		$service->return = 2;
+		Assert::same(4, $service->magic(2));
+
+		Assert::same(array(0), $service->calls[0]);
+		Assert::same(array(1), $service->calls[1]);
+		Assert::same(array(2), $service->calls[2]);
+
+		self::assertAspectInvocation($service, 'KdybyTests\Aop\ConditionalAfterReturningAspect', 0, new AfterReturning($service, 'magic', array(0), 0));
+		self::assertAspectInvocation($service, 'KdybyTests\Aop\ConditionalAfterReturningAspect', 1, new AfterReturning($service, 'magic', array(2), 4));
+		self::assertAspectInvocation($service, 'KdybyTests\Aop\ConditionalAfterReturningAspect', 2, NULL);
 	}
 
 

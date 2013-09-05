@@ -148,6 +148,46 @@ class AroundAspect extends Nette\Object
 
 
 
+class ConditionalAroundAspect extends Nette\Object
+{
+
+	/**
+	 * @var array|Aop\JoinPoint\AroundMethod[]
+	 */
+	public $calls = array();
+
+	public $modifyArgs = FALSE;
+
+	public $modifyReturn = FALSE;
+
+
+
+	/**
+	 * @Aop\Around("method(KdybyTests\Aop\CommonService->magic($argument == 1))")
+	 */
+	public function log(Aop\JoinPoint\AroundMethod $around)
+	{
+		$this->calls[] = $around;
+
+		if (is_array($this->modifyArgs)) {
+			foreach ($this->modifyArgs as $i => $val) {
+				$around->setArgument($i, $val);
+			}
+		}
+
+		$result = $around->proceed();
+
+		if ($this->modifyReturn !== FALSE) {
+			$result = $this->modifyReturn;
+		}
+
+		return $result;
+	}
+
+}
+
+
+
 class SecondAroundAspect extends AroundAspect
 {
 
@@ -222,6 +262,34 @@ class AfterReturningAspect extends Nette\Object
 
 	/**
 	 * @Aop\AfterReturning("method(KdybyTests\Aop\CommonService->magic)")
+	 */
+	public function log(Aop\JoinPoint\AfterReturning $after)
+	{
+		$this->calls[] = $after;
+
+		if ($this->modifyReturn !== FALSE) {
+			$after->setResult($this->modifyReturn);
+		}
+	}
+
+}
+
+
+
+class ConditionalAfterReturningAspect extends Nette\Object
+{
+
+	/**
+	 * @var array|Aop\JoinPoint\AfterReturning[]
+	 */
+	public $calls = array();
+
+	public $modifyReturn = FALSE;
+
+
+
+	/**
+	 * @Aop\AfterReturning("method(KdybyTests\Aop\CommonService->magic) && evaluate(this.return == 2)")
 	 */
 	public function log(Aop\JoinPoint\AfterReturning $after)
 	{

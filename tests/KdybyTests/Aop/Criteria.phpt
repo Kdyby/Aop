@@ -160,7 +160,7 @@ class CriteriaTest extends Tester\TestCase
 	{
 		$criteria = Criteria::create()->where('this.foo.bar', Criteria::EQ, new Code\PhpLiteral('TRUE'));
 		Assert::same(
-			"(Criteria::compare(PropertyAccess::getPropertyAccessor()->getValue(\$this, 'foo.bar'), '==', TRUE))",
+			"(Criteria::compare(PropertyAccess::createPropertyAccessor()->getValue(\$this, 'foo.bar'), '==', TRUE))",
 			(string) $criteria->serialize(new Nette\DI\ContainerBuilder())
 		);
 	}
@@ -195,7 +195,7 @@ class CriteriaTest extends Tester\TestCase
 	{
 		$criteria = Criteria::create()->where('context.foo.bar', Criteria::EQ, new Code\PhpLiteral('TRUE'));
 		Assert::same(
-			"(Criteria::compare(PropertyAccess::getPropertyAccessor()->getValue(\$this->_kdyby_aopContainer->getService('foo'), 'bar'), '==', TRUE))",
+			"(Criteria::compare(PropertyAccess::createPropertyAccessor()->getValue(\$this->_kdyby_aopContainer->getService('foo'), 'bar'), '==', TRUE))",
 			(string) $criteria->serialize(new Nette\DI\ContainerBuilder())
 		);
 	}
@@ -206,13 +206,13 @@ class CriteriaTest extends Tester\TestCase
 	{
 		$criteria = Criteria::create()->where('context.stdClass.bar', Criteria::EQ, new Code\PhpLiteral('TRUE'));
 		Assert::same(
-			"(Criteria::compare(PropertyAccess::getPropertyAccessor()->getValue(\$this->_kdyby_aopContainer->getByType('stdClass'), 'bar'), '==', TRUE))",
+			"(Criteria::compare(PropertyAccess::createPropertyAccessor()->getValue(\$this->_kdyby_aopContainer->getByType('stdClass'), 'bar'), '==', TRUE))",
 			(string) $criteria->serialize(new Nette\DI\ContainerBuilder())
 		);
 
 		$criteria = Criteria::create()->where('context.KdybyTests\Aop\CriteriaTest.bar', Criteria::EQ, new Code\PhpLiteral('TRUE'));
 		Assert::same(
-			"(Criteria::compare(PropertyAccess::getPropertyAccessor()->getValue(\$this->_kdyby_aopContainer->getByType('KdybyTests\\\\Aop\\\\CriteriaTest'), 'bar'), '==', TRUE))",
+			"(Criteria::compare(PropertyAccess::createPropertyAccessor()->getValue(\$this->_kdyby_aopContainer->getByType('KdybyTests\\\\Aop\\\\CriteriaTest'), 'bar'), '==', TRUE))",
 			(string) $criteria->serialize(new Nette\DI\ContainerBuilder())
 		);
 	}

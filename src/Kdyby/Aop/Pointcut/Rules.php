@@ -120,6 +120,8 @@ class Rules extends Nette\Object implements Filter, RuntimeFilter
 			$conds[] = $rule->createCondition();
 		}
 
+		$conds = array_filter($conds);
+
 		if (count($conds) > 1) {
 			$conds = implode(' ' . $this->operator . ' ', $conds);
 

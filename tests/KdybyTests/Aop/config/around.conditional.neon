@@ -1,0 +1,5 @@
+aspects:
+	- KdybyTests\Aop\ConditionalAroundAspect
+
+services:
+	- KdybyTests\Aop\CommonService

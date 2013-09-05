@@ -175,7 +175,7 @@ class Criteria extends Nette\Object
 			$serialised[] = $this->doSerialize($builder, $expression);
 		}
 
-		return new Code\PhpLiteral('(' . implode(' ' . $this->operator . ' ', $serialised) . ')');
+		return new Code\PhpLiteral('(' . implode(' ' . $this->operator . ' ', array_filter($serialised)) . ')');
 	}
 
 
@@ -234,7 +234,7 @@ class Criteria extends Nette\Object
 					throw new Kdyby\Aop\NotImplementedException();
 				}
 
-				$expression = Code\Helpers::format('PropertyAccess::getPropertyAccessor()->getValue(?, ?)', new Code\PhpLiteral($targetObject), $m['path']);
+				$expression = Code\Helpers::format('PropertyAccess::createPropertyAccessor()->getValue(?, ?)', new Code\PhpLiteral($targetObject), $m['path']);
 			}
 
 			$expression = new Code\PhpLiteral($expression);
