@@ -370,7 +370,7 @@ class Criteria extends Nette\Object
 					throw new Kdyby\Aop\InvalidArgumentException('Left value is expected to be array or Traversable');
 				}
 
-				return !empty(array_intersect($left, $right));
+				return (bool)array_filter(array_intersect($left, $right));
 
 			default:
 				throw new Kdyby\Aop\NotImplementedException();
