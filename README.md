@@ -12,7 +12,6 @@ Kdyby/Aop requires PHP 5.3.2 or higher.
 - [Symfony/PropertyAccess](https://github.com/symfony/PropertyAccess)
 
 
-
 Installation
 ------------
 
