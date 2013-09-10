@@ -60,6 +60,7 @@ class AopExtension extends Nette\DI\CompilerExtension
 	public function loadConfiguration()
 	{
 		$this->registerAspectsExtension();
+		AnnotationRegistry::registerLoader("class_exists");
 	}
 
 
