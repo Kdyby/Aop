@@ -46,8 +46,7 @@ class AdvisedClassType extends Code\ClassType
 		$originalName = $method->getName();
 		$method->setName(self::CG_PUBLIC_PROXY_PREFIX . $originalName);
 		$method->setVisibility('public');
-		$method->addDocument('@internal');
-		$method->addDocument('@deprecated');
+		$method->setDocuments(array('@internal', '@deprecated'));
 
 		$argumentsPass = array();
 		foreach ($method->getParameters() as $parameter) {
@@ -84,8 +83,7 @@ class AdvisedClassType extends Code\ClassType
 
 		$injectMethod = $class->addMethod(self::CG_INJECT_METHOD);
 		$injectMethod->addParameter('container')->setTypeHint('\Nette\DI\Container');
-		$injectMethod->addDocument('@internal');
-		$injectMethod->addDocument('@deprecated');
+		$injectMethod->setDocuments(array('@internal', '@deprecated'));
 		$injectMethod->addBody('$this->_kdyby_aopContainer = $container;');
 
 		$providerMethod = $class->addMethod('__getAdvice');
