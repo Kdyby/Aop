@@ -50,6 +50,11 @@ class AopExtension extends Nette\DI\CompilerExtension
 	 */
 	private $serviceDefinitions = array();
 
+	/**
+	 * @var string
+	 */
+	private $compiledFile;
+
 
 
 	public function loadConfiguration()
@@ -75,6 +80,7 @@ class AopExtension extends Nette\DI\CompilerExtension
 	public function beforeCompile()
 	{
 		$builder = $this->getContainerBuilder();
+		$this->compiledFile = NULL;
 
 		$file = new PhpFile();
 		$cg = $file->getNamespace('Kdyby\Aop_CG\\' . $builder->parameters['container']['class']);
@@ -103,7 +109,23 @@ class AopExtension extends Nette\DI\CompilerExtension
 			$this->patchService($serviceId, $advisedClass, $cg);
 		}
 
-		require_once $this->writeGeneratedCode($file);
+		if (!$cg->classes) {
+			return;
+		}
+
+		require_once ($this->compiledFile = $this->writeGeneratedCode($file));
+	}
+
+
+
+	public function afterCompile(Nette\PhpGenerator\ClassType $class)
+	{
+		if (!$this->compiledFile) {
+			return;
+		}
+
+		$init = $class->methods['initialize'];
+		$init->addBody('require_once ?;', array($this->compiledFile));
 	}
 
 
