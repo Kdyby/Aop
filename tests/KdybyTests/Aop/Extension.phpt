@@ -52,6 +52,20 @@ class ExtensionTest extends Tester\TestCase
 
 
 
+	public function testAspectConfiguration()
+	{
+		$dic = $this->createContainer('aspect-configs');
+		foreach ($services = array_keys($dic->findByTag(Kdyby\Aop\DI\AspectsExtension::ASPECT_TAG)) as $serviceId) {
+			$service = $dic->getService($serviceId);
+			Assert::true($service instanceof AspectWithArguments);
+			Assert::same(array($dic->getByType('Nette\Http\Request')), $service->args);
+		}
+
+		Assert::same(4, count($services));
+	}
+
+
+
 	public function testFunctionalBefore()
 	{
 		$dic = $this->createContainer('before');

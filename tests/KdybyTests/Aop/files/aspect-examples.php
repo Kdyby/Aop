@@ -366,3 +366,27 @@ class SecondAfterAspect extends AfterAspect
 {
 
 }
+
+class AspectWithArguments extends Nette\Object
+{
+
+	public $args;
+
+
+
+	public function __construct(Nette\Http\Request $httpRequest)
+	{
+		$this->args = func_get_args();
+	}
+
+
+
+	/**
+	 * @Aop\After("method(KdybyTests\Aop\CommonService->magic)")
+	 */
+	public function log(Aop\JoinPoint\AfterMethod $after)
+	{
+		// pass
+	}
+
+}

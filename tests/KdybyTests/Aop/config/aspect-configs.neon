@@ -1,0 +1,10 @@
+aspects:
+	a:
+		class: KdybyTests\Aop\AspectWithArguments
+
+	b:
+		class: KdybyTests\Aop\AspectWithArguments(@httpRequest)
+
+	- KdybyTests\Aop\AspectWithArguments
+
+	- KdybyTests\Aop\AspectWithArguments(@httpRequest)
