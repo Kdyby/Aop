@@ -61,6 +61,7 @@ class AopExtension extends Nette\DI\CompilerExtension
 	{
 		$this->registerAspectsExtension();
 		AnnotationRegistry::registerLoader("class_exists");
+		AnnotationReader::addGlobalIgnoredName('persistent');
 	}
 
 
