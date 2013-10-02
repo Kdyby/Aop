@@ -142,12 +142,7 @@ class PointcutMethod extends Code\Method
 		}
 
 		if (!$this->around) {
-			$argumentsPass = array();
-			foreach (array_values($this->getParameters()) as $i => $parameter) {
-				$argumentsPass[] = '$__arguments[' . $i . ']';
-			}
-			$parentCall = Code\Helpers::format('$__result = parent::?(?);', $this->getName(), new Code\PhpLiteral(implode(', ', $argumentsPass)));
-
+			$parentCall = Code\Helpers::format('$__result = call_user_func_array("parent::?", $__arguments);', $this->getName());
 		} else {
 			$parentCall = Code\Helpers::format('$__around = new \Kdyby\Aop\JoinPoint\AroundMethod($this, __FUNCTION__, $__arguments);');
 			foreach ($this->around as $around) {
