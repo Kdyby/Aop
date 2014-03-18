@@ -142,9 +142,16 @@ class AopExtension extends Nette\DI\CompilerExtension
 			$def->setFactory($cg->name . '\\' . $advisedClass->getName());
 		}
 
-		$setup = $def->getSetup();
-		array_unshift($setup, new Nette\DI\Statement(AdvisedClassType::CG_INJECT_METHOD, array('@Nette\DI\Container')));
-		$def->setSetup($setup);
+		$statement = new Nette\DI\Statement(AdvisedClassType::CG_INJECT_METHOD, array('@Nette\DI\Container'));
+
+		if (property_exists($def, 'setup')) {
+			array_unshift($def->setup, $statement);
+
+		} else {
+			$setup = $def->getSetup();
+			array_unshift($setup, $statement);
+			$def->setSetup($setup);
+		}
 	}
 
 
