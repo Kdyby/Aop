@@ -134,6 +134,13 @@ class AopExtension extends Nette\DI\CompilerExtension
 
 	private function patchService($serviceId, Code\ClassType $advisedClass, NamespaceBlock $cg)
 	{
+		static $publicSetup;
+
+		if ($publicSetup === NULL) {
+			$refl = new Nette\Reflection\Property('Nette\DI\ServiceDefinition', 'setSetup');
+			$publicSetup = $refl->isPublic();
+		}
+
 		$def = $this->getContainerBuilder()->getDefinition($serviceId);
 		if ($def->factory) {
 			$def->factory->entity = $cg->name . '\\' . $advisedClass->getName();
@@ -144,7 +151,7 @@ class AopExtension extends Nette\DI\CompilerExtension
 
 		$statement = new Nette\DI\Statement(AdvisedClassType::CG_INJECT_METHOD, array('@Nette\DI\Container'));
 
-		if (property_exists($def, 'setup')) {
+		if ($publicSetup) {
 			array_unshift($def->setup, $statement);
 
 		} else {
