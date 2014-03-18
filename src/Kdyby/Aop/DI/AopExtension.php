@@ -137,7 +137,7 @@ class AopExtension extends Nette\DI\CompilerExtension
 		static $publicSetup;
 
 		if ($publicSetup === NULL) {
-			$refl = new Nette\Reflection\Property('Nette\DI\ServiceDefinition', 'setSetup');
+			$refl = new Nette\Reflection\Property('Nette\DI\ServiceDefinition', 'setup');
 			$publicSetup = $refl->isPublic();
 		}
 
