@@ -101,9 +101,8 @@ class AopExtension extends Nette\DI\CompilerExtension
 				$newMethod = $targetMethod->getPointcutCode();
 				$advisedClass->setMethodInstance($newMethod);
 				$advisedClass->generatePublicProxyMethod($targetMethod->getCode());
-				if ($newMethod->name === '__construct') {
-					$constructorInject = TRUE;
-				}
+				$constructorInject = $constructorInject || strtolower($newMethod->name) === '__construct';
+				
 				/** @var AdviceDefinition[] $methodAdvices */
 				foreach ($methodAdvices as $adviceDef) {
 					$newMethod->addAdvice($adviceDef);
