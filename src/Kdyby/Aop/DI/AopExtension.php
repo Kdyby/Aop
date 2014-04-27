@@ -92,7 +92,8 @@ class AopExtension extends Nette\DI\CompilerExtension
 		foreach ($this->findAdvisedMethods() as $serviceId => $pointcuts) {
 			$service = $this->getWrappedDefinition($serviceId);
 			$advisedClass = AdvisedClassType::fromServiceDefinition($service);
-
+			$constructorInject = FALSE;
+			
 			foreach ($pointcuts as $methodAdvices) {
 				/** @var Pointcut\Method $targetMethod */
 				$targetMethod = reset($methodAdvices)->getTargetMethod();
@@ -100,7 +101,9 @@ class AopExtension extends Nette\DI\CompilerExtension
 				$newMethod = $targetMethod->getPointcutCode();
 				$advisedClass->setMethodInstance($newMethod);
 				$advisedClass->generatePublicProxyMethod($targetMethod->getCode());
-
+				if ($newMethod->name === '__construct') {
+					$constructorInject = TRUE;
+				}
 				/** @var AdviceDefinition[] $methodAdvices */
 				foreach ($methodAdvices as $adviceDef) {
 					$newMethod->addAdvice($adviceDef);
@@ -108,7 +111,7 @@ class AopExtension extends Nette\DI\CompilerExtension
 			}
 
 			$cg->addClass($advisedClass);
-			$this->patchService($serviceId, $advisedClass, $cg);
+			$this->patchService($serviceId, $advisedClass, $cg, $constructorInject);
 		}
 
 		if (!$cg->classes) {
@@ -132,7 +135,7 @@ class AopExtension extends Nette\DI\CompilerExtension
 
 
 
-	private function patchService($serviceId, Code\ClassType $advisedClass, NamespaceBlock $cg)
+	private function patchService($serviceId, Code\ClassType $advisedClass, NamespaceBlock $cg, $constructorInject = FALSE)
 	{
 		static $publicSetup;
 
@@ -149,15 +152,17 @@ class AopExtension extends Nette\DI\CompilerExtension
 			$def->setFactory($cg->name . '\\' . $advisedClass->getName());
 		}
 
-		$statement = new Nette\DI\Statement(AdvisedClassType::CG_INJECT_METHOD, array('@Nette\DI\Container'));
+		if (!$constructorInject) {
+			$statement = new Nette\DI\Statement(AdvisedClassType::CG_INJECT_METHOD, array('@Nette\DI\Container'));
+		
+			if ($publicSetup) {
+				array_unshift($def->setup, $statement);
 
-		if ($publicSetup) {
-			array_unshift($def->setup, $statement);
-
-		} else {
-			$setup = $def->getSetup();
-			array_unshift($setup, $statement);
-			$def->setSetup($setup);
+			} else {
+				$setup = $def->getSetup();
+				array_unshift($setup, $statement);
+				$def->setSetup($setup);
+			}
 		}
 	}
 

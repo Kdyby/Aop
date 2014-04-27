@@ -24,7 +24,10 @@ class CommonService
 
 	public $return = 2;
 
-
+	
+	public function __construct() 
+	{
+	}
 
 	public function magic($argument)
 	{
@@ -387,6 +390,27 @@ class AspectWithArguments extends Nette\Object
 	public function log(Aop\JoinPoint\AfterMethod $after)
 	{
 		// pass
+	}
+
+}
+
+
+class ConstructorBeforeAspect extends Nette\Object
+{
+
+	/**
+	 * @var array|Aop\JoinPoint\BeforeMethod[]
+	 */
+	public $calls = array();
+
+
+
+	/**
+	 * @Aop\Before("method(KdybyTests\Aop\CommonService->__construct)")
+	 */
+	public function log(Aop\JoinPoint\BeforeMethod $before)
+	{
+		$this->calls[] = $before;
 	}
 
 }
