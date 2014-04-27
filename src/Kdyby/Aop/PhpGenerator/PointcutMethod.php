@@ -130,7 +130,7 @@ class PointcutMethod extends Code\Method
 	{
 		$this->setBody('');
 		
-		if ($this->name === '__construct') {		
+		if (strtolower($this->name) === '__construct') {		
 			$this->addParameter('_kdyby_aopContainer')
 					->setTypeHint('\Nette\DI\Container');
 			$this->addBody('$this->_kdyby_aopContainer = $_kdyby_aopContainer;');
