@@ -129,6 +129,13 @@ class PointcutMethod extends Code\Method
 	public function __toString()
 	{
 		$this->setBody('');
+		
+		if ($this->name === '__construct') {		
+			$this->addParameter('_kdyby_aopContainer')
+					->setTypeHint('\Nette\DI\Container');
+			$this->addBody('$this->_kdyby_aopContainer = $_kdyby_aopContainer;');
+		}
+		
 		$this->addBody('$__arguments = func_get_args(); $__exception = $__result = NULL;');
 
 		if ($this->before) {

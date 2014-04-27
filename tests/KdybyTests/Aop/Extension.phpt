@@ -87,6 +87,15 @@ class ExtensionTest extends Tester\TestCase
 		Assert::same(array(3), $service->calls[2]);
 		self::assertAspectInvocation($service, 'KdybyTests\Aop\BeforeAspect', 2, new BeforeMethod($service, 'magic', array(3)));
 	}
+	
+	
+
+	public function testFunctionalConstructor()
+	{
+		$dic = $this->createContainer('constructor');
+		$service = $dic->getByType('KdybyTests\Aop\CommonService');
+		self::assertAspectInvocation($service, 'KdybyTests\Aop\ConstructorBeforeAspect', 0, new BeforeMethod($service, '__construct', array($dic)));
+	}
 
 
 
