@@ -44,6 +44,16 @@ class CommonService
 
 
 
+interface ICommonServiceFactory
+{
+
+	/** @return CommonService */
+	function create();
+
+}
+
+
+
 class BeforeAspect extends Nette\Object
 {
 

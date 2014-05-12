@@ -63,6 +63,19 @@ class ExtensionTest extends Tester\TestCase
 
 		Assert::same(4, count($services));
 	}
+	
+	
+	
+	public function testIfAspectAppliedOnCreatedObject()
+	{
+		$dic = $this->createContainer('factory');
+		$service = $dic->getByType('KdybyTests\Aop\CommonService');
+		$createdObject = $dic->getByType('KdybyTests\Aop\ICommonServiceFactory')->create();
+		
+		Assert::notEqual('KdybyTests\Aop\CommonService', get_class($service));
+		Assert::notEqual('KdybyTests\Aop\CommonService', get_class($createdObject));
+		Assert::isEqual(get_class($service), get_class($createdObject));
+	}
 
 
 
