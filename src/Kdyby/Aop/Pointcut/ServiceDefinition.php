@@ -120,7 +120,9 @@ class ServiceDefinition extends Nette\Object
 					continue; // todo: maybe in next version
 				}
 
-				$this->openMethods[$method->getName()] = new Method($method, $this);
+				if (!isset($this->openMethods[$method->getName()])) {
+					$this->openMethods[$method->getName()] = new Method($method, $this);
+				}
 			}
 
 		} while ($type = $type->getParentClass());

@@ -185,3 +185,20 @@ class MockPresenter extends Nette\Application\UI\Presenter
 	}
 
 }
+
+class BaseClass
+{
+
+	public function __construct($x) {
+		;
+	}
+}
+
+class InheritedClass extends BaseClass
+{
+
+	public function __construct($x, $y)
+	{
+		parent::__construct($x);
+	}
+}
