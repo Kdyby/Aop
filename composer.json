@@ -17,12 +17,16 @@
 		"issues": "https://github.com/kdyby/aop/issues"
 	},
 	"require": {
-		"nette/nette": "~2.1@dev",
+		"nette/di": "~2.2@dev",
+		"nette/php-generator": "~2.2@dev",
 
-		"kdyby/annotations": "@dev",
-		"symfony/property-access": "~2.3"
+		"kdyby/annotations": "~2.0@dev",
+		"symfony/property-access": "~2.4"
 	},
 	"require-dev": {
+		"nette/nette": "~2.2@dev",
+		"nette/bootstrap": "~2.2@dev",
+
 		"nette/tester": "@dev",
 		"doctrine/collections": "~1.1",
 		"jakub-onderka/php-parallel-lint": "~0.6"

@@ -22,17 +22,6 @@ use Nette\PhpGenerator as Code;
 
 
 
-if (!class_exists('Nette\DI\CompilerExtension')) {
-	class_alias('Nette\Config\CompilerExtension', 'Nette\DI\CompilerExtension');
-	class_alias('Nette\Config\Compiler', 'Nette\DI\Compiler');
-	class_alias('Nette\Config\Helpers', 'Nette\DI\Config\Helpers');
-}
-
-if (isset(Nette\Loaders\NetteLoader::getInstance()->renamed['Nette\Configurator']) || !class_exists('Nette\Configurator')) {
-	unset(Nette\Loaders\NetteLoader::getInstance()->renamed['Nette\Configurator']); // fuck you
-	class_alias('Nette\Config\Configurator', 'Nette\Configurator');
-}
-
 /**
  * @author Filip Procházka <filip@prochazka.su>
  */
@@ -93,7 +82,7 @@ class AopExtension extends Nette\DI\CompilerExtension
 			$service = $this->getWrappedDefinition($serviceId);
 			$advisedClass = AdvisedClassType::fromServiceDefinition($service);
 			$constructorInject = FALSE;
-			
+
 			foreach ($pointcuts as $methodAdvices) {
 				/** @var Pointcut\Method $targetMethod */
 				$targetMethod = reset($methodAdvices)->getTargetMethod();
@@ -102,7 +91,7 @@ class AopExtension extends Nette\DI\CompilerExtension
 				$advisedClass->setMethodInstance($newMethod);
 				$advisedClass->generatePublicProxyMethod($targetMethod->getCode());
 				$constructorInject = $constructorInject || strtolower($newMethod->name) === '__construct';
-				
+
 				/** @var AdviceDefinition[] $methodAdvices */
 				foreach ($methodAdvices as $adviceDef) {
 					$newMethod->addAdvice($adviceDef);
@@ -153,7 +142,7 @@ class AopExtension extends Nette\DI\CompilerExtension
 
 		if (!$constructorInject) {
 			$statement = new Nette\DI\Statement(AdvisedClassType::CG_INJECT_METHOD, array('@Nette\DI\Container'));
-		
+
 			if ($publicSetup) {
 				array_unshift($def->setup, $statement);
 

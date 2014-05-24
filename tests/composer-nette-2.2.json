@@ -17,32 +17,16 @@
 		"issues": "https://github.com/kdyby/aop/issues"
 	},
 	"require": {
-		"nette/nette": "@dev",
-		"nette/application": "@dev",
-		"nette/bootstrap": "@dev",
-		"nette/caching": "@dev",
-		"nette/component-model": "@dev",
-		"nette/database": "@dev",
-		"nette/di": "@dev",
-		"nette/finder": "@dev",
-		"nette/forms": "@dev",
-		"nette/http": "@dev",
-		"nette/mail": "@dev",
-		"nette/neon": "@dev",
-		"nette/php-generator": "@dev",
-		"nette/reflection": "@dev",
-		"nette/robot-loader": "@dev",
-		"nette/safe-stream": "@dev",
-		"nette/security": "@dev",
-		"nette/tokenizer": "@dev",
-		"nette/utils": "@dev",
-		"latte/latte": "@dev",
-		"tracy/tracy": "@dev",
+		"nette/di": "2.2.*",
+		"nette/php-generator": "2.2.*",
 
-		"kdyby/annotations": "@dev",
-		"symfony/property-access": "~2.3"
+		"kdyby/annotations": "~2.0@dev",
+		"symfony/property-access": "~2.4"
 	},
 	"require-dev": {
+		"nette/nette": "2.2.*",
+		"nette/bootstrap": "2.2.*",
+
 		"nette/tester": "@dev",
 		"doctrine/collections": "~1.1",
 		"jakub-onderka/php-parallel-lint": "~0.6"
