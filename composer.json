@@ -26,6 +26,7 @@
 	"require-dev": {
 		"nette/nette": "~2.2@dev",
 		"nette/bootstrap": "~2.2@dev",
+		"nette/neon": "~2.2@dev",
 
 		"nette/tester": "@dev",
 		"doctrine/collections": "~1.1",
