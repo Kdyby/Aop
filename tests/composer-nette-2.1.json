@@ -19,8 +19,8 @@
 	"require": {
 		"nette/nette": "2.1.*",
 
-		"kdyby/annotations": "@dev",
-		"symfony/property-access": "~2.3"
+		"kdyby/annotations": "2.0.*@dev",
+		"symfony/property-access": "~2.4"
 	},
 	"require-dev": {
 		"nette/tester": "@dev",
