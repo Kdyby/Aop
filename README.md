@@ -1,5 +1,9 @@
-Kdyby/Aop [![Build Status](https://secure.travis-ci.org/Kdyby/Aop.png?branch=master)](http://travis-ci.org/Kdyby/Aop)
-===========================
+Kdyby/Aop
+======
+
+[![Build Status](https://travis-ci.org/Kdyby/Aop.svg?branch=nette-2.1)](https://travis-ci.org/Kdyby/Aop)
+[![Downloads this Month](https://img.shields.io/packagist/dm/kdyby/aop.svg)](https://packagist.org/packages/kdyby/aop)
+[![Latest stable](https://img.shields.io/packagist/v/kdyby/aop.svg)](https://packagist.org/packages/kdyby/aop)
 
 
 Requirements
@@ -7,7 +11,7 @@ Requirements
 
 Kdyby/Aop requires PHP 5.3.2 or higher.
 
-- [Nette Framework 2.1.x](https://github.com/nette/nette)
+- [Nette Framework](https://github.com/nette/nette)
 - [Kdyby/Annotations](https://github.com/Kdyby/Annotations)
 - [Symfony/PropertyAccess](https://github.com/symfony/PropertyAccess)
 
@@ -20,6 +24,12 @@ The best way to install Kdyby/Aop is using  [Composer](http://getcomposer.org/):
 ```sh
 $ composer require kdyby/aop:@dev
 ```
+
+
+Documentation
+------------
+
+Lear more in the [documentation](https://github.com/Kdyby/Aop/blob/nette-2.1/docs/en/index.md).
 
 
 -----
