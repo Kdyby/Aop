@@ -1,5 +1,9 @@
-Kdyby/Aop [![Build Status](https://secure.travis-ci.org/Kdyby/Aop.png?branch=master)](http://travis-ci.org/Kdyby/Aop)
-===========================
+Kdyby/Aop
+======
+
+[![Build Status](https://travis-ci.org/Kdyby/Aop.svg?branch=master)](https://travis-ci.org/Kdyby/Aop)
+[![Downloads this Month](https://img.shields.io/packagist/dm/Kdyby/Aop.svg)](https://packagist.org/packages/Kdyby/Aop)
+[![Latest stable](img.shields.io/packagist/v/Kdyby/Aop.svg)](https://packagist.org/packages/Kdyby/Aop)
 
 
 Requirements
