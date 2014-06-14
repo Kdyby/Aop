@@ -29,7 +29,7 @@ $ composer require kdyby/aop:@dev
 Documentation
 ------------
 
-Lear more in the [documentation](https://github.com/Kdyby/Aop/blob/nette-2.1/docs/en/index.md).
+Learn more in the [documentation](https://github.com/Kdyby/Aop/blob/nette-2.1/docs/en/index.md).
 
 
 -----
