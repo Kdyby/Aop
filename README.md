@@ -29,7 +29,7 @@ $ composer require kdyby/aop:@dev
 Documentation
 ------------
 
-Lear more in the [documentation](https://github.com/Kdyby/Aop/blob/master/docs/en/index.md).
+Learn more in the [documentation](https://github.com/Kdyby/Aop/blob/master/docs/en/index.md).
 
 
 -----
