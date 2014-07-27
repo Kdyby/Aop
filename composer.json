@@ -46,6 +46,8 @@
 		"latte/latte": "~2.2@dev",
 		"tracy/tracy": "~2.2@dev",
 
+		"kdyby/doctrine-cache": "~2.3@dev",
+
 		"nette/tester": "@dev",
 		"doctrine/collections": "~1.1",
 		"jakub-onderka/php-parallel-lint": "~0.7"
