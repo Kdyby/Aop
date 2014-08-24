@@ -161,11 +161,11 @@ Examples:
 
 And don't forget to have a look at [Symfony/PropertyAccess](http://symfony.com/doc/current/components/property_access/index.html).
 
-#### classAnnotateWith(`Some\Annotation`)
+#### classAnnotatedWith(`Some\Annotation`)
 
 Matches all classes, that are annotated with this annotation. It uses [Kdyby/Annotations](https://github.com/Kdyby/Annotations) for reading them.
 
-#### methodAnnotateWith(`Some\Annotation`)
+#### methodAnnotatedWith(`Some\Annotation`)
 
 Matches all methods, that are annotated with this annotation.
 
