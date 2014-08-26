@@ -59,7 +59,7 @@ class AspectsConfig extends Nette\Object
 		$aspects = array();
 		foreach ($this->aspectsList as $def) {
 			if (!is_array($def)) {
-				if (!is_string($def) && (!$def instanceof \stdClass || empty($def->value))) {
+				if (!is_string($def) && (!$def instanceof \stdClass || empty($def->value)) && !$def instanceof Nette\DI\Statement) {
 					$serialised = Nette\Utils\Json::encode($def);
 					throw new Kdyby\Aop\UnexpectedValueException("The service definition $serialised is expected to be an array or Neon entity.");
 				}
