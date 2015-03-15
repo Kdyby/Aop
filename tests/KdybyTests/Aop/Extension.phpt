@@ -41,7 +41,7 @@ class ExtensionTest extends Tester\TestCase
 		$config = new Nette\Configurator();
 		$config->setTempDirectory(TEMP_DIR);
 		$config->addParameters(array('container' => array('class' => 'SystemContainer_' . md5($configFile . microtime()))));
-		$config->addConfig(__DIR__ . '/../nette-reset.neon');
+		$config->addConfig(__DIR__ . '/../nette-reset.neon', !isset($config->defaultExtensions['nette']) ? 'v23' : 'v22');
 		$config->addConfig(__DIR__ . '/config/' . $configFile . '.neon');
 
 		Kdyby\Annotations\DI\AnnotationsExtension::register($config);
@@ -63,15 +63,15 @@ class ExtensionTest extends Tester\TestCase
 
 		Assert::same(4, count($services));
 	}
-	
-	
-	
+
+
+
 	public function testIfAspectAppliedOnCreatedObject()
 	{
 		$dic = $this->createContainer('factory');
 		$service = $dic->getByType('KdybyTests\Aop\CommonService');
 		$createdObject = $dic->getByType('KdybyTests\Aop\ICommonServiceFactory')->create();
-		
+
 		Assert::notEqual('KdybyTests\Aop\CommonService', get_class($service));
 		Assert::notEqual('KdybyTests\Aop\CommonService', get_class($createdObject));
 		Assert::isEqual(get_class($service), get_class($createdObject));
@@ -100,8 +100,8 @@ class ExtensionTest extends Tester\TestCase
 		Assert::same(array(3), $service->calls[2]);
 		self::assertAspectInvocation($service, 'KdybyTests\Aop\BeforeAspect', 2, new BeforeMethod($service, 'magic', array(3)));
 	}
-	
-	
+
+
 
 	public function testFunctionalConstructor()
 	{
