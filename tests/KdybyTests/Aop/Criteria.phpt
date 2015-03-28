@@ -212,7 +212,7 @@ class CriteriaTest extends Tester\TestCase
 
 		$criteria = Criteria::create()->where('context.KdybyTests\Aop\CriteriaTest.bar', Criteria::EQ, new Code\PhpLiteral('TRUE'));
 		Assert::same(
-			"(Criteria::compare(PropertyAccess::createPropertyAccessor()->getValue(\$this->_kdyby_aopContainer->getByType('KdybyTests\\\\Aop\\\\CriteriaTest'), 'bar'), '==', TRUE))",
+			"(Criteria::compare(PropertyAccess::createPropertyAccessor()->getValue(\$this->_kdyby_aopContainer->getByType('KdybyTests\\Aop\\CriteriaTest'), 'bar'), '==', TRUE))",
 			(string) $criteria->serialize(new Nette\DI\ContainerBuilder())
 		);
 	}
