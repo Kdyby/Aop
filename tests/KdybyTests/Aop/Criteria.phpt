@@ -205,14 +205,14 @@ class CriteriaTest extends Tester\TestCase
 	public function testSerialize_service_byType()
 	{
 		$criteria = Criteria::create()->where('context.stdClass.bar', Criteria::EQ, new Code\PhpLiteral('TRUE'));
-		Assert::same(
+		Assert::match(
 			"(Criteria::compare(PropertyAccess::createPropertyAccessor()->getValue(\$this->_kdyby_aopContainer->getByType('stdClass'), 'bar'), '==', TRUE))",
 			(string) $criteria->serialize(new Nette\DI\ContainerBuilder())
 		);
 
 		$criteria = Criteria::create()->where('context.KdybyTests\Aop\CriteriaTest.bar', Criteria::EQ, new Code\PhpLiteral('TRUE'));
-		Assert::same(
-			"(Criteria::compare(PropertyAccess::createPropertyAccessor()->getValue(\$this->_kdyby_aopContainer->getByType('KdybyTests\\Aop\\CriteriaTest'), 'bar'), '==', TRUE))",
+		Assert::match(
+			"(Criteria::compare(PropertyAccess::createPropertyAccessor()->getValue(\$this->_kdyby_aopContainer->getByType('KdybyTests%a%Aop%a%CriteriaTest'), 'bar'), '==', TRUE))",
 			(string) $criteria->serialize(new Nette\DI\ContainerBuilder())
 		);
 	}
