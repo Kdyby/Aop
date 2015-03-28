@@ -22,10 +22,10 @@ use Nette;
  * <code>
  * class AclExtension extends Nette\DI\CompilerExtension implements \Kdyby\Aop\DI\IAspectsProvider
  * {
- * 	public function getAspectsConfiguration()
- * 	{
- * 		return \Kdyby\Aop\DI\AspectsExtension::loadAspects(__DIR__ . '/aspects.neon', $this);
- * 	}
+ *     public function getAspectsConfiguration()
+ *     {
+ *         return \Kdyby\Aop\DI\AspectsExtension::loadAspects(__DIR__ . '/aspects.neon', $this);
+ *     }
  * }
  * </code>
  *

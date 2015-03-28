@@ -24,8 +24,8 @@ class CommonService
 
 	public $return = 2;
 
-	
-	public function __construct() 
+
+	public function __construct()
 	{
 	}
 
