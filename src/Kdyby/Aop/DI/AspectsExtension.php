@@ -70,7 +70,7 @@ class AspectsExtension extends Nette\DI\CompilerExtension
 	public static function register(Nette\Configurator $configurator)
 	{
 		$configurator->onCompile[] = function ($config, Nette\DI\Compiler $compiler) {
-			$compiler->addExtension('aspects', new AopExtension());
+			$compiler->addExtension('aspects', new AspectsExtension());
 		};
 	}
 

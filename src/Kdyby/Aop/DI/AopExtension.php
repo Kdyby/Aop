@@ -48,22 +48,8 @@ class AopExtension extends Nette\DI\CompilerExtension
 
 	public function loadConfiguration()
 	{
-		$this->registerAspectsExtension();
 		AnnotationRegistry::registerLoader("class_exists");
 		AnnotationReader::addGlobalIgnoredName('persistent');
-	}
-
-
-
-	private function registerAspectsExtension()
-	{
-		foreach ($this->compiler->getExtensions() as $extension) {
-			if ($extension instanceof AspectsExtension) {
-				return;
-			}
-		}
-
-		$this->compiler->addExtension('aspects', new AspectsExtension());
 	}
 
 

@@ -35,6 +35,16 @@ class InvalidStateException extends \RuntimeException implements Exception
 /**
  * @author Filip Procházka <filip@prochazka.su>
  */
+class CompilationException extends InvalidStateException
+{
+
+}
+
+
+
+/**
+ * @author Filip Procházka <filip@prochazka.su>
+ */
 class InvalidArgumentException extends \InvalidArgumentException implements Exception
 {
 

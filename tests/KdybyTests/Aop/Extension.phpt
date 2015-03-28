@@ -45,6 +45,7 @@ class ExtensionTest extends Tester\TestCase
 		$config->addConfig(__DIR__ . '/config/' . $configFile . '.neon');
 
 		Kdyby\Annotations\DI\AnnotationsExtension::register($config);
+		Kdyby\Aop\DI\AspectsExtension::register($config);
 		Kdyby\Aop\DI\AopExtension::register($config);
 
 		return $config->createContainer();
