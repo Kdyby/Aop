@@ -18,6 +18,7 @@ You can enable the extension using your neon config.
 extensions:
 	aop: Kdyby\Aop\DI\AopExtension
 	annotations: Kdyby\Annotations\DI\AnnotationsExtension
+	aspects: Kdyby\Aop\DI\AspectsExtension
 ```
 
 You can find the [documentation of annotations extension here](https://github.com/Kdyby/Annotations/blob/master/docs/en/index.md).
@@ -56,10 +57,6 @@ The `aspects.neon` file should be list of unnamed services as in `aspects` secti
 
 
 #### AspectsExtension
-
-> Where did this come from?!
-
-Yeah, don't mind it. It's registered automatically from the `AopExtension`.
 
 > There are two extensions?!
 
