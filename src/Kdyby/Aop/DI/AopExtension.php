@@ -59,8 +59,15 @@ class AopExtension extends Nette\DI\CompilerExtension
 		$builder = $this->getContainerBuilder();
 		$this->compiledFile = NULL;
 
+		if (!empty($builder->parameters['container']['class'])) {
+			$namespace = $builder->parameters['container']['class'];
+
+		} else {
+			$namespace = $builder->getClassName(); //Nette 2.3
+		}
+
 		$file = new PhpFile();
-		$cg = $file->getNamespace('Kdyby\Aop_CG\\' . $builder->parameters['container']['class']);
+		$cg = $file->getNamespace('Kdyby\\Aop_CG\\' . $namespace);
 		$cg->imports[] = 'Kdyby\Aop\Pointcut\Matcher\Criteria';
 		$cg->imports[] = 'Symfony\Component\PropertyAccess\PropertyAccess';
 
