@@ -35,5 +35,10 @@
 			"src/Kdyby/Aop/annotations.php",
 			"src/Kdyby/Aop/exceptions.php"
 		]
+	},
+	"extra": {
+		"branch-alias": {
+			"dev-nette-2.1": "0.1-dev"
+		}
 	}
 }
