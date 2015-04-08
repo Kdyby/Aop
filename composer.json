@@ -62,7 +62,7 @@
 	},
 	"extra": {
 		"branch-alias": {
-			"dev-nette-2.2": "0.1-dev"
+			"dev-nette-2.2": "0.2-dev"
 		}
 	}
 }
