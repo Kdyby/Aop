@@ -22,7 +22,7 @@ Installation
 The best way to install Kdyby/Aop is using  [Composer](http://getcomposer.org/):
 
 ```sh
-$ composer require kdyby/aop:@dev
+$ composer require kdyby/aop
 ```
 
 
