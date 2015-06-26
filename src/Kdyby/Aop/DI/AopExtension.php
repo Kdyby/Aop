@@ -217,7 +217,7 @@ class AopExtension extends Nette\DI\CompilerExtension
 			$this->classes = array();
 			foreach ($this->getContainerBuilder()->getDefinitions() as $name => $def) {
 				$class = $def->class;
-				if ($def->autowired && $class) {
+				if ($class) {
 					foreach (class_parents($class) + class_implements($class) + array($class) as $parent) {
 						$this->classes[strtolower($parent)][] = (string) $name;
 					}
