@@ -207,7 +207,7 @@ class PointcutMethod extends Code\Method
 	/**
 	 * @param \ReflectionMethod $from
 	 * @param Code\Method $method
-	 * @throws \Exception|\ReflectionException
+	 * @throws \ReflectionException
 	 * @return Code\Method
 	 */
 	public static function expandTypeHints(\ReflectionMethod $from, Code\Method $method)

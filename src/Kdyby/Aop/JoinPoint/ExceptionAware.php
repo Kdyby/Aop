@@ -22,7 +22,7 @@ interface ExceptionAware
 {
 
 	/**
-	 * @return \Exception|NULL
+	 * @return \Exception|\Throwable|NULL
 	 */
 	function getException();
 

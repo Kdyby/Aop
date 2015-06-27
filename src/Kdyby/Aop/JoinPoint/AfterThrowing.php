@@ -22,13 +22,19 @@ class AfterThrowing extends MethodInvocation implements ExceptionAware
 {
 
 	/**
-	 * @var \Exception
+	 * @var \Exception|\Throwable
 	 */
 	private $exception;
 
 
 
-	public function __construct($targetObject, $targetMethod, $arguments = array(), \Exception $exception = NULL)
+	/**
+	 * @param $targetObject
+	 * @param $targetMethod
+	 * @param array $arguments
+	 * @param \Exception|\Throwable|NULL $exception
+	 */
+	public function __construct($targetObject, $targetMethod, $arguments = array(), $exception = NULL)
 	{
 		parent::__construct($targetObject, $targetMethod, $arguments);
 		$this->exception = $exception;
@@ -37,7 +43,7 @@ class AfterThrowing extends MethodInvocation implements ExceptionAware
 
 
 	/**
-	 * @return \Exception
+	 * @return \Exception|\Throwable
 	 */
 	public function getException()
 	{
