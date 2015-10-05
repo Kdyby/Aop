@@ -14,8 +14,6 @@ use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use Kdyby;
 use Kdyby\Aop\PhpGenerator\AdvisedClassType;
-use Kdyby\Aop\PhpGenerator\NamespaceBlock;
-use Kdyby\Aop\PhpGenerator\PhpFile;
 use Kdyby\Aop\Pointcut;
 use Nette;
 use Nette\PhpGenerator as Code;
@@ -66,14 +64,14 @@ class AopExtension extends Nette\DI\CompilerExtension
 			$namespace = $builder->getClassName(); //Nette 2.3
 		}
 
-		$file = new PhpFile();
-		$cg = $file->getNamespace('Kdyby\\Aop_CG\\' . $namespace);
-		$cg->imports[] = 'Kdyby\Aop\Pointcut\Matcher\Criteria';
-		$cg->imports[] = 'Symfony\Component\PropertyAccess\PropertyAccess';
+		$file = new Code\PhpFile();
+		$cg = $file->addNamespace('Kdyby\\Aop_CG\\' . $namespace);
+		$cg->addUse('Kdyby\Aop\Pointcut\Matcher\Criteria');
+		$cg->addUse('Symfony\Component\PropertyAccess\PropertyAccess');
 
 		foreach ($this->findAdvisedMethods() as $serviceId => $pointcuts) {
 			$service = $this->getWrappedDefinition($serviceId);
-			$advisedClass = AdvisedClassType::fromServiceDefinition($service);
+			$advisedClass = AdvisedClassType::fromServiceDefinition($service, $cg);
 			$constructorInject = FALSE;
 
 			foreach ($pointcuts as $methodAdvices) {
@@ -81,8 +79,8 @@ class AopExtension extends Nette\DI\CompilerExtension
 				$targetMethod = reset($methodAdvices)->getTargetMethod();
 
 				$newMethod = $targetMethod->getPointcutCode();
-				$advisedClass->setMethodInstance($newMethod);
-				$advisedClass->generatePublicProxyMethod($targetMethod->getCode());
+				AdvisedClassType::setMethodInstance($advisedClass, $newMethod);
+				AdvisedClassType::generatePublicProxyMethod($advisedClass, $targetMethod->getCode());
 				$constructorInject = $constructorInject || strtolower($newMethod->name) === '__construct';
 
 				/** @var AdviceDefinition[] $methodAdvices */
@@ -91,7 +89,6 @@ class AopExtension extends Nette\DI\CompilerExtension
 				}
 			}
 
-			$cg->addClass($advisedClass);
 			$this->patchService($serviceId, $advisedClass, $cg, $constructorInject);
 		}
 
@@ -99,7 +96,7 @@ class AopExtension extends Nette\DI\CompilerExtension
 			return;
 		}
 
-		require_once ($this->compiledFile = $this->writeGeneratedCode($file));
+		require_once ($this->compiledFile = $this->writeGeneratedCode($file, $cg));
 	}
 
 
@@ -116,7 +113,7 @@ class AopExtension extends Nette\DI\CompilerExtension
 
 
 
-	private function patchService($serviceId, Code\ClassType $advisedClass, NamespaceBlock $cg, $constructorInject = FALSE)
+	private function patchService($serviceId, Code\ClassType $advisedClass, Code\PhpNamespace $cg, $constructorInject = FALSE)
 	{
 		static $publicSetup;
 
@@ -149,7 +146,7 @@ class AopExtension extends Nette\DI\CompilerExtension
 
 
 
-	private function writeGeneratedCode(PhpFile $file)
+	private function writeGeneratedCode(Code\PhpFile $file, Code\PhpNamespace $namespace)
 	{
 		$builder = $this->getContainerBuilder();
 
@@ -157,7 +154,7 @@ class AopExtension extends Nette\DI\CompilerExtension
 			mkdir($tempDir, 0777, TRUE);
 		}
 
-		$key = md5(serialize($builder->parameters) . serialize(array_keys(reset($file->namespaces)->classes)));
+		$key = md5(serialize($builder->parameters) . serialize(array_keys($namespace->classes)));
 		file_put_contents($cached = $tempDir . '/' . $key . '.php', (string) $file);
 
 		return $cached;

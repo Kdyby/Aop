@@ -19,7 +19,7 @@ use Nette\PhpGenerator as Code;
 /**
  * @author Filip Procházka <filip@prochazka.su>
  */
-class AdvisedClassType extends Code\ClassType
+class AdvisedClassType extends Nette\Object
 {
 
 	const CG_INJECT_METHOD = '__injectAopContainer';
@@ -31,17 +31,17 @@ class AdvisedClassType extends Code\ClassType
 	 * @param Code\Method $method
 	 * @return Code\Method
 	 */
-	public function setMethodInstance(Code\Method $method)
+	public static function setMethodInstance(Code\ClassType $class, Code\Method $method)
 	{
-		$methods = [$method->getName() => $method] + $this->getMethods();
-		$this->setMethods($methods);
+		$methods = [$method->getName() => $method] + $class->getMethods();
+		$class->setMethods($methods);
 
 		return $method;
 	}
 
 
 
-	public function generatePublicProxyMethod(Code\Method $method)
+	public static function generatePublicProxyMethod(Code\ClassType $class, Code\Method $method)
 	{
 		$originalName = $method->getName();
 		$method->setName(self::CG_PUBLIC_PROXY_PREFIX . $originalName);
@@ -55,23 +55,22 @@ class AdvisedClassType extends Code\ClassType
 		}
 		$method->addBody('return parent::?(?);', [$originalName, new Code\PhpLiteral(implode(', ', $argumentsPass))]);
 
-		$this->setMethodInstance($method);
+		self::setMethodInstance($class, $method);
 	}
 
 
 
 	/**
 	 * @param Kdyby\Aop\Pointcut\ServiceDefinition $service
-	 * @return AdvisedClassType
+	 * @param Code\PhpNamespace $namespace
+	 * @return Code\ClassType
 	 */
-	public static function fromServiceDefinition(Kdyby\Aop\Pointcut\ServiceDefinition $service)
+	public static function fromServiceDefinition(Kdyby\Aop\Pointcut\ServiceDefinition $service, Code\PhpNamespace $namespace)
 	{
 		$originalType = $service->getTypeReflection();
 
-		$class = new static();
-		/** @var AdvisedClassType $class */
+		$class = $namespace->addClass(str_replace(array('\\', '.'), '_', "{$originalType}Class_{$service->serviceId}"));
 
-		$class->setName(str_replace(['\\', '.'], '_', "{$originalType}Class_{$service->serviceId}"));
 		$class->setExtends('\\' . $originalType->getName());
 		$class->setFinal(TRUE);
 
