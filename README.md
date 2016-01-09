@@ -4,6 +4,7 @@ Kdyby/Aop
 [![Build Status](https://travis-ci.org/Kdyby/Aop.svg?branch=master)](https://travis-ci.org/Kdyby/Aop)
 [![Downloads this Month](https://img.shields.io/packagist/dm/kdyby/aop.svg)](https://packagist.org/packages/kdyby/aop)
 [![Latest stable](https://img.shields.io/packagist/v/kdyby/aop.svg)](https://packagist.org/packages/kdyby/aop)
+[![Join the chat at https://gitter.im/Kdyby/Help](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Kdyby/Help)
 
 
 Requirements
