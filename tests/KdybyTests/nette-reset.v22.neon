@@ -1,0 +1,13 @@
+php:
+	date.timezone: Europe/Prague
+
+services:
+	cacheStorage:
+		class: Nette\Caching\Storages\MemoryStorage
+
+nette:
+	security:
+		frames: null
+
+	session:
+		autoStart: false
