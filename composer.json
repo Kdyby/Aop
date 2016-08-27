@@ -20,7 +20,7 @@
 		"nette/di": "~2.4@dev",
 		"nette/php-generator": "~2.4@dev",
 
-		"kdyby/annotations": "~2.3@dev",
+		"kdyby/annotations": "^2.1@dev",
 		"symfony/property-access": "~2.6"
 	},
 	"require-dev": {
@@ -46,7 +46,7 @@
 		"latte/latte": "~2.4@dev",
 		"tracy/tracy": "~2.4@dev",
 
-		"kdyby/doctrine-cache": "~2.5@dev",
+		"kdyby/doctrine-cache": "^2.5.2@dev",
 
 		"nette/tester": "~1.7",
 		"doctrine/collections": "~1.2"
