@@ -46,7 +46,7 @@ class AdvisedClassType extends Nette\Object
 		$originalName = $method->getName();
 		$method->setName(self::CG_PUBLIC_PROXY_PREFIX . $originalName);
 		$method->setVisibility('public');
-		$method->setDocuments(['@internal', '@deprecated']);
+		$method->setComment("@internal\n@deprecated");
 
 		$argumentsPass = [];
 		foreach ($method->getParameters() as $parameter) {
@@ -76,13 +76,13 @@ class AdvisedClassType extends Nette\Object
 
 		$class->addProperty('_kdyby_aopContainer')
 			->setVisibility('private')
-			->addDocument('@var \Nette\DI\Container|\SystemContainer');
+			->addComment('@var \Nette\DI\Container|\SystemContainer');
 		$class->addProperty('_kdyby_aopAdvices', [])
 			->setVisibility('private');
 
 		$injectMethod = $class->addMethod(self::CG_INJECT_METHOD);
 		$injectMethod->addParameter('container')->setTypeHint('\Nette\DI\Container');
-		$injectMethod->setDocuments(['@internal', '@deprecated']);
+		$injectMethod->setComment("@internal\n@deprecated");
 		$injectMethod->addBody('$this->_kdyby_aopContainer = $container;');
 
 		$providerMethod = $class->addMethod('__getAdvice');

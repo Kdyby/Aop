@@ -57,12 +57,7 @@ class AopExtension extends Nette\DI\CompilerExtension
 		$builder = $this->getContainerBuilder();
 		$this->compiledFile = NULL;
 
-		if (!empty($builder->parameters['container']['class'])) {
-			$namespace = $builder->parameters['container']['class'];
-
-		} else {
-			$namespace = $builder->getClassName(); //Nette 2.3
-		}
+		$namespace = 'Container';
 
 		$file = new Code\PhpFile();
 		$cg = $file->addNamespace('Kdyby\\Aop_CG\\' . $namespace);
@@ -81,7 +76,7 @@ class AopExtension extends Nette\DI\CompilerExtension
 				$newMethod = $targetMethod->getPointcutCode();
 				AdvisedClassType::setMethodInstance($advisedClass, $newMethod);
 				AdvisedClassType::generatePublicProxyMethod($advisedClass, $targetMethod->getCode());
-				$constructorInject = $constructorInject || strtolower($newMethod->name) === '__construct';
+				$constructorInject = $constructorInject || strtolower($newMethod->getName()) === '__construct';
 
 				/** @var AdviceDefinition[] $methodAdvices */
 				foreach ($methodAdvices as $adviceDef) {
@@ -92,7 +87,7 @@ class AopExtension extends Nette\DI\CompilerExtension
 			$this->patchService($serviceId, $advisedClass, $cg, $constructorInject);
 		}
 
-		if (!$cg->classes) {
+		if (!$cg->getClasses()) {
 			return;
 		}
 
@@ -123,11 +118,11 @@ class AopExtension extends Nette\DI\CompilerExtension
 		}
 
 		$def = $this->getContainerBuilder()->getDefinition($serviceId);
-		if ($def->factory) {
-			$def->factory->entity = $cg->name . '\\' . $advisedClass->getName();
+		if ($def->getFactory()) {
+			$def->setFactory(new Nette\DI\Statement($cg->getName() . '\\' . $advisedClass->getName()));
 
 		} else {
-			$def->setFactory($cg->name . '\\' . $advisedClass->getName());
+			$def->setFactory($cg->getName() . '\\' . $advisedClass->getName());
 		}
 
 		if (!$constructorInject) {
@@ -154,7 +149,7 @@ class AopExtension extends Nette\DI\CompilerExtension
 			mkdir($tempDir, 0777, TRUE);
 		}
 
-		$key = md5(serialize($builder->parameters) . serialize(array_keys($namespace->classes)));
+		$key = md5(serialize($builder->parameters) . serialize(array_keys($namespace->getClasses())));
 		file_put_contents($cached = $tempDir . '/' . $key . '.php', (string) $file);
 
 		return $cached;
