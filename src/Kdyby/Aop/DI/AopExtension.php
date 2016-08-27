@@ -57,7 +57,11 @@ class AopExtension extends Nette\DI\CompilerExtension
 		$builder = $this->getContainerBuilder();
 		$this->compiledFile = NULL;
 
-		$namespace = 'Container';
+		$namespace = 'Container_' . substr(md5(serialize([
+			$builder->parameters,
+			$this->compiler->exportDependencies(),
+			PHP_VERSION_ID - PHP_RELEASE_VERSION,
+		])), 0, 10);
 
 		$file = new Code\PhpFile();
 		$cg = $file->addNamespace('Kdyby\\Aop_CG\\' . $namespace);
