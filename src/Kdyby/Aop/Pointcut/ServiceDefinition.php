@@ -98,7 +98,7 @@ class ServiceDefinition extends Nette\Object
 			return $this->typesWithing;
 		}
 
-		return $this->typesWithing = class_parents($class = $this->originalType->getName()) + class_implements($class) + array($class => $class);
+		return $this->typesWithing = class_parents($class = $this->originalType->getName()) + class_implements($class) + [$class => $class];
 	}
 
 
@@ -112,7 +112,7 @@ class ServiceDefinition extends Nette\Object
 			return $this->openMethods;
 		}
 
-		$this->openMethods = array();
+		$this->openMethods = [];
 		$type = $this->originalType;
 		do {
 			foreach ($type->getMethods(\ReflectionMethod::IS_PUBLIC | \ReflectionMethod::IS_PROTECTED) as $method) {
@@ -138,7 +138,7 @@ class ServiceDefinition extends Nette\Object
 	 */
 	public function match(Filter $rule)
 	{
-		$matching = array();
+		$matching = [];
 		foreach ($this->getOpenMethods() as $method) {
 			if ($rule->matches($method)) {
 				$matching[] = $method;

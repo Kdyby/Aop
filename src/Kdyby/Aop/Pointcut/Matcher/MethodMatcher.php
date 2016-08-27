@@ -44,15 +44,15 @@ class MethodMatcher extends Nette\Object implements Kdyby\Aop\Pointcut\Filter
 		}
 
 		// preg_replace($pattern, $replacement, $subject, $limit);
-		$method = preg_replace(array(
+		$method = preg_replace([
 			'~\\\\\\*~',
 			'~\\\\\\[\\\\\\!(.*?)\\\\\\]~', // restrict
 			'~\\\\\\[\\\\\\?(.*?)\\\\\\]~', // optional
-		), array(
+		], [
 			'.*?',
 			'(?!$1)',
 			'(?:$1)?',
-		), preg_quote($method));
+		], preg_quote($method));
 
 		if (preg_match_all('~\\\\\\[(?!\\\\\\!|\\\\\\?|\s)(?:\\\\\\||[^\\|]*?)+\\\\\\]~', $method, $m, PREG_SET_ORDER)) {
 			$method = str_replace($m[0][0], '(?:' . preg_replace('~\\\\\\|~', '|', substr($m[0][0], 2, -2)) . ')', $method);

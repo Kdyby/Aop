@@ -34,52 +34,52 @@ class PointcutRulesTest extends Tester\TestCase
 
 	public function dataMatchWithin()
 	{
-		$data = array();
+		$data = [];
 
-		$data[] = array(TRUE,
-			new Pointcut\Rules(array(new Matcher\WithinMatcher('KdybyTests\Aop\SmegHead'))),
+		$data[] = [TRUE,
+			new Pointcut\Rules([new Matcher\WithinMatcher('KdybyTests\Aop\SmegHead')]),
 			$this->createDefinition('KdybyTests\Aop\SmegHead'),
-		);
+		];
 
-		$data[] = array(TRUE,
-			new Pointcut\Rules(array(new Matcher\WithinMatcher('KdybyTests\Aop\*'))),
+		$data[] = [TRUE,
+			new Pointcut\Rules([new Matcher\WithinMatcher('KdybyTests\Aop\*')]),
 			$this->createDefinition('KdybyTests\Aop\SmegHead'),
-		);
+		];
 
-		$data[] = array(TRUE,
-			new Pointcut\Rules(array(new Matcher\WithinMatcher('*'))),
+		$data[] = [TRUE,
+			new Pointcut\Rules([new Matcher\WithinMatcher('*')]),
 			$this->createDefinition('KdybyTests\Aop\SmegHead'),
-		);
+		];
 
-		$data[] = array(FALSE,
-			new Pointcut\Rules(array(new Matcher\WithinMatcher('KdybyTests\Aop\SmegHead'))),
+		$data[] = [FALSE,
+			new Pointcut\Rules([new Matcher\WithinMatcher('KdybyTests\Aop\SmegHead')]),
 			$this->createDefinition('KdybyTests\Aop\Legie'),
-		);
+		];
 
-		$data[] = array(TRUE,
-			new Pointcut\Rules(array(new Matcher\WithinMatcher('KdybyTests\Aop\Cat'))),
+		$data[] = [TRUE,
+			new Pointcut\Rules([new Matcher\WithinMatcher('KdybyTests\Aop\Cat')]),
 			$this->createDefinition('KdybyTests\Aop\Legie'),
-		);
+		];
 
-		$data[] = array(FALSE,
-			new Pointcut\Rules(array(new Matcher\WithinMatcher('KdybyTests\Aop\Cat'))),
+		$data[] = [FALSE,
+			new Pointcut\Rules([new Matcher\WithinMatcher('KdybyTests\Aop\Cat')]),
 			$this->createDefinition('KdybyTests\Aop\SmegHead'),
-		);
+		];
 
-		$data[] = array(TRUE,
-			new Pointcut\Rules(array(new Matcher\WithinMatcher('Nette\Templating\*'))),
+		$data[] = [TRUE,
+			new Pointcut\Rules([new Matcher\WithinMatcher('Nette\Templating\*')]),
 			$this->createDefinition('KdybyTests\Aop\CustomTemplate'),
-		);
+		];
 
-		$data[] = array(TRUE,
-			new Pointcut\Rules(array(new Matcher\WithinMatcher('Nette\Templating\I*'))),
+		$data[] = [TRUE,
+			new Pointcut\Rules([new Matcher\WithinMatcher('Nette\Templating\I*')]),
 			$this->createDefinition('Nette\Templating\FileTemplate'),
-		);
+		];
 
-		$data[] = array(FALSE,
-			new Pointcut\Rules(array(new Matcher\WithinMatcher('Nette\Templating\*'))),
+		$data[] = [FALSE,
+			new Pointcut\Rules([new Matcher\WithinMatcher('Nette\Templating\*')]),
 			$this->createDefinition('KdybyTests\Aop\SmegHead'),
-		);
+		];
 
 		return $data;
 	}
@@ -98,77 +98,77 @@ class PointcutRulesTest extends Tester\TestCase
 
 	public function dataMatchMethod()
 	{
-		$data = array();
+		$data = [];
 
-		$data[] = array(TRUE,
-			new Pointcut\Rules(array(new Matcher\MethodMatcher('injectFoo'))),
+		$data[] = [TRUE,
+			new Pointcut\Rules([new Matcher\MethodMatcher('injectFoo')]),
 			$this->createDefinition('KdybyTests\Aop\SmegHead'),
-		);
+		];
 
-		$data[] = array(TRUE,
-			new Pointcut\Rules(array(new Matcher\MethodMatcher('public injectFoo'))),
+		$data[] = [TRUE,
+			new Pointcut\Rules([new Matcher\MethodMatcher('public injectFoo')]),
 			$this->createDefinition('KdybyTests\Aop\SmegHead'),
-		);
+		];
 
-		$data[] = array(FALSE,
-			new Pointcut\Rules(array(new Matcher\MethodMatcher('protected injectFoo'))),
+		$data[] = [FALSE,
+			new Pointcut\Rules([new Matcher\MethodMatcher('protected injectFoo')]),
 			$this->createDefinition('KdybyTests\Aop\SmegHead'),
-		);
+		];
 
-		$data[] = array(FALSE,
-			new Pointcut\Rules(array(new Matcher\MethodMatcher('private injectFoo'))),
+		$data[] = [FALSE,
+			new Pointcut\Rules([new Matcher\MethodMatcher('private injectFoo')]),
 			$this->createDefinition('KdybyTests\Aop\SmegHead'),
-		);
+		];
 
-		$data[] = array(TRUE,
-			new Pointcut\Rules(array(new Matcher\MethodMatcher('*Calculation'))),
+		$data[] = [TRUE,
+			new Pointcut\Rules([new Matcher\MethodMatcher('*Calculation')]),
 			$this->createDefinition('KdybyTests\Aop\Legie'),
-		);
+		];
 
-		$data[] = array(TRUE,
-			new Pointcut\Rules(array(new Matcher\MethodMatcher('protected *Calculation'))),
+		$data[] = [TRUE,
+			new Pointcut\Rules([new Matcher\MethodMatcher('protected *Calculation')]),
 			$this->createDefinition('KdybyTests\Aop\Legie'),
-		);
+		];
 
-		$data[] = array(TRUE,
-			new Pointcut\Rules(array(new Matcher\MethodMatcher('inject*'))),
+		$data[] = [TRUE,
+			new Pointcut\Rules([new Matcher\MethodMatcher('inject*')]),
 			$this->createDefinition('KdybyTests\Aop\Legie'),
-		);
+		];
 
-		$data[] = array(TRUE,
-			new Pointcut\Rules(array(new Matcher\MethodMatcher('[inject]Bar'))),
+		$data[] = [TRUE,
+			new Pointcut\Rules([new Matcher\MethodMatcher('[inject]Bar')]),
 			$this->createDefinition('KdybyTests\Aop\Legie'),
-		);
+		];
 
-		$data[] = array(TRUE,
-			new Pointcut\Rules(array(new Matcher\MethodMatcher('[?inject]Bar'))),
+		$data[] = [TRUE,
+			new Pointcut\Rules([new Matcher\MethodMatcher('[?inject]Bar')]),
 			$this->createDefinition('KdybyTests\Aop\Legie'),
-		);
+		];
 
-		$data[] = array(TRUE,
-			new Pointcut\Rules(array(new Matcher\MethodMatcher('[?inject]Bar'))),
+		$data[] = [TRUE,
+			new Pointcut\Rules([new Matcher\MethodMatcher('[?inject]Bar')]),
 			$this->createDefinition('KdybyTests\Aop\SmegHead'),
-		);
+		];
 
-		$data[] = array(FALSE,
-			new Pointcut\Rules(array(new Matcher\MethodMatcher('[?inject]Bar'))),
+		$data[] = [FALSE,
+			new Pointcut\Rules([new Matcher\MethodMatcher('[?inject]Bar')]),
 			$this->createDefinition('KdybyTests\Aop\CustomTemplate'),
-		);
+		];
 
-		$data[] = array(FALSE,
-			new Pointcut\Rules(array(new Matcher\MethodMatcher('[!inject]Bar'))),
+		$data[] = [FALSE,
+			new Pointcut\Rules([new Matcher\MethodMatcher('[!inject]Bar')]),
 			$this->createDefinition('KdybyTests\Aop\Legie'),
-		);
+		];
 
-		$data[] = array(TRUE,
-			new Pointcut\Rules(array(new Matcher\MethodMatcher('[!inject]Bar'))),
+		$data[] = [TRUE,
+			new Pointcut\Rules([new Matcher\MethodMatcher('[!inject]Bar')]),
 			$this->createDefinition('KdybyTests\Aop\SmegHead'),
-		);
+		];
 
-		$data[] = array(FALSE,
-			new Pointcut\Rules(array(new Matcher\MethodMatcher('[!inject]Bar'))),
+		$data[] = [FALSE,
+			new Pointcut\Rules([new Matcher\MethodMatcher('[!inject]Bar')]),
 			$this->createDefinition('KdybyTests\Aop\CustomTemplate'),
-		);
+		];
 
 		return $data;
 	}
@@ -187,31 +187,31 @@ class PointcutRulesTest extends Tester\TestCase
 
 	public function testMatchMethod_or()
 	{
-		$rules = new Pointcut\Rules(array(new Matcher\MethodMatcher('public [render|action|handle]*')));
+		$rules = new Pointcut\Rules([new Matcher\MethodMatcher('public [render|action|handle]*')]);
 		$def = $this->createDefinition('KdybyTests\Aop\MockPresenter');
 
-		Assert::same(array(
+		Assert::same([
 			$def->openMethods['renderDefault'],
 			$def->openMethods['actionDefault'],
 			$def->openMethods['handleSort'],
-		), $def->match($rules));
+		], $def->match($rules));
 	}
 
 
 
 	public function dataMatchFilter()
 	{
-		$data = array();
+		$data = [];
 
-		$data[] = array(TRUE,
-			new Pointcut\Rules(array(new Matcher\FilterMatcher('KdybyTests\Aop\MyPointcutFilter'))),
+		$data[] = [TRUE,
+			new Pointcut\Rules([new Matcher\FilterMatcher('KdybyTests\Aop\MyPointcutFilter')]),
 			$this->createDefinition('KdybyTests\Aop\Legie'),
-		);
+		];
 
-		$data[] = array(FALSE,
-			new Pointcut\Rules(array(new Matcher\FilterMatcher('KdybyTests\Aop\MyPointcutFilter'))),
+		$data[] = [FALSE,
+			new Pointcut\Rules([new Matcher\FilterMatcher('KdybyTests\Aop\MyPointcutFilter')]),
 			$this->createDefinition('KdybyTests\Aop\SmegHead'),
-		);
+		];
 
 		return $data;
 	}
@@ -230,19 +230,19 @@ class PointcutRulesTest extends Tester\TestCase
 
 	public function dataMatchClassAnnotateWith()
 	{
-		$data = array();
+		$data = [];
 
 		$reader = new AnnotationReader();
 
-		$data[] = array(TRUE,
-			new Pointcut\Rules(array(new Matcher\ClassAnnotateWithMatcher('KdybyTests\Aop\Test', $reader))),
+		$data[] = [TRUE,
+			new Pointcut\Rules([new Matcher\ClassAnnotateWithMatcher('KdybyTests\Aop\Test', $reader)]),
 			$this->createDefinition('KdybyTests\Aop\SmegHead'),
-		);
+		];
 
-		$data[] = array(FALSE,
-			new Pointcut\Rules(array(new Matcher\ClassAnnotateWithMatcher('KdybyTests\Aop\Test', $reader))),
+		$data[] = [FALSE,
+			new Pointcut\Rules([new Matcher\ClassAnnotateWithMatcher('KdybyTests\Aop\Test', $reader)]),
 			$this->createDefinition('KdybyTests\Aop\Legie'),
-		);
+		];
 
 		return $data;
 	}
@@ -261,19 +261,19 @@ class PointcutRulesTest extends Tester\TestCase
 
 	public function dataMatchMethodAnnotateWith()
 	{
-		$data = array();
+		$data = [];
 
 		$reader = new AnnotationReader();
 
-		$data[] = array(TRUE,
-			new Pointcut\Rules(array(new Matcher\MethodAnnotateWithMatcher('KdybyTests\Aop\Test', $reader))),
+		$data[] = [TRUE,
+			new Pointcut\Rules([new Matcher\MethodAnnotateWithMatcher('KdybyTests\Aop\Test', $reader)]),
 			$this->createDefinition('KdybyTests\Aop\Legie'),
-		);
+		];
 
-		$data[] = array(FALSE,
-			new Pointcut\Rules(array(new Matcher\MethodAnnotateWithMatcher('KdybyTests\Aop\Test', $reader))),
+		$data[] = [FALSE,
+			new Pointcut\Rules([new Matcher\MethodAnnotateWithMatcher('KdybyTests\Aop\Test', $reader)]),
 			$this->createDefinition('KdybyTests\Aop\SmegHead'),
-		);
+		];
 
 		return $data;
 	}

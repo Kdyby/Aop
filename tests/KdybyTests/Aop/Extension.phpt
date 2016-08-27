@@ -58,7 +58,7 @@ class ExtensionTest extends Tester\TestCase
 		foreach ($services = array_keys($dic->findByTag(Kdyby\Aop\DI\AspectsExtension::ASPECT_TAG)) as $serviceId) {
 			$service = $dic->getService($serviceId);
 			Assert::true($service instanceof AspectWithArguments);
-			Assert::same(array($dic->getByType('Nette\Http\Request')), $service->args);
+			Assert::same([$dic->getByType('Nette\Http\Request')], $service->args);
 		}
 
 		Assert::same(4, count($services));
@@ -86,19 +86,19 @@ class ExtensionTest extends Tester\TestCase
 		/** @var CommonService $service */
 
 		Assert::same(4, $service->magic(2));
-		Assert::same(array(2), $service->calls[0]);
-		$advice = self::assertAspectInvocation($service, 'KdybyTests\Aop\BeforeAspect', 0, new BeforeMethod($service, 'magic', array(2)));
+		Assert::same([2], $service->calls[0]);
+		$advice = self::assertAspectInvocation($service, 'KdybyTests\Aop\BeforeAspect', 0, new BeforeMethod($service, 'magic', [2]));
 		/** @var BeforeAspect $advice */
 
 		$service->return = 3;
 		Assert::same(6, $service->magic(2));
-		Assert::same(array(2), $service->calls[1]);
-		self::assertAspectInvocation($service, 'KdybyTests\Aop\BeforeAspect', 1, new BeforeMethod($service, 'magic', array(2)));
+		Assert::same([2], $service->calls[1]);
+		self::assertAspectInvocation($service, 'KdybyTests\Aop\BeforeAspect', 1, new BeforeMethod($service, 'magic', [2]));
 
-		$advice->modifyArgs = array(3);
+		$advice->modifyArgs = [3];
 		Assert::same(9, $service->magic(2));
-		Assert::same(array(3), $service->calls[2]);
-		self::assertAspectInvocation($service, 'KdybyTests\Aop\BeforeAspect', 2, new BeforeMethod($service, 'magic', array(3)));
+		Assert::same([3], $service->calls[2]);
+		self::assertAspectInvocation($service, 'KdybyTests\Aop\BeforeAspect', 2, new BeforeMethod($service, 'magic', [3]));
 	}
 
 
@@ -107,7 +107,7 @@ class ExtensionTest extends Tester\TestCase
 	{
 		$dic = $this->createContainer('constructor');
 		$service = $dic->getByType('KdybyTests\Aop\CommonService');
-		self::assertAspectInvocation($service, 'KdybyTests\Aop\ConstructorBeforeAspect', 0, new BeforeMethod($service, '__construct', array($dic)));
+		self::assertAspectInvocation($service, 'KdybyTests\Aop\ConstructorBeforeAspect', 0, new BeforeMethod($service, '__construct', [$dic]));
 	}
 
 
@@ -122,11 +122,11 @@ class ExtensionTest extends Tester\TestCase
 		Assert::same(2, $service->magic(1));
 		Assert::same(4, $service->magic(2));
 
-		Assert::same(array(0), $service->calls[0]);
-		Assert::same(array(1), $service->calls[1]);
-		Assert::same(array(2), $service->calls[2]);
+		Assert::same([0], $service->calls[0]);
+		Assert::same([1], $service->calls[1]);
+		Assert::same([2], $service->calls[2]);
 
-		self::assertAspectInvocation($service, 'KdybyTests\Aop\ConditionalBeforeAspect', 0, new BeforeMethod($service, 'magic', array(1)));
+		self::assertAspectInvocation($service, 'KdybyTests\Aop\ConditionalBeforeAspect', 0, new BeforeMethod($service, 'magic', [1]));
 		self::assertAspectInvocation($service, 'KdybyTests\Aop\ConditionalBeforeAspect', 1, NULL);
 		self::assertAspectInvocation($service, 'KdybyTests\Aop\ConditionalBeforeAspect', 2, NULL);
 	}
@@ -140,19 +140,19 @@ class ExtensionTest extends Tester\TestCase
 		/** @var CommonService $service */
 
 		Assert::same(4, $service->magic(2));
-		Assert::same(array(2), $service->calls[0]);
-		$advice = self::assertAspectInvocation($service, 'KdybyTests\Aop\AroundAspect', 0, new AroundMethod($service, 'magic', array(2)));
+		Assert::same([2], $service->calls[0]);
+		$advice = self::assertAspectInvocation($service, 'KdybyTests\Aop\AroundAspect', 0, new AroundMethod($service, 'magic', [2]));
 		/** @var AroundAspect $advice */
 
 		$service->return = 3;
 		Assert::same(6, $service->magic(2));
-		Assert::same(array(2), $service->calls[1]);
-		self::assertAspectInvocation($service, 'KdybyTests\Aop\AroundAspect', 1, new AroundMethod($service, 'magic', array(2)));
+		Assert::same([2], $service->calls[1]);
+		self::assertAspectInvocation($service, 'KdybyTests\Aop\AroundAspect', 1, new AroundMethod($service, 'magic', [2]));
 
-		$advice->modifyArgs = array(3);
+		$advice->modifyArgs = [3];
 		Assert::same(9, $service->magic(2));
-		Assert::same(array(3), $service->calls[2]);
-		self::assertAspectInvocation($service, 'KdybyTests\Aop\AroundAspect', 2, new AroundMethod($service, 'magic', array(3)));
+		Assert::same([3], $service->calls[2]);
+		self::assertAspectInvocation($service, 'KdybyTests\Aop\AroundAspect', 2, new AroundMethod($service, 'magic', [3]));
 	}
 
 
@@ -167,11 +167,11 @@ class ExtensionTest extends Tester\TestCase
 		Assert::same(2, $service->magic(1));
 		Assert::same(4, $service->magic(2));
 
-		Assert::same(array(0), $service->calls[0]);
-		Assert::same(array(1), $service->calls[1]);
-		Assert::same(array(2), $service->calls[2]);
+		Assert::same([0], $service->calls[0]);
+		Assert::same([1], $service->calls[1]);
+		Assert::same([2], $service->calls[2]);
 
-		self::assertAspectInvocation($service, 'KdybyTests\Aop\ConditionalAroundAspect', 0, new AroundMethod($service, 'magic', array(1)));
+		self::assertAspectInvocation($service, 'KdybyTests\Aop\ConditionalAroundAspect', 0, new AroundMethod($service, 'magic', [1]));
 		self::assertAspectInvocation($service, 'KdybyTests\Aop\ConditionalAroundAspect', 1, NULL);
 		self::assertAspectInvocation($service, 'KdybyTests\Aop\ConditionalAroundAspect', 2, NULL);
 	}
@@ -186,35 +186,35 @@ class ExtensionTest extends Tester\TestCase
 
 		Assert::null($service->magic(2));
 		Assert::true(empty($service->calls));
-		$advice = self::assertAspectInvocation($service, 'KdybyTests\Aop\AroundBlockingAspect', 0, new AroundMethod($service, 'magic', array(2)));
+		$advice = self::assertAspectInvocation($service, 'KdybyTests\Aop\AroundBlockingAspect', 0, new AroundMethod($service, 'magic', [2]));
 		/** @var AroundBlockingAspect $advice */
 
 		$service->return = 3;
 		Assert::null($service->magic(2));
 		Assert::true(empty($service->calls));
-		self::assertAspectInvocation($service, 'KdybyTests\Aop\AroundBlockingAspect', 1, new AroundMethod($service, 'magic', array(2)));
+		self::assertAspectInvocation($service, 'KdybyTests\Aop\AroundBlockingAspect', 1, new AroundMethod($service, 'magic', [2]));
 
 		$service->throw = TRUE;
 		Assert::null($service->magic(2));
 		Assert::true(empty($service->calls));
-		self::assertAspectInvocation($service, 'KdybyTests\Aop\AroundBlockingAspect', 2, new AroundMethod($service, 'magic', array(2)));
+		self::assertAspectInvocation($service, 'KdybyTests\Aop\AroundBlockingAspect', 2, new AroundMethod($service, 'magic', [2]));
 
-		$advice->modifyArgs = array(3);
+		$advice->modifyArgs = [3];
 		Assert::null($service->magic(2));
 		Assert::true(empty($service->calls));
-		self::assertAspectInvocation($service, 'KdybyTests\Aop\AroundBlockingAspect', 3, new AroundMethod($service, 'magic', array(3)));
+		self::assertAspectInvocation($service, 'KdybyTests\Aop\AroundBlockingAspect', 3, new AroundMethod($service, 'magic', [3]));
 
 		$advice->modifyReturn = 9;
 		Assert::same(9, $service->magic(2));
 		Assert::true(empty($service->calls));
-		self::assertAspectInvocation($service, 'KdybyTests\Aop\AroundBlockingAspect', 4, new AroundMethod($service, 'magic', array(3)));
+		self::assertAspectInvocation($service, 'KdybyTests\Aop\AroundBlockingAspect', 4, new AroundMethod($service, 'magic', [3]));
 
 		$advice->modifyThrow = TRUE;
 		Assert::throws(function () use ($service) {
 			$service->magic(2);
 		}, 'RuntimeException', "Everybody is dead Dave.");
 		Assert::true(empty($service->calls));
-		self::assertAspectInvocation($service, 'KdybyTests\Aop\AroundBlockingAspect', 5, new AroundMethod($service, 'magic', array(3)));
+		self::assertAspectInvocation($service, 'KdybyTests\Aop\AroundBlockingAspect', 5, new AroundMethod($service, 'magic', [3]));
 	}
 
 
@@ -226,19 +226,19 @@ class ExtensionTest extends Tester\TestCase
 		/** @var CommonService $service */
 
 		Assert::same(4, $service->magic(2));
-		Assert::same(array(2), $service->calls[0]);
-		$advice = self::assertAspectInvocation($service, 'KdybyTests\Aop\AfterReturningAspect', 0, new AfterReturning($service, 'magic', array(2), 4));
+		Assert::same([2], $service->calls[0]);
+		$advice = self::assertAspectInvocation($service, 'KdybyTests\Aop\AfterReturningAspect', 0, new AfterReturning($service, 'magic', [2], 4));
 		/** @var AfterReturningAspect $advice */
 
 		$service->return = 3;
 		Assert::same(6, $service->magic(2));
-		Assert::same(array(2), $service->calls[1]);
-		self::assertAspectInvocation($service, 'KdybyTests\Aop\AfterReturningAspect', 1, new AfterReturning($service, 'magic', array(2), 6));
+		Assert::same([2], $service->calls[1]);
+		self::assertAspectInvocation($service, 'KdybyTests\Aop\AfterReturningAspect', 1, new AfterReturning($service, 'magic', [2], 6));
 
 		$advice->modifyReturn = 9;
 		Assert::same(9, $service->magic(2));
-		Assert::same(array(2), $service->calls[2]);
-		self::assertAspectInvocation($service, 'KdybyTests\Aop\AfterReturningAspect', 2, new AfterReturning($service, 'magic', array(2), 9));
+		Assert::same([2], $service->calls[2]);
+		self::assertAspectInvocation($service, 'KdybyTests\Aop\AfterReturningAspect', 2, new AfterReturning($service, 'magic', [2], 9));
 	}
 
 
@@ -257,12 +257,12 @@ class ExtensionTest extends Tester\TestCase
 		$service->return = 2;
 		Assert::same(4, $service->magic(2));
 
-		Assert::same(array(0), $service->calls[0]);
-		Assert::same(array(1), $service->calls[1]);
-		Assert::same(array(2), $service->calls[2]);
+		Assert::same([0], $service->calls[0]);
+		Assert::same([1], $service->calls[1]);
+		Assert::same([2], $service->calls[2]);
 
-		self::assertAspectInvocation($service, 'KdybyTests\Aop\ConditionalAfterReturningAspect', 0, new AfterReturning($service, 'magic', array(0), 0));
-		self::assertAspectInvocation($service, 'KdybyTests\Aop\ConditionalAfterReturningAspect', 1, new AfterReturning($service, 'magic', array(2), 4));
+		self::assertAspectInvocation($service, 'KdybyTests\Aop\ConditionalAfterReturningAspect', 0, new AfterReturning($service, 'magic', [0], 0));
+		self::assertAspectInvocation($service, 'KdybyTests\Aop\ConditionalAfterReturningAspect', 1, new AfterReturning($service, 'magic', [2], 4));
 		self::assertAspectInvocation($service, 'KdybyTests\Aop\ConditionalAfterReturningAspect', 2, NULL);
 	}
 
@@ -279,8 +279,8 @@ class ExtensionTest extends Tester\TestCase
 			$service->magic(2);
 		}, 'RuntimeException', "Something's fucky");
 
-		Assert::same(array(2), $service->calls[0]);
-		self::assertAspectInvocation($service, 'KdybyTests\Aop\AfterThrowingAspect', 0, new AfterThrowing($service, 'magic', array(2), new \RuntimeException("Something's fucky")));
+		Assert::same([2], $service->calls[0]);
+		self::assertAspectInvocation($service, 'KdybyTests\Aop\AfterThrowingAspect', 0, new AfterThrowing($service, 'magic', [2], new \RuntimeException("Something's fucky")));
 	}
 
 
@@ -292,16 +292,16 @@ class ExtensionTest extends Tester\TestCase
 		/** @var CommonService $service */
 
 		Assert::same(4, $service->magic(2));
-		Assert::same(array(2), $service->calls[0]);
-		self::assertAspectInvocation($service, 'KdybyTests\Aop\AfterAspect', 0, new AfterMethod($service, 'magic', array(2), 4));
+		Assert::same([2], $service->calls[0]);
+		self::assertAspectInvocation($service, 'KdybyTests\Aop\AfterAspect', 0, new AfterMethod($service, 'magic', [2], 4));
 
 		$service->throw = TRUE;
 		Assert::throws(function () use ($service) {
 			$service->magic(2);
 		}, 'RuntimeException', "Something's fucky");
 
-		Assert::same(array(2), $service->calls[1]);
-		self::assertAspectInvocation($service, 'KdybyTests\Aop\AfterAspect', 1, new AfterMethod($service, 'magic', array(2), NULL, new \RuntimeException("Something's fucky")));
+		Assert::same([2], $service->calls[1]);
+		self::assertAspectInvocation($service, 'KdybyTests\Aop\AfterAspect', 1, new AfterMethod($service, 'magic', [2], NULL, new \RuntimeException("Something's fucky")));
 	}
 
 
@@ -313,21 +313,21 @@ class ExtensionTest extends Tester\TestCase
 		/** @var CommonService $service */
 
 		Assert::same(4, $service->magic(2));
-		Assert::same(array(2), $service->calls[0]);
-		self::assertAspectInvocation($service, 'KdybyTests\Aop\BeforeAspect', 0, new BeforeMethod($service, 'magic', array(2)));
-		self::assertAspectInvocation($service, 'KdybyTests\Aop\AroundAspect', 0, new AroundMethod($service, 'magic', array(2)));
-		self::assertAspectInvocation($service, 'KdybyTests\Aop\AfterReturningAspect', 0, new AfterReturning($service, 'magic', array(2), 4));
-		self::assertAspectInvocation($service, 'KdybyTests\Aop\AfterAspect', 0, new AfterMethod($service, 'magic', array(2), 4));
+		Assert::same([2], $service->calls[0]);
+		self::assertAspectInvocation($service, 'KdybyTests\Aop\BeforeAspect', 0, new BeforeMethod($service, 'magic', [2]));
+		self::assertAspectInvocation($service, 'KdybyTests\Aop\AroundAspect', 0, new AroundMethod($service, 'magic', [2]));
+		self::assertAspectInvocation($service, 'KdybyTests\Aop\AfterReturningAspect', 0, new AfterReturning($service, 'magic', [2], 4));
+		self::assertAspectInvocation($service, 'KdybyTests\Aop\AfterAspect', 0, new AfterMethod($service, 'magic', [2], 4));
 
 		$service->throw = TRUE;
 		Assert::throws(function () use ($service) {
 			$service->magic(3);
 		}, 'RuntimeException', "Something's fucky");
-		Assert::same(array(3), $service->calls[1]);
-		self::assertAspectInvocation($service, 'KdybyTests\Aop\BeforeAspect', 1, new BeforeMethod($service, 'magic', array(3)));
-		self::assertAspectInvocation($service, 'KdybyTests\Aop\AroundAspect', 1, new AroundMethod($service, 'magic', array(3)));
-		self::assertAspectInvocation($service, 'KdybyTests\Aop\AfterThrowingAspect', 0, new AfterThrowing($service, 'magic', array(3), new \RuntimeException("Something's fucky")));
-		self::assertAspectInvocation($service, 'KdybyTests\Aop\AfterAspect', 1, new AfterMethod($service, 'magic', array(3), NULL, new \RuntimeException("Something's fucky")));
+		Assert::same([3], $service->calls[1]);
+		self::assertAspectInvocation($service, 'KdybyTests\Aop\BeforeAspect', 1, new BeforeMethod($service, 'magic', [3]));
+		self::assertAspectInvocation($service, 'KdybyTests\Aop\AroundAspect', 1, new AroundMethod($service, 'magic', [3]));
+		self::assertAspectInvocation($service, 'KdybyTests\Aop\AfterThrowingAspect', 0, new AfterThrowing($service, 'magic', [3], new \RuntimeException("Something's fucky")));
+		self::assertAspectInvocation($service, 'KdybyTests\Aop\AfterAspect', 1, new AfterMethod($service, 'magic', [3], NULL, new \RuntimeException("Something's fucky")));
 	}
 
 
@@ -339,29 +339,29 @@ class ExtensionTest extends Tester\TestCase
 		/** @var CommonService $service */
 
 		Assert::same(4, $service->magic(2));
-		Assert::same(array(2), $service->calls[0]);
-		self::assertAspectInvocation($service, 'KdybyTests\Aop\BeforeAspect', 0, new BeforeMethod($service, 'magic', array(2)));
-		self::assertAspectInvocation($service, 'KdybyTests\Aop\SecondBeforeAspect', 0, new BeforeMethod($service, 'magic', array(2)));
-		self::assertAspectInvocation($service, 'KdybyTests\Aop\AroundAspect', 0, new AroundMethod($service, 'magic', array(2)));
-		self::assertAspectInvocation($service, 'KdybyTests\Aop\SecondAroundAspect', 0, new AroundMethod($service, 'magic', array(2)));
-		self::assertAspectInvocation($service, 'KdybyTests\Aop\AfterReturningAspect', 0, new AfterReturning($service, 'magic', array(2), 4));
-		self::assertAspectInvocation($service, 'KdybyTests\Aop\SecondAfterReturningAspect', 0, new AfterReturning($service, 'magic', array(2), 4));
-		self::assertAspectInvocation($service, 'KdybyTests\Aop\AfterAspect', 0, new AfterMethod($service, 'magic', array(2), 4));
-		self::assertAspectInvocation($service, 'KdybyTests\Aop\SecondAfterAspect', 0, new AfterMethod($service, 'magic', array(2), 4));
+		Assert::same([2], $service->calls[0]);
+		self::assertAspectInvocation($service, 'KdybyTests\Aop\BeforeAspect', 0, new BeforeMethod($service, 'magic', [2]));
+		self::assertAspectInvocation($service, 'KdybyTests\Aop\SecondBeforeAspect', 0, new BeforeMethod($service, 'magic', [2]));
+		self::assertAspectInvocation($service, 'KdybyTests\Aop\AroundAspect', 0, new AroundMethod($service, 'magic', [2]));
+		self::assertAspectInvocation($service, 'KdybyTests\Aop\SecondAroundAspect', 0, new AroundMethod($service, 'magic', [2]));
+		self::assertAspectInvocation($service, 'KdybyTests\Aop\AfterReturningAspect', 0, new AfterReturning($service, 'magic', [2], 4));
+		self::assertAspectInvocation($service, 'KdybyTests\Aop\SecondAfterReturningAspect', 0, new AfterReturning($service, 'magic', [2], 4));
+		self::assertAspectInvocation($service, 'KdybyTests\Aop\AfterAspect', 0, new AfterMethod($service, 'magic', [2], 4));
+		self::assertAspectInvocation($service, 'KdybyTests\Aop\SecondAfterAspect', 0, new AfterMethod($service, 'magic', [2], 4));
 
 		$service->throw = TRUE;
 		Assert::throws(function () use ($service) {
 			$service->magic(3);
 		}, 'RuntimeException', "Something's fucky");
-		Assert::same(array(3), $service->calls[1]);
-		self::assertAspectInvocation($service, 'KdybyTests\Aop\BeforeAspect', 1, new BeforeMethod($service, 'magic', array(3)));
-		self::assertAspectInvocation($service, 'KdybyTests\Aop\SecondBeforeAspect', 1, new BeforeMethod($service, 'magic', array(3)));
-		self::assertAspectInvocation($service, 'KdybyTests\Aop\AroundAspect', 1, new AroundMethod($service, 'magic', array(3)));
-		self::assertAspectInvocation($service, 'KdybyTests\Aop\SecondAroundAspect', 1, new AroundMethod($service, 'magic', array(3)));
-		self::assertAspectInvocation($service, 'KdybyTests\Aop\AfterThrowingAspect', 0, new AfterThrowing($service, 'magic', array(3), new \RuntimeException("Something's fucky")));
-		self::assertAspectInvocation($service, 'KdybyTests\Aop\SecondAfterThrowingAspect', 0, new AfterThrowing($service, 'magic', array(3), new \RuntimeException("Something's fucky")));
-		self::assertAspectInvocation($service, 'KdybyTests\Aop\AfterAspect', 1, new AfterMethod($service, 'magic', array(3), NULL, new \RuntimeException("Something's fucky")));
-		self::assertAspectInvocation($service, 'KdybyTests\Aop\SecondAfterAspect', 1, new AfterMethod($service, 'magic', array(3), NULL, new \RuntimeException("Something's fucky")));
+		Assert::same([3], $service->calls[1]);
+		self::assertAspectInvocation($service, 'KdybyTests\Aop\BeforeAspect', 1, new BeforeMethod($service, 'magic', [3]));
+		self::assertAspectInvocation($service, 'KdybyTests\Aop\SecondBeforeAspect', 1, new BeforeMethod($service, 'magic', [3]));
+		self::assertAspectInvocation($service, 'KdybyTests\Aop\AroundAspect', 1, new AroundMethod($service, 'magic', [3]));
+		self::assertAspectInvocation($service, 'KdybyTests\Aop\SecondAroundAspect', 1, new AroundMethod($service, 'magic', [3]));
+		self::assertAspectInvocation($service, 'KdybyTests\Aop\AfterThrowingAspect', 0, new AfterThrowing($service, 'magic', [3], new \RuntimeException("Something's fucky")));
+		self::assertAspectInvocation($service, 'KdybyTests\Aop\SecondAfterThrowingAspect', 0, new AfterThrowing($service, 'magic', [3], new \RuntimeException("Something's fucky")));
+		self::assertAspectInvocation($service, 'KdybyTests\Aop\AfterAspect', 1, new AfterMethod($service, 'magic', [3], NULL, new \RuntimeException("Something's fucky")));
+		self::assertAspectInvocation($service, 'KdybyTests\Aop\SecondAfterAspect', 1, new AfterMethod($service, 'magic', [3], NULL, new \RuntimeException("Something's fucky")));
 	}
 
 
@@ -428,7 +428,7 @@ class ExtensionTest extends Tester\TestCase
 			return $propRefl->getValue($service);
 
 		} catch (\ReflectionException $e) {
-			return array();
+			return [];
 		}
 	}
 

@@ -30,12 +30,12 @@ class NamespaceBlock extends Nette\Object
 	/**
 	 * @var array|Code\ClassType[]
 	 */
-	public $classes = array();
+	public $classes = [];
 
 	/**
 	 * @var array
 	 */
-	public $imports = array();
+	public $imports = [];
 
 
 

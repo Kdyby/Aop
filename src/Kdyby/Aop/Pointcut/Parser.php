@@ -49,7 +49,7 @@ class Parser extends Nette\Object
 
 	public function __construct(MatcherFactory $matcherFactory)
 	{
-		$this->tokenizer = new Tokenizer(array(
+		$this->tokenizer = new Tokenizer([
 			self::TOK_BRACKET => '[\\(\\)]',
 			self::TOK_VISIBILITY => '(?:public|protected|private)(?=[\t ]+)',
 			self::TOK_KEYWORD => '(?:classAnnotatedWith|class|methodAnnotatedWith|method|within|filter|setting|evaluate)(?=\\()',
@@ -61,7 +61,7 @@ class Parser extends Nette\Object
 			self::TOK_WHITESPACE => '[\n\r\s]+',
 			self::TOK_STRING => '\'(?:\\\\.|[^\'\\\\])*\'|"(?:\\\\.|[^"\\\\])*"',
 			self::TOK_WILDCARD => '\\*',
-		), 'i');
+		], 'i');
 
 		$this->matcherFactory = $matcherFactory;
 	}
@@ -72,7 +72,7 @@ class Parser extends Nette\Object
 	{
 		try {
 			$tokens = new TokenIterator($this->tokenizer->tokenize($input));
-			$tokens->ignored = array(self::TOK_WHITESPACE);
+			$tokens->ignored = [self::TOK_WHITESPACE];
 
 		} catch (Nette\Utils\TokenizerException $e) {
 			throw new Kdyby\Aop\ParserException("Input contains unexpected expressions", 0, $e);
@@ -92,7 +92,7 @@ class Parser extends Nette\Object
 	{
 		$inverseNext = FALSE;
 		$operator = NULL;
-		$rules = array();
+		$rules = [];
 		while ($token = $tokens->nextToken()) {
 			if ($tokens->isCurrent(self::TOK_KEYWORD)) {
 				$rule = $this->{'parse' . $token[0]}($tokens);
@@ -157,29 +157,29 @@ class Parser extends Nette\Object
 	protected function parseMethod(TokenIterator $tokens)
 	{
 		$visibility = NULL;
-		$arguments = array();
+		$arguments = [];
 
 		if ($tokens->isCurrent(self::TOK_KEYWORD)) {
-			self::nextValue($tokens, self::TOK_KEYWORD, array(self::TOK_WHITESPACE));
+			self::nextValue($tokens, self::TOK_KEYWORD, [self::TOK_WHITESPACE]);
 			$tokens->nextToken();
-			self::nextValue($tokens, '(', array(self::TOK_WHITESPACE));
+			self::nextValue($tokens, '(', [self::TOK_WHITESPACE]);
 			$tokens->nextToken();
 		}
 
-		$className = self::nextValue($tokens, array(self::TOK_IDENTIFIER, self::TOK_VISIBILITY), array(self::TOK_WHITESPACE));
+		$className = self::nextValue($tokens, [self::TOK_IDENTIFIER, self::TOK_VISIBILITY], [self::TOK_WHITESPACE]);
 		if ($tokens->isCurrent(self::TOK_VISIBILITY)) {
 			$visibility = $className . ' ';
 
 			$tokens->nextToken();
-			$className = self::nextValue($tokens, array(self::TOK_IDENTIFIER), array(self::TOK_WHITESPACE));
+			$className = self::nextValue($tokens, [self::TOK_IDENTIFIER], [self::TOK_WHITESPACE]);
 		}
 
 		$tokens->nextToken();
-		$method = substr(self::nextValue($tokens, array(self::TOK_METHOD), array(self::TOK_WHITESPACE)), 2);
+		$method = substr(self::nextValue($tokens, [self::TOK_METHOD], [self::TOK_WHITESPACE]), 2);
 
 		if ($tokens->isNext('(')) {
 			if ($criteria = $this->parseArguments($tokens)) {
-				$arguments = array($this->matcherFactory->getMatcher('arguments', $criteria));
+				$arguments = [$this->matcherFactory->getMatcher('arguments', $criteria)];
 			}
 		}
 		$tokens->nextToken(); // method end )
@@ -191,10 +191,10 @@ class Parser extends Nette\Object
 			return $this->matcherFactory->getMatcher('method', $visibility . $method);
 		}
 
-		return new Rules(array_merge(array(
+		return new Rules(array_merge([
 			$this->matcherFactory->getMatcher('class', $className),
 			$this->matcherFactory->getMatcher('method', $visibility . $method),
-		), $arguments), Rules::OP_AND);
+		], $arguments), Rules::OP_AND);
 	}
 
 
@@ -270,7 +270,7 @@ class Parser extends Nette\Object
 	protected function parseArguments(TokenIterator $tokens)
 	{
 		$operator = NULL;
-		$conditions = array();
+		$conditions = [];
 
 		while ($token = $tokens->nextToken()) {
 			if ($tokens->isCurrent(self::TOK_LOGIC)) {
@@ -294,16 +294,16 @@ class Parser extends Nette\Object
 
 			$left = self::sanitizeArgumentExpression(self::nextValue(
 				$tokens,
-				array(self::TOK_IDENTIFIER, self::TOK_STRING),
+				[self::TOK_IDENTIFIER, self::TOK_STRING],
 				self::TOK_WHITESPACE
 			), $tokens->currentToken());
 
 			$tokens->nextToken();
-			$comparator = self::nextValue($tokens, array(self::TOK_OPERATOR, self::TOK_LOGIC, ')'), self::TOK_WHITESPACE);
+			$comparator = self::nextValue($tokens, [self::TOK_OPERATOR, self::TOK_LOGIC, ')'], self::TOK_WHITESPACE);
 
 			if ($tokens->isCurrent(self::TOK_LOGIC, ')')) {
 				$tokens->position -= 1;
-				$conditions[] = array($left, Matcher\Criteria::EQ, new PhpLiteral("TRUE"));
+				$conditions[] = [$left, Matcher\Criteria::EQ, new PhpLiteral("TRUE")];
 				continue;
 			}
 
@@ -312,7 +312,7 @@ class Parser extends Nette\Object
 				if ($tokens->isNext('(')) {
 					$tokens->nextToken(); // (
 
-					$right = array();
+					$right = [];
 					while ($token = $tokens->nextToken()) {
 						if ($tokens->isCurrent(')')) {
 							break;
@@ -329,7 +329,7 @@ class Parser extends Nette\Object
 						throw new Kdyby\Aop\ParserException("Argument for $comparator cannot be an empty array.");
 					}
 
-					$conditions[] = array($left, $comparator, $right);
+					$conditions[] = [$left, $comparator, $right];
 					continue;
 				}
 			}
@@ -337,11 +337,11 @@ class Parser extends Nette\Object
 			$tokens->nextToken();
 			$right = self::sanitizeArgumentExpression(self::nextValue(
 				$tokens,
-				array(self::TOK_IDENTIFIER, self::TOK_STRING),
+				[self::TOK_IDENTIFIER, self::TOK_STRING],
 				self::TOK_WHITESPACE
 			), $tokens->currentToken());
 
-			$conditions[] = array($left, $comparator, $right);
+			$conditions[] = [$left, $comparator, $right];
 		}
 
 		if (!$conditions) {
@@ -398,14 +398,14 @@ class Parser extends Nette\Object
 	 * @throws \Kdyby\Aop\ParserException
 	 * @return NULL|string
 	 */
-	protected static function nextValue(TokenIterator $tokens, $types, $allowedToSkip = array())
+	protected static function nextValue(TokenIterator $tokens, $types, $allowedToSkip = [])
 	{
 		do {
-			if (call_user_func_array(array($tokens, 'isCurrent'), (array)$types)) {
+			if (call_user_func_array([$tokens, 'isCurrent'], (array)$types)) {
 				return $tokens->currentValue();
 			}
 
-			if (!$allowedToSkip || !call_user_func_array(array($tokens, 'isCurrent'), (array)$allowedToSkip)) {
+			if (!$allowedToSkip || !call_user_func_array([$tokens, 'isCurrent'], (array)$allowedToSkip)) {
 				$type = $tokens->currentToken();
 				throw new Kdyby\Aop\ParserException('Unexpected token ' . $type[Tokenizer::TYPE] . ' at offset ' . $type[Tokenizer::OFFSET]);
 			}

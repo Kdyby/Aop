@@ -36,7 +36,7 @@ class MatcherFactory extends Nette\Object
 	/**
 	 * @var array
 	 */
-	private $cache = array();
+	private $cache = [];
 
 
 
@@ -56,7 +56,7 @@ class MatcherFactory extends Nette\Object
 	public function getMatcher($type, $arg)
 	{
 		if (!isset($this->cache[$type][(string) $arg])) {
-			$this->cache[$type][(string) $arg] = call_user_func(array($this, 'create' . ucfirst($type)), $arg);
+			$this->cache[$type][(string) $arg] = call_user_func([$this, 'create' . ucfirst($type)], $arg);
 		}
 
 		return $this->cache[$type][(string) $arg];

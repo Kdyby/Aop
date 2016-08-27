@@ -25,11 +25,11 @@ class AroundMethod extends MethodInvocation
 	/**
 	 * @var array|callable[]
 	 */
-	private $callChain = array();
+	private $callChain = [];
 
 
 
-	public function __construct($targetObject, $targetMethod, $arguments = array())
+	public function __construct($targetObject, $targetMethod, $arguments = [])
 	{
 		parent::__construct($targetObject, $targetMethod, $arguments);
 	}
@@ -45,7 +45,7 @@ class AroundMethod extends MethodInvocation
 
 	public function addChainLink($object, $method)
 	{
-		return $this->callChain[] = array($object, $method);
+		return $this->callChain[] = [$object, $method];
 	}
 
 
@@ -56,10 +56,10 @@ class AroundMethod extends MethodInvocation
 	public function proceed()
 	{
 		if ($callback = array_shift($this->callChain)) {
-			return call_user_func(array($callback[0], $callback[1]), $this);
+			return call_user_func([$callback[0], $callback[1]], $this);
 		}
 
-		return call_user_func_array(array($this->targetObject, AdvisedClassType::CG_PUBLIC_PROXY_PREFIX . $this->targetMethod), $this->getArguments());
+		return call_user_func_array([$this->targetObject, AdvisedClassType::CG_PUBLIC_PROXY_PREFIX . $this->targetMethod], $this->getArguments());
 	}
 
 }

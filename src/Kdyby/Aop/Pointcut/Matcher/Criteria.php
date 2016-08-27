@@ -46,7 +46,7 @@ class Criteria extends Nette\Object
 	/**
 	 * @var array
 	 */
-	private $expressions = array();
+	private $expressions = [];
 
 
 
@@ -56,7 +56,7 @@ class Criteria extends Nette\Object
 	 */
 	public function __construct($operator = self::TYPE_AND)
 	{
-		if (!in_array($operator = strtoupper($operator), array(self::TYPE_AND, self::TYPE_OR), TRUE)) {
+		if (!in_array($operator = strtoupper($operator), [self::TYPE_AND, self::TYPE_OR], TRUE)) {
 			throw new Kdyby\Aop\InvalidArgumentException("Given operator '$operator' cannot be evaluated.");
 		}
 
@@ -83,7 +83,7 @@ class Criteria extends Nette\Object
 			throw new Kdyby\Aop\InvalidArgumentException("Given comparison '$comparison' cannot be evaluated.");
 		}
 
-		$this->expressions[] = array($left, $comparison, $right);
+		$this->expressions[] = [$left, $comparison, $right];
 		return $this;
 	}
 
@@ -106,7 +106,7 @@ class Criteria extends Nette\Object
 			throw new Kdyby\Aop\NoRulesExceptions();
 		}
 
-		$logical = array();
+		$logical = [];
 		foreach ($this->expressions as $expression) {
 			$logical[] = $this->doEvaluate($builder, $expression);
 			if (!$this->isMatching($logical)) {
@@ -170,7 +170,7 @@ class Criteria extends Nette\Object
 			throw new Kdyby\Aop\NoRulesExceptions();
 		}
 
-		$serialised = array();
+		$serialised = [];
 		foreach ($this->expressions as $expression) {
 			$serialised[] = $this->doSerialize($builder, $expression);
 		}
@@ -261,13 +261,13 @@ class Criteria extends Nette\Object
 	 */
 	public static function isValidComparison($comparison)
 	{
-		return in_array(strtoupper($comparison), array(
+		return in_array(strtoupper($comparison), [
 			self::EQ, self::NEQ, '!=',
 			self::LT, self::LTE,
 			self::GT, self::GTE,
 			self::IS, 'IS', self::IN, self::NIN,
 			self::CONTAINS, self::MATCHES
-		), TRUE);
+		], TRUE);
 	}
 
 

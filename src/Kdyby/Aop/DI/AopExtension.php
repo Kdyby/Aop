@@ -32,12 +32,12 @@ class AopExtension extends Nette\DI\CompilerExtension
 	/**
 	 * @var array
 	 */
-	private $classes = array();
+	private $classes = [];
 
 	/**
 	 * @var array
 	 */
-	private $serviceDefinitions = array();
+	private $serviceDefinitions = [];
 
 	/**
 	 * @var string
@@ -111,7 +111,7 @@ class AopExtension extends Nette\DI\CompilerExtension
 		}
 
 		$init = $class->methods['initialize'];
-		$init->addBody('require_once ?;', array($this->compiledFile));
+		$init->addBody('require_once ?;', [$this->compiledFile]);
 	}
 
 
@@ -134,7 +134,7 @@ class AopExtension extends Nette\DI\CompilerExtension
 		}
 
 		if (!$constructorInject) {
-			$statement = new Nette\DI\Statement(AdvisedClassType::CG_INJECT_METHOD, array('@Nette\DI\Container'));
+			$statement = new Nette\DI\Statement(AdvisedClassType::CG_INJECT_METHOD, ['@Nette\DI\Container']);
 
 			if ($publicSetup) {
 				array_unshift($def->setup, $statement);
@@ -177,7 +177,7 @@ class AopExtension extends Nette\DI\CompilerExtension
 		$matcherFactory = new Pointcut\MatcherFactory($builder, $annotationReader);
 		$analyzer = new Pointcut\AspectAnalyzer(new Pointcut\Parser($matcherFactory), $annotationReader);
 
-		$advisedMethods = array();
+		$advisedMethods = [];
 		$this->classes = NULL;
 
 		foreach ($builder->findByTag(AspectsExtension::ASPECT_TAG) as $aspectId => $meta) {
@@ -214,18 +214,18 @@ class AopExtension extends Nette\DI\CompilerExtension
 	private function findByTypes($types)
 	{
 		if ($this->classes === NULL) {
-			$this->classes = array();
+			$this->classes = [];
 			foreach ($this->getContainerBuilder()->getDefinitions() as $name => $def) {
 				$class = $def->class;
 				if ($class) {
-					foreach (class_parents($class) + class_implements($class) + array($class) as $parent) {
+					foreach (class_parents($class) + class_implements($class) + [$class] as $parent) {
 						$this->classes[strtolower($parent)][] = (string) $name;
 					}
 				}
 			}
 		}
 
-		$services = array();
+		$services = [];
 		foreach (array_filter((array)$types) as $type) {
 			$lower = ltrim(strtolower($type), '\\');
 			if (isset($this->classes[$lower])) {

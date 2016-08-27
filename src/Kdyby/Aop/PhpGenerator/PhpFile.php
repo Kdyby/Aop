@@ -24,7 +24,7 @@ class PhpFile extends Nette\Object
 	/**
 	 * @var array|NamespaceBlock[]
 	 */
-	public $namespaces = array();
+	public $namespaces = [];
 
 
 

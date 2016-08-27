@@ -18,7 +18,7 @@ use Kdyby\Aop;
 class CommonService
 {
 
-	public $calls = array();
+	public $calls = [];
 
 	public $throw = FALSE;
 
@@ -60,7 +60,7 @@ class BeforeAspect extends Nette\Object
 	/**
 	 * @var array|Aop\JoinPoint\BeforeMethod[]
 	 */
-	public $calls = array();
+	public $calls = [];
 
 	public $modifyArgs = FALSE;
 
@@ -90,7 +90,7 @@ class ConditionalBeforeAspect extends Nette\Object
 	/**
 	 * @var array|Aop\JoinPoint\BeforeMethod[]
 	 */
-	public $calls = array();
+	public $calls = [];
 
 	public $modifyArgs = FALSE;
 
@@ -127,7 +127,7 @@ class AroundAspect extends Nette\Object
 	/**
 	 * @var array|Aop\JoinPoint\AroundMethod[]
 	 */
-	public $calls = array();
+	public $calls = [];
 
 	public $modifyArgs = FALSE;
 
@@ -167,7 +167,7 @@ class ConditionalAroundAspect extends Nette\Object
 	/**
 	 * @var array|Aop\JoinPoint\AroundMethod[]
 	 */
-	public $calls = array();
+	public $calls = [];
 
 	public $modifyArgs = FALSE;
 
@@ -214,7 +214,7 @@ class AroundBlockingAspect extends Nette\Object
 	/**
 	 * @var array|Aop\JoinPoint\AroundMethod[]
 	 */
-	public $calls = array();
+	public $calls = [];
 
 	public $modifyArgs = FALSE;
 
@@ -267,7 +267,7 @@ class AfterReturningAspect extends Nette\Object
 	/**
 	 * @var array|Aop\JoinPoint\AfterReturning[]
 	 */
-	public $calls = array();
+	public $calls = [];
 
 	public $modifyReturn = FALSE;
 
@@ -295,7 +295,7 @@ class ConditionalAfterReturningAspect extends Nette\Object
 	/**
 	 * @var array|Aop\JoinPoint\AfterReturning[]
 	 */
-	public $calls = array();
+	public $calls = [];
 
 	public $modifyReturn = FALSE;
 
@@ -330,7 +330,7 @@ class AfterThrowingAspect extends Nette\Object
 	/**
 	 * @var array|Aop\JoinPoint\AfterThrowing[]
 	 */
-	public $calls = array();
+	public $calls = [];
 
 
 
@@ -359,7 +359,7 @@ class AfterAspect extends Nette\Object
 	/**
 	 * @var array|Aop\JoinPoint\AfterMethod[]
 	 */
-	public $calls = array();
+	public $calls = [];
 
 
 
@@ -411,7 +411,7 @@ class ConstructorBeforeAspect extends Nette\Object
 	/**
 	 * @var array|Aop\JoinPoint\BeforeMethod[]
 	 */
-	public $calls = array();
+	public $calls = [];
 
 
 

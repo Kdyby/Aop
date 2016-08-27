@@ -40,7 +40,7 @@ class AfterMethod extends MethodInvocation implements ResultAware, ExceptionAwar
 	 * @param null $result
 	 * @param \Exception|\Throwable|NULL $exception
 	 */
-	public function __construct($targetObject, $targetMethod, $arguments = array(), $result = NULL, $exception = NULL)
+	public function __construct($targetObject, $targetMethod, $arguments = [], $result = NULL, $exception = NULL)
 	{
 		parent::__construct($targetObject, $targetMethod, $arguments);
 		$this->result = $result;

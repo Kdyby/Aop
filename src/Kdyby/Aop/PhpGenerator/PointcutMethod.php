@@ -25,27 +25,27 @@ class PointcutMethod extends Code\Method
 	/**
 	 * @var array
 	 */
-	private $before = array();
+	private $before = [];
 
 	/**
 	 * @var array
 	 */
-	private $around = array();
+	private $around = [];
 
 	/**
 	 * @var array
 	 */
-	private $afterReturning = array();
+	private $afterReturning = [];
 
 	/**
 	 * @var array
 	 */
-	private $afterThrowing = array();
+	private $afterThrowing = [];
 
 	/**
 	 * @var array
 	 */
-	private $after = array();
+	private $after = [];
 
 
 

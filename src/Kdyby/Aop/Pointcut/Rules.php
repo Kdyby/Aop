@@ -37,7 +37,7 @@ class Rules extends Nette\Object implements Filter, RuntimeFilter
 
 
 
-	public function __construct(array $rules = array(), $operator = self::OP_AND)
+	public function __construct(array $rules = [], $operator = self::OP_AND)
 	{
 		foreach ($rules as $rule) {
 			$this->addRule($rule);
@@ -78,7 +78,7 @@ class Rules extends Nette\Object implements Filter, RuntimeFilter
 			throw new Kdyby\Aop\NoRulesExceptions();
 		}
 
-		$logical = array();
+		$logical = [];
 		foreach ($this->rules as $rule) {
 			$logical[] = $rule->matches($method);
 			if (!$this->isMatching($logical)) {
@@ -96,7 +96,7 @@ class Rules extends Nette\Object implements Filter, RuntimeFilter
 	 */
 	public function listAcceptedTypes()
 	{
-		$types = array();
+		$types = [];
 		foreach ($this->rules as $rule) {
 			$types = array_merge($types, (array)$rule->listAcceptedTypes());
 		}
@@ -111,7 +111,7 @@ class Rules extends Nette\Object implements Filter, RuntimeFilter
 	 */
 	public function createCondition()
 	{
-		$conds = array();
+		$conds = [];
 		foreach ($this->rules as $rule) {
 			if (!$rule instanceof RuntimeFilter) {
 				continue;

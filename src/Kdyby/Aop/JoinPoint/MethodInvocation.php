@@ -40,7 +40,7 @@ abstract class MethodInvocation extends Nette\Object
 
 
 
-	public function __construct($targetObject, $targetMethod, $arguments = array())
+	public function __construct($targetObject, $targetMethod, $arguments = [])
 	{
 		$this->targetObject = $targetObject;
 		$this->targetMethod = $targetMethod;

@@ -33,7 +33,7 @@ class AdvisedClassType extends Code\ClassType
 	 */
 	public function setMethodInstance(Code\Method $method)
 	{
-		$methods = array($method->getName() => $method) + $this->getMethods();
+		$methods = [$method->getName() => $method] + $this->getMethods();
 		$this->setMethods($methods);
 
 		return $method;
@@ -46,14 +46,14 @@ class AdvisedClassType extends Code\ClassType
 		$originalName = $method->getName();
 		$method->setName(self::CG_PUBLIC_PROXY_PREFIX . $originalName);
 		$method->setVisibility('public');
-		$method->setDocuments(array('@internal', '@deprecated'));
+		$method->setDocuments(['@internal', '@deprecated']);
 
-		$argumentsPass = array();
+		$argumentsPass = [];
 		foreach ($method->getParameters() as $parameter) {
 			/** @var Code\Parameter $parameter */
 			$argumentsPass[] = '$' . $parameter->getName();
 		}
-		$method->addBody('return parent::?(?);', array($originalName, new Code\PhpLiteral(implode(', ', $argumentsPass))));
+		$method->addBody('return parent::?(?);', [$originalName, new Code\PhpLiteral(implode(', ', $argumentsPass))]);
 
 		$this->setMethodInstance($method);
 	}
@@ -71,19 +71,19 @@ class AdvisedClassType extends Code\ClassType
 		$class = new static();
 		/** @var AdvisedClassType $class */
 
-		$class->setName(str_replace(array('\\', '.'), '_', "{$originalType}Class_{$service->serviceId}"));
+		$class->setName(str_replace(['\\', '.'], '_', "{$originalType}Class_{$service->serviceId}"));
 		$class->setExtends('\\' . $originalType->getName());
 		$class->setFinal(TRUE);
 
 		$class->addProperty('_kdyby_aopContainer')
 			->setVisibility('private')
 			->addDocument('@var \Nette\DI\Container|\SystemContainer');
-		$class->addProperty('_kdyby_aopAdvices', array())
+		$class->addProperty('_kdyby_aopAdvices', [])
 			->setVisibility('private');
 
 		$injectMethod = $class->addMethod(self::CG_INJECT_METHOD);
 		$injectMethod->addParameter('container')->setTypeHint('\Nette\DI\Container');
-		$injectMethod->setDocuments(array('@internal', '@deprecated'));
+		$injectMethod->setDocuments(['@internal', '@deprecated']);
 		$injectMethod->addBody('$this->_kdyby_aopContainer = $container;');
 
 		$providerMethod = $class->addMethod('__getAdvice');
@@ -96,7 +96,7 @@ class AdvisedClassType extends Code\ClassType
 		);
 
 		if (!$originalType->hasMethod('__sleep')) {
-			$properties = array();
+			$properties = [];
 			foreach ($originalType->getProperties() as $property) {
 				if ($property->isStatic()) {
 					continue;
@@ -106,7 +106,7 @@ class AdvisedClassType extends Code\ClassType
 			}
 
 			$sleep = $class->addMethod('__sleep');
-			$sleep->setBody('return array(?);', array(new Code\PhpLiteral(implode(', ', $properties))));
+			$sleep->setBody('return array(?);', [new Code\PhpLiteral(implode(', ', $properties))]);
 		}
 
 		return $class;

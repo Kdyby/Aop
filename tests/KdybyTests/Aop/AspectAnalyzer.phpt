@@ -34,67 +34,67 @@ class AspectAnalyzerTest extends Tester\TestCase
 	 */
 	public function dataAnalyze()
 	{
-		$data = array();
+		$data = [];
 
-		$data[] = array(
-			array(
-				'log' => array(
-					'Kdyby\Aop\Before' => new Pointcut\Rules(array(
+		$data[] = [
+			[
+				'log' => [
+					'Kdyby\Aop\Before' => new Pointcut\Rules([
 						new Pointcut\Matcher\WithinMatcher('KdybyTests\Aop\CommonService'),
 						new Pointcut\Matcher\MethodMatcher('magic'),
-					))
-				),
-			),
+					])
+				],
+			],
 			$this->createDefinition('KdybyTests\Aop\BeforeAspect'),
-		);
+		];
 
-		$data[] = array(
-			array(
-				'log' => array(
-					'Kdyby\Aop\Around' => new Pointcut\Rules(array(
+		$data[] = [
+			[
+				'log' => [
+					'Kdyby\Aop\Around' => new Pointcut\Rules([
 						new Pointcut\Matcher\WithinMatcher('KdybyTests\Aop\CommonService'),
 						new Pointcut\Matcher\MethodMatcher('magic'),
-					)),
-				),
-			),
+					]),
+				],
+			],
 			$this->createDefinition('KdybyTests\Aop\AroundAspect'),
-		);
+		];
 
-		$data[] = array(
-			array(
-				'log' => array(
-					'Kdyby\Aop\AfterReturning' => new Pointcut\Rules(array(
+		$data[] = [
+			[
+				'log' => [
+					'Kdyby\Aop\AfterReturning' => new Pointcut\Rules([
 						new Pointcut\Matcher\WithinMatcher('KdybyTests\Aop\CommonService'),
 						new Pointcut\Matcher\MethodMatcher('magic'),
-					)),
-				),
-			),
+					]),
+				],
+			],
 			$this->createDefinition('KdybyTests\Aop\AfterReturningAspect'),
-		);
+		];
 
-		$data[] = array(
-			array(
-				'log' => array(
-					'Kdyby\Aop\AfterThrowing' => new Pointcut\Rules(array(
+		$data[] = [
+			[
+				'log' => [
+					'Kdyby\Aop\AfterThrowing' => new Pointcut\Rules([
 						new Pointcut\Matcher\WithinMatcher('KdybyTests\Aop\CommonService'),
 						new Pointcut\Matcher\MethodMatcher('magic'),
-					)),
-				),
-			),
+					]),
+				],
+			],
 			$this->createDefinition('KdybyTests\Aop\AfterThrowingAspect'),
-		);
+		];
 
-		$data[] = array(
-			array(
-				'log' => array(
-					'Kdyby\Aop\After' => new Pointcut\Rules(array(
+		$data[] = [
+			[
+				'log' => [
+					'Kdyby\Aop\After' => new Pointcut\Rules([
 						new Pointcut\Matcher\WithinMatcher('KdybyTests\Aop\CommonService'),
 						new Pointcut\Matcher\MethodMatcher('magic'),
-					)),
-				),
-			),
+					]),
+				],
+			],
 			$this->createDefinition('KdybyTests\Aop\AfterAspect'),
-		);
+		];
 
 		return $data;
 	}

@@ -90,7 +90,7 @@ class CriteriaTest extends Tester\TestCase
 	public function testIn()
 	{
 		$dave = new \stdClass;
-		$lister = new ArrayCollection(array($dave));
+		$lister = new ArrayCollection([$dave]);
 		$kryten = new \SplObjectStorage();
 		$kryten->attach($dave);
 		$cat = new \stdClass;
@@ -118,7 +118,7 @@ class CriteriaTest extends Tester\TestCase
 	public function testContains()
 	{
 		$dave = new \stdClass;
-		$lister = new ArrayCollection(array($dave));
+		$lister = new ArrayCollection([$dave]);
 		$kryten = new \SplObjectStorage();
 		$kryten->attach($dave);
 		$cat = new \stdClass;
@@ -137,9 +137,9 @@ class CriteriaTest extends Tester\TestCase
 
 	public function testMatches()
 	{
-		$dave = array('a', 'b', 'c');
-		$cat = array('c', 'd', 'e');
-		$lister = array('e', 'f', 'g');
+		$dave = ['a', 'b', 'c'];
+		$cat = ['c', 'd', 'e'];
+		$lister = ['e', 'f', 'g'];
 
 		Assert::true(Criteria::compare($dave, Criteria::MATCHES, $cat));
 		Assert::true(Criteria::compare($cat, Criteria::MATCHES, $lister));

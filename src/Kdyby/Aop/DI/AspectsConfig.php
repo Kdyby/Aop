@@ -56,20 +56,20 @@ class AspectsConfig extends Nette\Object
 
 	public function load(Nette\DI\Compiler $compiler, Nette\DI\ContainerBuilder $containerBuilder)
 	{
-		$aspects = array();
+		$aspects = [];
 		foreach ($this->aspectsList as $def) {
 			if (!is_array($def)) {
 				if (!is_string($def) && (!$def instanceof \stdClass || empty($def->value)) && !$def instanceof Nette\DI\Statement) {
 					$serialised = Nette\Utils\Json::encode($def);
 					throw new Kdyby\Aop\UnexpectedValueException("The service definition $serialised is expected to be an array or Neon entity.");
 				}
-				$def = array('factory' => $def);
+				$def = ['factory' => $def];
 			}
 			$def['tags'][] = AspectsExtension::ASPECT_TAG;
 			$aspects[] = $def;
 		}
 
-		$compiler->parseServices($containerBuilder, array('services' => $aspects), $this->prefix ? substr($this->extension->prefix('self'), 0, -5) : NULL);
+		$compiler->parseServices($containerBuilder, ['services' => $aspects], $this->prefix ? substr($this->extension->prefix('self'), 0, -5) : NULL);
 	}
 
 }

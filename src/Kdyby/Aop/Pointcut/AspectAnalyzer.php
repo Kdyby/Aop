@@ -51,13 +51,13 @@ class AspectAnalyzer extends Nette\Object
 	 */
 	public function analyze(ServiceDefinition $service)
 	{
-		$pointcuts = array();
+		$pointcuts = [];
 		foreach ($service->getOpenMethods() as $method) {
 			if (!$annotations = $this->filterAopAnnotations($method->getAnnotations($this->annotationReader))) {
 				continue;
 			}
 
-			$rules = array();
+			$rules = [];
 			foreach ($annotations as $annotation) {
 				$rules[get_class($annotation)] = $this->pointcutParser->parse($annotation->value);
 			}
