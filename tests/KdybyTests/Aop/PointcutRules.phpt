@@ -67,17 +67,17 @@ class PointcutRulesTest extends Tester\TestCase
 		];
 
 		$data[] = [TRUE,
-			new Pointcut\Rules([new Matcher\WithinMatcher('Nette\Templating\*')]),
+			new Pointcut\Rules([new Matcher\WithinMatcher('Nette\Application\UI\*')]),
 			$this->createDefinition('KdybyTests\Aop\CustomTemplate'),
 		];
 
 		$data[] = [TRUE,
-			new Pointcut\Rules([new Matcher\WithinMatcher('Nette\Templating\I*')]),
-			$this->createDefinition('Nette\Templating\FileTemplate'),
+			new Pointcut\Rules([new Matcher\WithinMatcher('Nette\Application\UI\I*')]),
+			$this->createDefinition(Nette\Bridges\ApplicationLatte\Template::class),
 		];
 
 		$data[] = [FALSE,
-			new Pointcut\Rules([new Matcher\WithinMatcher('Nette\Templating\*')]),
+			new Pointcut\Rules([new Matcher\WithinMatcher('Nette\Application\UI\I*')]),
 			$this->createDefinition('KdybyTests\Aop\SmegHead'),
 		];
 

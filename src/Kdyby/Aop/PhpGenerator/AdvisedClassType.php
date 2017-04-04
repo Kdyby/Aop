@@ -41,21 +41,24 @@ class AdvisedClassType extends Nette\Object
 
 
 
-	public static function generatePublicProxyMethod(Code\ClassType $class, Code\Method $method)
+	public static function generatePublicProxyMethod(Code\ClassType $class, Code\Method $originalMethod)
 	{
-		$originalName = $method->getName();
-		$method->setName(self::CG_PUBLIC_PROXY_PREFIX . $originalName);
-		$method->setVisibility('public');
-		$method->setComment("@internal\n@deprecated");
+		$proxyMethod = new Code\Method(self::CG_PUBLIC_PROXY_PREFIX .  $originalMethod->getName());
+
+		$proxyMethod->setVisibility('public');
+		$proxyMethod->setComment("@internal\n@deprecated");
 
 		$argumentsPass = [];
-		foreach ($method->getParameters() as $parameter) {
+		$args = [];
+		foreach ($originalMethod->getParameters() as $parameter) {
 			/** @var Code\Parameter $parameter */
 			$argumentsPass[] = '$' . $parameter->getName();
+			$args[$parameter->getName()] = $parameter;
 		}
-		$method->addBody('return parent::?(?);', [$originalName, new Code\PhpLiteral(implode(', ', $argumentsPass))]);
+		$proxyMethod->addBody('return parent::?(?);', [ $originalMethod->getName(), new Code\PhpLiteral(implode(', ', $argumentsPass))]);
 
-		self::setMethodInstance($class, $method);
+		$proxyMethod->setParameters($args);
+		self::setMethodInstance($class, $proxyMethod);
 	}
 
 

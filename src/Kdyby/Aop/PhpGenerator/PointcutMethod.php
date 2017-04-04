@@ -48,6 +48,33 @@ class PointcutMethod extends Code\Method
 	private $after = [];
 
 
+	public static function from($from)
+	{
+		$method = new static($from->isClosure() ? NULL : $from->getName());
+		$params = [];
+		$factory = new Code\Factory();
+		foreach ($from->getParameters() as $param) {
+			$params[$param->getName()] = $factory->fromParameterReflection($param);
+		}
+		$method->setParameters($params);
+		if ($from instanceof \ReflectionMethod) {
+			$isInterface = $from->getDeclaringClass()->isInterface();
+			$method->setStatic($from->isStatic());
+			$method->setVisibility($from->isPrivate() ? 'private' : ($from->isProtected() ? 'protected' : ($isInterface ? NULL : 'public')));
+			$method->setFinal($from->isFinal());
+			$method->setAbstract($from->isAbstract() && !$isInterface);
+			$method->setBody($from->isAbstract() ? FALSE : '');
+		}
+		$method->setReturnReference($from->returnsReference());
+		$method->setVariadic($from->isVariadic());
+		$method->setComment(Code\Helpers::unformatDocComment($from->getDocComment()));
+		if (PHP_VERSION_ID >= 70000 && $from->hasReturnType()) {
+			$method->setReturnType((string) $from->getReturnType());
+			$method->setReturnNullable($from->getReturnType()->allowsNull());
+		}
+		return $method;
+	}
+
 
 	public function addAdvice(Kdyby\Aop\DI\AdviceDefinition $adviceDef)
 	{
@@ -217,7 +244,9 @@ class PointcutMethod extends Code\Method
 
 		foreach ($from->getParameters() as $paramRefl) {
 			try {
-				$parameters[$paramRefl->getName()]->setTypeHint($paramRefl->isArray() ? 'array' : ($paramRefl->getClass() ? '\\' . $paramRefl->getClass()->getName() : ''));
+				if(!in_array($parameters[$paramRefl->getName()]->getTypeHint(),['boolean', 'integer', 'float', 'string', 'object', 'int', 'bool', ])) {
+					$parameters[$paramRefl->getName()]->setTypeHint($paramRefl->isArray() ? 'array' : ($paramRefl->getClass() ? '\\' . $paramRefl->getClass()->getName() : ''));
+				}
 			} catch (\ReflectionException $e) {
 				if (preg_match('#Class (.+) does not exist#', $e->getMessage(), $m)) {
 					$parameters[$paramRefl->getName()]->setTypeHint('\\' . $m[1]);
