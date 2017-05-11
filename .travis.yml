@@ -9,7 +9,6 @@ cache:
 php:
   - 5.6
   - 7.0
-  - hhvm
 
 env:
   matrix:
@@ -23,7 +22,6 @@ matrix:
     - php: 7.0
       env: NETTE=nette-2.4 COVERAGE="--coverage ./coverage.xml --coverage-src ./src" TESTER_RUNTIME="phpdbg"
   allow_failures:
-    - php: hhvm
     - php: 7.0
       env: NETTE=nette-2.4 COVERAGE="--coverage ./coverage.xml --coverage-src ./src" TESTER_RUNTIME="phpdbg"
 
