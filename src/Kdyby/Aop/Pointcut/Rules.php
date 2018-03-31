@@ -19,8 +19,10 @@ use Nette\PhpGenerator as Code;
 /**
  * @author Filip Procházka <filip@prochazka.su>
  */
-class Rules extends Nette\Object implements Filter, RuntimeFilter
+class Rules implements Filter, RuntimeFilter
 {
+
+	use Nette\SmartObject;
 
 	const OP_AND = 'AND';
 	const OP_OR = 'OR';

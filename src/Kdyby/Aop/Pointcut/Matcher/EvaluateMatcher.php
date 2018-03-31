@@ -18,8 +18,10 @@ use Nette;
 /**
  * @author Filip Procházka <filip@prochazka.su>
  */
-class EvaluateMatcher extends Nette\Object implements Kdyby\Aop\Pointcut\Filter, Kdyby\Aop\Pointcut\RuntimeFilter
+class EvaluateMatcher implements Kdyby\Aop\Pointcut\Filter, Kdyby\Aop\Pointcut\RuntimeFilter
 {
+
+	use Nette\SmartObject;
 
 	/**
 	 * @var Criteria

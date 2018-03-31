@@ -21,8 +21,10 @@ use Nette\Utils\Tokenizer;
 /**
  * @author Filip Procházka <filip@prochazka.su>
  */
-class Parser extends Nette\Object
+class Parser
 {
+	use Nette\SmartObject;
+
 	const TOK_BRACKET = 'bracket';
 	const TOK_VISIBILITY = 'visibility';
 	const TOK_KEYWORD = 'keyword';

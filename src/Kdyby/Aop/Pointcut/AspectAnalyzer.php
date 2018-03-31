@@ -21,8 +21,9 @@ use Nette;
 /**
  * @author Filip Procházka <filip@prochazka.su>
  */
-class AspectAnalyzer extends Nette\Object
+class AspectAnalyzer
 {
+	use Nette\SmartObject;
 
 	/**
 	 * @var \Doctrine\Common\Annotations\Reader

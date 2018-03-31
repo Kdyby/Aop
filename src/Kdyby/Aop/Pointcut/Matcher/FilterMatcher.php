@@ -18,8 +18,10 @@ use Nette;
 /**
  * @author Filip Procházka <filip@prochazka.su>
  */
-class FilterMatcher extends Nette\Object implements Kdyby\Aop\Pointcut\Filter
+class FilterMatcher implements Kdyby\Aop\Pointcut\Filter
 {
+
+	use Nette\SmartObject;
 
 	/**
 	 * @var \Kdyby\Aop\Pointcut\Filter

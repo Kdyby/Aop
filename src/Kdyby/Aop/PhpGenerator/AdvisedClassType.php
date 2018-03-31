@@ -19,8 +19,10 @@ use Nette\PhpGenerator as Code;
 /**
  * @author Filip Procházka <filip@prochazka.su>
  */
-class AdvisedClassType extends Nette\Object
+class AdvisedClassType
 {
+
+	use Nette\SmartObject;
 
 	const CG_INJECT_METHOD = '__injectAopContainer';
 	const CG_PUBLIC_PROXY_PREFIX = '__publicAopProxy_';

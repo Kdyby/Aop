@@ -20,8 +20,10 @@ use Nette;
 /**
  * @author Filip Procházka <filip@prochazka.su>
  */
-class MatcherFactory extends Nette\Object
+class MatcherFactory
 {
+
+	use Nette\SmartObject;
 
 	/**
 	 * @var \Nette\DI\ContainerBuilder

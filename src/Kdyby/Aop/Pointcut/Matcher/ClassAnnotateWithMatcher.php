@@ -19,8 +19,10 @@ use Nette;
 /**
  * @author Filip Procházka <filip@prochazka.su>
  */
-class ClassAnnotateWithMatcher extends Nette\Object implements Kdyby\Aop\Pointcut\Filter
+class ClassAnnotateWithMatcher implements Kdyby\Aop\Pointcut\Filter
 {
+
+	use Nette\SmartObject;
 
 	/**
 	 * @var string

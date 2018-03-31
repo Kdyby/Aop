@@ -21,8 +21,11 @@ use Nette\DI\ContainerBuilder;
 /**
  * @author Filip Procházka <filip@prochazka.su>
  */
-class Criteria extends Nette\Object
+class Criteria
 {
+
+	use Nette\SmartObject;
+
 	const TYPE_AND = 'AND';
 	const TYPE_OR = 'OR';
 
