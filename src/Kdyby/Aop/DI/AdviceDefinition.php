@@ -20,8 +20,10 @@ use Nette;
 /**
  * @author Filip Procházka <filip@prochazka.su>
  */
-class AdviceDefinition extends Nette\Object
+class AdviceDefinition
 {
+
+	use Nette\SmartObject;
 
 	/**
 	 * @var Method

@@ -20,8 +20,10 @@ use Nette\Reflection\Method;
 /**
  * @author Filip Procházka <filip@prochazka.su>
  */
-abstract class MethodInvocation extends Nette\Object
+abstract class MethodInvocation
 {
+
+	use Nette\SmartObject;
 
 	/**
 	 * @var object

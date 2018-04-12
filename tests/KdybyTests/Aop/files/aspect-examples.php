@@ -54,8 +54,10 @@ interface ICommonServiceFactory
 
 
 
-class BeforeAspect extends Nette\Object
+class BeforeAspect
 {
+
+	use Nette\SmartObject;
 
 	/**
 	 * @var array|Aop\JoinPoint\BeforeMethod[]
@@ -84,8 +86,9 @@ class BeforeAspect extends Nette\Object
 
 
 
-class ConditionalBeforeAspect extends Nette\Object
+class ConditionalBeforeAspect
 {
+	use Nette\SmartObject;
 
 	/**
 	 * @var array|Aop\JoinPoint\BeforeMethod[]
@@ -121,8 +124,10 @@ class SecondBeforeAspect extends BeforeAspect
 
 
 
-class AroundAspect extends Nette\Object
+class AroundAspect
 {
+
+	use Nette\SmartObject;
 
 	/**
 	 * @var array|Aop\JoinPoint\AroundMethod[]
@@ -161,8 +166,10 @@ class AroundAspect extends Nette\Object
 
 
 
-class ConditionalAroundAspect extends Nette\Object
+class ConditionalAroundAspect
 {
+
+	use Nette\SmartObject;
 
 	/**
 	 * @var array|Aop\JoinPoint\AroundMethod[]
@@ -208,8 +215,10 @@ class SecondAroundAspect extends AroundAspect
 
 
 
-class AroundBlockingAspect extends Nette\Object
+class AroundBlockingAspect
 {
+
+	use Nette\SmartObject;
 
 	/**
 	 * @var array|Aop\JoinPoint\AroundMethod[]
@@ -261,8 +270,10 @@ class SecondAroundBlockingAspect extends AroundBlockingAspect
 
 
 
-class AfterReturningAspect extends Nette\Object
+class AfterReturningAspect
 {
+
+	use Nette\SmartObject;
 
 	/**
 	 * @var array|Aop\JoinPoint\AfterReturning[]
@@ -289,8 +300,10 @@ class AfterReturningAspect extends Nette\Object
 
 
 
-class ConditionalAfterReturningAspect extends Nette\Object
+class ConditionalAfterReturningAspect
 {
+
+	use Nette\SmartObject;
 
 	/**
 	 * @var array|Aop\JoinPoint\AfterReturning[]
@@ -324,8 +337,10 @@ class SecondAfterReturningAspect extends AfterReturningAspect
 
 
 
-class AfterThrowingAspect extends Nette\Object
+class AfterThrowingAspect
 {
+
+	use Nette\SmartObject;
 
 	/**
 	 * @var array|Aop\JoinPoint\AfterThrowing[]
@@ -353,8 +368,10 @@ class SecondAfterThrowingAspect extends AfterThrowingAspect
 
 
 
-class AfterAspect extends Nette\Object
+class AfterAspect
 {
+
+	use Nette\SmartObject;
 
 	/**
 	 * @var array|Aop\JoinPoint\AfterMethod[]
@@ -380,8 +397,10 @@ class SecondAfterAspect extends AfterAspect
 
 }
 
-class AspectWithArguments extends Nette\Object
+class AspectWithArguments
 {
+
+	use Nette\SmartObject;
 
 	public $args;
 
@@ -405,8 +424,10 @@ class AspectWithArguments extends Nette\Object
 }
 
 
-class ConstructorBeforeAspect extends Nette\Object
+class ConstructorBeforeAspect
 {
+
+	use Nette\SmartObject;
 
 	/**
 	 * @var array|Aop\JoinPoint\BeforeMethod[]

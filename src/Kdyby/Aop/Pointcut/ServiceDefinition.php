@@ -25,8 +25,10 @@ use Nette;
  * @property Nette\Reflection\ClassType $typeReflection
  * @property-read Nette\Reflection\ClassType $typeReflection
  */
-class ServiceDefinition extends Nette\Object
+class ServiceDefinition
 {
+
+	use Nette\SmartObject;
 
 	/**
 	 * @var \Nette\DI\ServiceDefinition

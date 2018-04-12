@@ -18,8 +18,10 @@ use Nette;
 /**
  * @author Filip Procházka <filip@prochazka.su>
  */
-class AspectsConfig extends Nette\Object
+class AspectsConfig
 {
+
+	use Nette\SmartObject;
 
 	/**
 	 * @var array

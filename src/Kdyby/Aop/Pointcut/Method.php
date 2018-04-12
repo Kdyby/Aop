@@ -24,8 +24,11 @@ use Nette\PhpGenerator as Code;
  * @property array|string[] $typesWithin
  * @property-read array|string[] $typesWithin
  */
-class Method extends Nette\Object
+class Method
 {
+
+	use Nette\SmartObject;
+
 	const VISIBILITY_PUBLIC = 'public';
 	const VISIBILITY_PROTECTED = 'protected';
 	const VISIBILITY_PRIVATE = 'private';
