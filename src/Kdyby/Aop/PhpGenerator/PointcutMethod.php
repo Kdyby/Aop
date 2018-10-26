@@ -224,7 +224,10 @@ class PointcutMethod extends Code\Method
 		if ($this->afterThrowing || $this->after) {
 			$this->addBody('if ($__exception) { throw $__exception; }');
 		}
-		$this->addBody('return $__result;');
+
+		if($this->getReturnType() !== 'void') {
+			$this->addBody('return $__result;');
+		}
 
 		return parent::__toString();
 	}
