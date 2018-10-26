@@ -11,7 +11,7 @@ Kdyby/Aop
 Requirements
 ------------
 
-Kdyby/Aop requires PHP 5.3.2 or higher.
+Kdyby/Aop requires PHP 7.1 or higher.
 
 - [Nette Framework](https://github.com/nette/nette)
 - [Kdyby/Annotations](https://github.com/Kdyby/Annotations)
