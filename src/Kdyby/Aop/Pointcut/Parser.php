@@ -13,8 +13,8 @@ namespace Kdyby\Aop\Pointcut;
 use Kdyby;
 use Nette;
 use Nette\PhpGenerator\PhpLiteral;
-use Nette\Utils\TokenIterator;
-use Nette\Utils\Tokenizer;
+use Nette\Tokenizer\Stream;
+use Nette\Tokenizer\Tokenizer;
 
 
 
@@ -73,10 +73,10 @@ class Parser
 	public function parse($input)
 	{
 		try {
-			$tokens = new TokenIterator($this->tokenizer->tokenize($input));
+			$tokens = $this->tokenizer->tokenize($input);
 			$tokens->ignored = [self::TOK_WHITESPACE];
 
-		} catch (Nette\Utils\TokenizerException $e) {
+		} catch (Nette\Tokenizer\Exception $e) {
 			throw new Kdyby\Aop\ParserException("Input contains unexpected expressions", 0, $e);
 		}
 
@@ -90,14 +90,14 @@ class Parser
 	 * @return Rules|mixed
 	 * @throws \Kdyby\Aop\ParserException
 	 */
-	protected function doParse(TokenIterator $tokens)
+	protected function doParse(Stream $tokens)
 	{
 		$inverseNext = FALSE;
 		$operator = NULL;
 		$rules = [];
 		while ($token = $tokens->nextToken()) {
 			if ($tokens->isCurrent(self::TOK_KEYWORD)) {
-				$rule = $this->{'parse' . $token[0]}($tokens);
+				$rule = $this->{'parse' . $token->value}($tokens);
 				if ($inverseNext) {
 					$rule = new Matcher\Inverse($rule);
 					$inverseNext = FALSE;
@@ -145,7 +145,7 @@ class Parser
 
 
 
-	protected function parseClass(TokenIterator $tokens)
+	protected function parseClass(Stream $tokens)
 	{
 		$tokens->nextUntil(self::TOK_IDENTIFIER);
 		$className = $tokens->nextValue();
@@ -156,7 +156,7 @@ class Parser
 
 
 
-	protected function parseMethod(TokenIterator $tokens)
+	protected function parseMethod(Stream $tokens)
 	{
 		$visibility = NULL;
 		$arguments = [];
@@ -201,7 +201,7 @@ class Parser
 
 
 
-	protected function parseWithin(TokenIterator $tokens)
+	protected function parseWithin(Stream $tokens)
 	{
 		$tokens->nextUntil(self::TOK_IDENTIFIER);
 		$within = $tokens->nextValue();
@@ -212,7 +212,7 @@ class Parser
 
 
 
-	protected function parseFilter(TokenIterator $tokens)
+	protected function parseFilter(Stream $tokens)
 	{
 		$tokens->nextUntil(self::TOK_IDENTIFIER);
 		$filter = $tokens->nextValue();
@@ -223,7 +223,7 @@ class Parser
 
 
 
-	protected function parseSetting(TokenIterator $tokens)
+	protected function parseSetting(Stream $tokens)
 	{
 		$tokens->nextUntil('(');
 		if (!$criteria = $this->parseArguments($tokens)) {
@@ -235,7 +235,7 @@ class Parser
 
 
 
-	protected function parseEvaluate(TokenIterator $tokens)
+	protected function parseEvaluate(Stream $tokens)
 	{
 		$tokens->nextUntil('(');
 		if (!$criteria = $this->parseArguments($tokens)) {
@@ -247,7 +247,7 @@ class Parser
 
 
 
-	protected function parseClassAnnotatedWith(TokenIterator $tokens)
+	protected function parseClassAnnotatedWith(Stream $tokens)
 	{
 		$tokens->nextUntil(self::TOK_IDENTIFIER);
 		$annotation = $tokens->nextValue();
@@ -258,7 +258,7 @@ class Parser
 
 
 
-	protected function parseMethodAnnotatedWith(TokenIterator $tokens)
+	protected function parseMethodAnnotatedWith(Stream $tokens)
 	{
 		$tokens->nextUntil(self::TOK_IDENTIFIER);
 		$annotation = $tokens->nextValue();
@@ -269,7 +269,7 @@ class Parser
 
 
 
-	protected function parseArguments(TokenIterator $tokens)
+	protected function parseArguments(Stream $tokens)
 	{
 		$operator = NULL;
 		$conditions = [];
@@ -323,7 +323,7 @@ class Parser
 							$right[] = self::sanitizeArgumentExpression($tokens->currentValue(), $token);
 
 						} elseif (!$tokens->isCurrent(',', self::TOK_WHITESPACE)) {
-							throw new Kdyby\Aop\ParserException('Unexpected token ' . $token[Tokenizer::TYPE]);
+							throw new Kdyby\Aop\ParserException('Unexpected token ' . $token->type);
 						}
 					}
 
@@ -380,11 +380,14 @@ class Parser
 		return $criteria;
 	}
 
-
-
+	/**
+	 * @param mixed $value
+	 * @param Nette\Tokenizer\Token $token
+	 * @return PhpLiteral
+	 */
 	protected static function sanitizeArgumentExpression($value, $token)
 	{
-		if ($token[Tokenizer::TYPE] === self::TOK_STRING || is_numeric($value) || preg_match('~^(TRUE|FALSE)\z~i', $value)) {
+		if ($token->type === self::TOK_STRING || is_numeric($value) || preg_match('~^(TRUE|FALSE)\z~i', $value)) {
 			return new PhpLiteral($value);
 		}
 
@@ -394,13 +397,13 @@ class Parser
 
 
 	/**
-	 * @param TokenIterator $tokens
+	 * @param Stream $tokens
 	 * @param array|string $types
 	 * @param array|string $allowedToSkip
 	 * @throws \Kdyby\Aop\ParserException
 	 * @return NULL|string
 	 */
-	protected static function nextValue(TokenIterator $tokens, $types, $allowedToSkip = [])
+	protected static function nextValue(Stream $tokens, $types, $allowedToSkip = [])
 	{
 		do {
 			if (call_user_func_array([$tokens, 'isCurrent'], (array)$types)) {
@@ -409,7 +412,7 @@ class Parser
 
 			if (!$allowedToSkip || !call_user_func_array([$tokens, 'isCurrent'], (array)$allowedToSkip)) {
 				$type = $tokens->currentToken();
-				throw new Kdyby\Aop\ParserException('Unexpected token ' . $type[Tokenizer::TYPE] . ' at offset ' . $type[Tokenizer::OFFSET]);
+				throw new Kdyby\Aop\ParserException('Unexpected token ' . $type->type . ' at offset ' . $type->offset);
 			}
 
 		} while ($token = $tokens->nextToken());
