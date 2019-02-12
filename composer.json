@@ -30,7 +30,6 @@
 		"nette/caching": "~2.4",
 		"nette/component-model": "~2.3",
 		"nette/database": "~2.4",
-		"nette/di": "~2.4",
 		"nette/finder": "~2.4",
 		"nette/forms": "~2.4",
 		"nette/http": "~2.4",
@@ -44,9 +43,7 @@
 		"nette/utils": "^2.5",
 		"latte/latte": "~2.4",
 		"tracy/tracy": "~2.4",
-
 		"kdyby/doctrine-cache": "^2.5.2",
-
 		"nette/tester": "~1.7",
 		"doctrine/collections": "~1.2"
 	},
@@ -58,6 +55,9 @@
 			"src/Kdyby/Aop/annotations.php",
 			"src/Kdyby/Aop/exceptions.php"
 		]
+	},
+	"conflict": {
+		"nette/di": ">=2.4.15"
 	},
 	"extra": {
 		"branch-alias": {
