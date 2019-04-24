@@ -41,7 +41,7 @@ class AspectsExtension extends Nette\DI\CompilerExtension
 			}
 
 			if (!($config = $extension->getAspectsConfiguration()) || !$config instanceof AspectsConfig) {
-				$refl = new Nette\Reflection\Method($extension, 'getAspectsConfiguration');
+				$refl = new Nette\PhpGenerator\Method($extension, 'getAspectsConfiguration');
 				$given = is_object($config) ? 'instance of ' . get_class($config) : gettype($config);
 				throw new Kdyby\Aop\UnexpectedValueException("Method $refl is expected to return instance of Kdyby\\Aop\\DI\\AspectsConfig, but $given given.");
 			}

@@ -12,8 +12,8 @@ namespace Kdyby\Aop\JoinPoint;
 
 use Kdyby;
 use Nette;
-use Nette\Reflection\ClassType;
-use Nette\Reflection\Method;
+use Nette\PhpGenerator\ClassType;
+use Nette\PhpGenerator\Method;
 
 
 

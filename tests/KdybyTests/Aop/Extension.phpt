@@ -43,7 +43,9 @@ class ExtensionTest extends Tester\TestCase
 		$config->addConfig(__DIR__ . '/../nette-reset.' . (!isset($config->defaultExtensions['nette']) ? 'v23' : 'v22') . '.neon');
 		$config->addConfig(__DIR__ . '/config/' . $configFile . '.neon');
 
-		Kdyby\Annotations\DI\AnnotationsExtension::register($config);
+		$config->onCompile[] = function (Nette\Configurator $config, Nette\DI\Compiler $compiler): void {
+			$compiler->addExtension('annotations', new Kdyby\Annotations\DI\AnnotationsExtension());
+		};
 		Kdyby\Aop\DI\AspectsExtension::register($config);
 		Kdyby\Aop\DI\AopExtension::register($config);
 
@@ -421,7 +423,7 @@ class ExtensionTest extends Tester\TestCase
 	private static function getAspects($service)
 	{
 		try {
-			$propRefl = Nette\Reflection\ClassType::from($service)
+			$propRefl = Nette\PhpGenerator\ClassType::from($service)
 				->getProperty('_kdyby_aopAdvices'); // internal property
 
 			$propRefl->setAccessible(TRUE);
