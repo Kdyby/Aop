@@ -34,20 +34,15 @@ class ServiceDefinitionTest extends Tester\TestCase
 
 	public function testInheritedConstructor()
 	{
-		$definition = $this->createDefinition('KdybyTests\Aop\InheritedClass');
-		Assert::equal($definition->getOpenMethods(), ['__construct' => new Pointcut\Method(\Nette\PhpGenerator\Method::from('KdybyTests\Aop\InheritedClass', '__construct'), $definition)]);
+		$definition = $this->createDefinition(InheritedClass::class);
+		Assert::equal($definition->getOpenMethods(), ['__construct' => new Pointcut\Method(Nette\PhpGenerator\Method::from(InheritedClass::class, '__construct'), $definition)]);
 	}
 
 
-
-	/**
-	 * @param string $class
-	 * @return Pointcut\ServiceDefinition
-	 */
-	private function createDefinition($class)
+	private function createDefinition(string $type): Pointcut\ServiceDefinition
 	{
 		$def = new Nette\DI\ServiceDefinition();
-		$def->setClass($class);
+		$def->setType($type);
 
 		return new Pointcut\ServiceDefinition($def, 'abc');
 	}
