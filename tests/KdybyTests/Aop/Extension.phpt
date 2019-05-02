@@ -49,7 +49,8 @@ class ExtensionTest extends Tester\TestCase
 		Kdyby\Aop\DI\AspectsExtension::register($config);
 		Kdyby\Aop\DI\AopExtension::register($config);
 
-		return $config->createContainer();
+		$container = $config->createContainer();
+		return $container;
 	}
 
 
@@ -71,11 +72,10 @@ class ExtensionTest extends Tester\TestCase
 	public function testIfAspectAppliedOnCreatedObject()
 	{
 		$dic = $this->createContainer('factory');
-		$service = $dic->getByType('KdybyTests\Aop\CommonService');
-		$createdObject = $dic->getByType('KdybyTests\Aop\ICommonServiceFactory')->create();
-
-		Assert::notEqual('KdybyTests\Aop\CommonService', get_class($service));
-		Assert::notEqual('KdybyTests\Aop\CommonService', get_class($createdObject));
+		$service = $dic->getByType(CommonService::class);
+		$createdObject = $dic->getByType(ICommonServiceFactory::class)->create();
+		Assert::notEqual(CommonService::class, get_class($service));
+		Assert::notEqual(CommonService::class, get_class($createdObject));
 		Assert::isEqual(get_class($service), get_class($createdObject));
 	}
 

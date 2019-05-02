@@ -35,7 +35,7 @@ class ServiceDefinitionTest extends Tester\TestCase
 	public function testInheritedConstructor()
 	{
 		$definition = $this->createDefinition(InheritedClass::class);
-		Assert::equal($definition->getOpenMethods(), ['__construct' => new Pointcut\Method(Nette\PhpGenerator\Method::from(InheritedClass::class, '__construct'), $definition)]);
+		Assert::equal($definition->getOpenMethods(), ['__construct' => new Pointcut\Method(new \ReflectionMethod(InheritedClass::class, '__construct'), $definition)]);
 	}
 
 
