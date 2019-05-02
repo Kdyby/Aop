@@ -167,7 +167,7 @@ class PointcutMethod
 	/**
 	 * @return string
 	 */
-	public function __toString()
+	public function beforePrint()
 	{
 		$this->setBody('');
 
@@ -242,8 +242,6 @@ class PointcutMethod
 		if($this->getReturnType() !== 'void') {
 			$this->addBody('return $__result;');
 		}
-
-		return parent::__toString();
 	}
 
 

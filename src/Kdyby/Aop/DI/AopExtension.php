@@ -86,6 +86,7 @@ class AopExtension extends Nette\DI\CompilerExtension
 				foreach ($methodAdvices as $adviceDef) {
 					$newMethod->addAdvice($adviceDef);
 				}
+				$newMethod->beforePrint();
 			}
 
 			$this->patchService($serviceId, $advisedClass, $cg, $constructorInject);
