@@ -20,7 +20,7 @@ use Nette\PhpGenerator as Code;
 
 
 
-/**
+/**W
  * @author Filip Procházka <filip@prochazka.su>
  */
 class AopExtension extends Nette\DI\CompilerExtension

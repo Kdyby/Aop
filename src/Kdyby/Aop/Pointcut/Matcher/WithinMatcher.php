@@ -41,7 +41,7 @@ class WithinMatcher implements Kdyby\Aop\Pointcut\Filter
 			$this->pattern = str_replace('\\*', '.*', preg_quote($type));
 
 		} else {
-			$this->type = Nette\PhpGenerator\ClassType::from($type)->getName();
+			$this->type = (new \ReflectionClass($type))->getName();
 		}
 	}
 

@@ -130,35 +130,22 @@ class Method
 	 */
 	public function getCode()
 	{
-		return PointcutMethod::expandTypeHints($this->method, Code\Method::from($this->method));
+		return PointcutMethod::expandTypeHints($this->method, PointcutMethod::from($this->method));
 	}
 
 
-
-	/**
-	 * @return PointcutMethod
-	 */
 	public function getPointcutCode()
 	{
 		return PointcutMethod::expandTypeHints($this->method, PointcutMethod::from($this->method));
 	}
 
 
-
-	/**
-	 * @return array
-	 */
-	public function getParameterNames()
+	public function getParameterNames(): array
 	{
 		return array_keys($this->method->getParameters());
 	}
 
-
-
-	/**
-	 * @return Nette\PhpGenerator\Method
-	 */
-	public function unwrap()
+	public function unwrap(): \ReflectionMethod
 	{
 		return $this->method;
 	}

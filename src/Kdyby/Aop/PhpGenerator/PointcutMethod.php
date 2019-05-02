@@ -19,8 +19,13 @@ use Nette\PhpGenerator as Code;
 /**
  * @author Filip Procházka <filip@prochazka.su>
  */
-class PointcutMethod extends \ReflectionMethod
+class PointcutMethod
 {
+	use Nette\SmartObject;
+	use Code\Traits\FunctionLike;
+	use Code\Traits\NameAware;
+	use Code\Traits\VisibilityAware;
+	use Code\Traits\CommentAware;
 
 	/**
 	 * @var array
@@ -48,9 +53,9 @@ class PointcutMethod extends \ReflectionMethod
 	private $after = [];
 
 
-	public static function from(\ReflectionMethod $from)
+	public static function from(\ReflectionMethod $from): Code\Method
 	{
-		$method = new static($from->isClosure() ? NULL : $from->getName());
+		$method = (new Code\Factory())->fromMethodReflection($from);
 		$params = [];
 		$factory = new Code\Factory();
 		foreach ($from->getParameters() as $param) {
@@ -68,7 +73,7 @@ class PointcutMethod extends \ReflectionMethod
 		$method->setReturnReference($from->returnsReference());
 		$method->setVariadic($from->isVariadic());
 		$method->setComment(Code\Helpers::unformatDocComment($from->getDocComment()));
-		if (PHP_VERSION_ID >= 70000 && $from->hasReturnType()) {
+		if ($from->hasReturnType()) {
 			$method->setReturnType((string) $from->getReturnType());
 			$method->setReturnNullable($from->getReturnType()->allowsNull());
 		}
@@ -235,12 +240,9 @@ class PointcutMethod extends \ReflectionMethod
 
 
 	/**
-	 * @param \ReflectionMethod $from
-	 * @param Code\Method $method
 	 * @throws \ReflectionException
-	 * @return Code\Method
 	 */
-	public static function expandTypeHints(\ReflectionMethod $from, Code\Method $method)
+	public static function expandTypeHints(\ReflectionMethod $from, Code\Method $method): PointcutMethod
 	{
 		$parameters = $method->getParameters();
 		/** @var Code\Parameter[] $parameters */

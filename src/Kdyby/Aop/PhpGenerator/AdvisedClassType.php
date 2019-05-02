@@ -74,7 +74,7 @@ class AdvisedClassType
 	{
 		$originalType = $service->getTypeReflection();
 
-		$class = $namespace->addClass(str_replace(['\\', '.'], '_', "{$originalType}Class_{$service->serviceId}"));
+		$class = $namespace->addClass(str_replace(['\\', '.'], '_', "{$originalType->getName()}Class_{$service->serviceId}"));
 
 		$class->setExtends('\\' . $originalType->getName());
 		$class->setFinal(TRUE);
