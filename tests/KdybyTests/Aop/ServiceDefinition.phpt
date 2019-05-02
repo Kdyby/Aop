@@ -49,4 +49,4 @@ class ServiceDefinitionTest extends Tester\TestCase
 
 }
 
-\run(new ServiceDefinitionTest());
+(new ServiceDefinitionTest())->run();

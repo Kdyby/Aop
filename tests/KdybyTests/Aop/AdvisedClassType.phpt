@@ -41,4 +41,4 @@ class TestClass
 
 	}
 }
-\run(new AdvisedClassTypeTest());
+(new AdvisedClassTypeTest())->run();

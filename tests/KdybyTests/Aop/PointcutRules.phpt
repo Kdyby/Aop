@@ -338,4 +338,4 @@ class PointcutRulesTest extends Tester\TestCase
 
 }
 
-\run(new PointcutRulesTest());
+(new PointcutRulesTest())->run();
