@@ -29,21 +29,15 @@ class AspectsConfig
 	private $aspectsList;
 
 	/**
-	 * @var \Nette\DI\CompilerExtension
-	 */
-	private $extension;
-
-	/**
 	 * @var bool
 	 */
 	private $prefix = TRUE;
 
 
 
-	public function __construct(array $aspectsList, Nette\DI\CompilerExtension $extension)
+	public function __construct(array $aspectsList)
 	{
 		$this->aspectsList = $aspectsList;
-		$this->extension = $extension;
 	}
 
 

@@ -18,7 +18,6 @@ use Doctrine;
  * @author Filip Procházka <filip@prochazka.su>
  *
  * @property string $value
- * @property-read string $value
  */
 interface Annotation
 {
