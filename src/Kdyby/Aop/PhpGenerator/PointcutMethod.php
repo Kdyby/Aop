@@ -19,7 +19,7 @@ use Nette\PhpGenerator as Code;
 /**
  * @author Filip Procházka <filip@prochazka.su>
  */
-class PointcutMethod extends Code\Method
+class PointcutMethod extends \ReflectionMethod
 {
 
 	/**
@@ -48,7 +48,7 @@ class PointcutMethod extends Code\Method
 	private $after = [];
 
 
-	public static function from($from)
+	public static function from(\ReflectionMethod $from)
 	{
 		$method = new static($from->isClosure() ? NULL : $from->getName());
 		$params = [];

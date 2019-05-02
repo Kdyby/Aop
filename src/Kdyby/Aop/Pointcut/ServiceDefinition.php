@@ -22,8 +22,7 @@ use Nette;
  *
  * @property string $serviceId
  * @property array|Method[] $openMethods
- * @property Nette\PhpGenerator\ClassType $typeReflection
- * @property-read Nette\PhpGenerator\ClassType $typeReflection
+ * @property \ReflectionClass $typeReflection
  */
 class ServiceDefinition
 {
@@ -36,7 +35,7 @@ class ServiceDefinition
 	private $serviceDefinition;
 
 	/**
-	 * @var \Nette\PhpGenerator\ClassType
+	 * @var \ReflectionClass
 	 */
 	private $originalType;
 
@@ -57,7 +56,7 @@ class ServiceDefinition
 
 
 
-	public function __construct(Nette\DI\ServiceDefinition $def, $serviceId)
+	public function __construct(Nette\DI\Definitions\ServiceDefinition $def, $serviceId)
 	{
 		$this->serviceDefinition = $def;
 
@@ -65,7 +64,7 @@ class ServiceDefinition
 			throw new Kdyby\Aop\InvalidArgumentException("Given service definition has unresolved class, please specify service type explicitly.");
 		}
 
-		$this->originalType = Nette\PhpGenerator\ClassType::from($def->class);
+		$this->originalType = new \ReflectionClass($def->class);
 		$this->serviceId = $serviceId;
 	}
 
@@ -80,11 +79,7 @@ class ServiceDefinition
 	}
 
 
-
-	/**
-	 * @return Nette\PhpGenerator\ClassType
-	 */
-	public function getTypeReflection()
+	public function getTypeReflection(): \ReflectionClass
 	{
 		return $this->originalType;
 	}
@@ -127,7 +122,7 @@ class ServiceDefinition
 				}
 			}
 
-		} while ($type = Nette\PhpGenerator\ClassType::from($type->getExtends()[0]));
+		} while (!empty($type->getParentClass()) && $type = $type->getParentClass());
 
 		return $this->openMethods;
 	}

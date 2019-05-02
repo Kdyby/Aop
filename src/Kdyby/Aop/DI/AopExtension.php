@@ -168,7 +168,7 @@ class AopExtension extends Nette\DI\CompilerExtension
 	private function findAdvisedMethods()
 	{
 		$builder = $this->getContainerBuilder();
-		$builder->prepareClassList();
+		$builder->resolve();
 
 		$annotationReader = new AnnotationReader();
 		$matcherFactory = new Pointcut\MatcherFactory($builder, $annotationReader);
@@ -213,9 +213,8 @@ class AopExtension extends Nette\DI\CompilerExtension
 		if ($this->classes === NULL) {
 			$this->classes = [];
 			foreach ($this->getContainerBuilder()->getDefinitions() as $name => $def) {
-				$class = $def->class;
-				if ($class) {
-					foreach (class_parents($class) + class_implements($class) + [$class] as $parent) {
+				if (isset($def->class)) {
+					foreach (class_parents($def->class) + class_implements($def->class) + [$def->class] as $parent) {
 						$this->classes[strtolower($parent)][] = (string) $name;
 					}
 				}

@@ -21,7 +21,6 @@ use Nette\PhpGenerator as Code;
 /**
  * @author Filip Procházka <filip@prochazka.su>
  *
- * @property array|string[] $typesWithin
  * @property-read array|string[] $typesWithin
  */
 class Method
@@ -34,7 +33,7 @@ class Method
 	const VISIBILITY_PRIVATE = 'private';
 
 	/**
-	 * @var \Nette\PhpGenerator\Method
+	 * @var \ReflectionMethod
 	 */
 	private $method;
 
@@ -45,7 +44,7 @@ class Method
 
 
 
-	public function __construct(Nette\PhpGenerator\Method $method, ServiceDefinition $serviceDefinition)
+	public function __construct(\ReflectionMethod $method, ServiceDefinition $serviceDefinition)
 	{
 		$this->method = $method;
 		$this->serviceDefinition = $serviceDefinition;
