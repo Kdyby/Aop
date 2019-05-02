@@ -61,9 +61,8 @@ class ExtensionTest extends Tester\TestCase
 		foreach ($services = array_keys($dic->findByTag(Kdyby\Aop\DI\AspectsExtension::ASPECT_TAG)) as $serviceId) {
 			$service = $dic->getService($serviceId);
 			Assert::true($service instanceof AspectWithArguments);
-			Assert::same([$dic->getByType('Nette\Http\Request')], $service->args);
+			Assert::same([$dic->getByType(Nette\Http\Request::class)], $service->args);
 		}
-
 		Assert::same(4, count($services));
 	}
 
