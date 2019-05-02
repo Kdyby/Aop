@@ -78,8 +78,8 @@ class AopExtension extends Nette\DI\CompilerExtension
 				$targetMethod = reset($methodAdvices)->getTargetMethod();
 
 				$newMethod = $targetMethod->getPointcutCode();
-				AdvisedClassType::setMethodInstance($advisedClass, $newMethod);
-				AdvisedClassType::generatePublicProxyMethod($advisedClass, $targetMethod->getCode());
+				AdvisedClassType::setMethodInstance($advisedClass, $newMethod->getMethod());
+				AdvisedClassType::generatePublicProxyMethod($advisedClass, $targetMethod->getCode()->getMethod());
 				$constructorInject = $constructorInject || strtolower($newMethod->getName()) === '__construct';
 
 				/** @var AdviceDefinition[] $methodAdvices */
@@ -150,7 +150,7 @@ class AopExtension extends Nette\DI\CompilerExtension
 	{
 		$builder = $this->getContainerBuilder();
 
-		if (!is_dir($tempDir = $builder->expand('%tempDir%/cache/_Kdyby.Aop'))) {
+		if (!is_dir($tempDir = Nette\DI\Helpers::expand('%tempDir%/cache/_Kdyby.Aop', $builder->parameters))) {
 			mkdir($tempDir, 0777, TRUE);
 		}
 

@@ -124,17 +124,13 @@ class Method
 	}
 
 
-
-	/**
-	 * @return Code\Method
-	 */
-	public function getCode()
+	public function getCode(): PointcutMethod
 	{
 		return PointcutMethod::expandTypeHints($this->method, PointcutMethod::from($this->method));
 	}
 
 
-	public function getPointcutCode()
+	public function getPointcutCode(): PointcutMethod
 	{
 		return PointcutMethod::expandTypeHints($this->method, PointcutMethod::from($this->method));
 	}

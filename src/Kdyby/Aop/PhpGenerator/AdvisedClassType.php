@@ -28,12 +28,7 @@ class AdvisedClassType
 	const CG_PUBLIC_PROXY_PREFIX = '__publicAopProxy_';
 
 
-
-	/**
-	 * @param Code\Method $method
-	 * @return Code\Method
-	 */
-	public static function setMethodInstance(Code\ClassType $class, Code\Method $method)
+	public static function setMethodInstance(Code\ClassType $class, Code\Method $method): Code\Method
 	{
 		$methods = [$method->getName() => $method] + $class->getMethods();
 		$class->setMethods($methods);

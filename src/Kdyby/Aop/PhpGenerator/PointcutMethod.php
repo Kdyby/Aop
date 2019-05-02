@@ -21,12 +21,6 @@ use Nette\PhpGenerator as Code;
  */
 class PointcutMethod
 {
-	use Nette\SmartObject;
-	use Code\Traits\FunctionLike;
-	use Code\Traits\NameAware;
-	use Code\Traits\VisibilityAware;
-	use Code\Traits\CommentAware;
-
 	/**
 	 * @var array
 	 */
@@ -52,10 +46,19 @@ class PointcutMethod
 	 */
 	private $after = [];
 
+	/**
+	 * @var Code\Method
+	 */
+	private $method;
 
-	public static function from(\ReflectionMethod $from): Code\Method
+	public function __construct(\ReflectionMethod $from)
 	{
-		$method = (new Code\Factory())->fromMethodReflection($from);
+		$this->method = (new Code\Factory())->fromMethodReflection($from);
+	}
+
+	public static function from(\ReflectionMethod $from): PointcutMethod
+	{
+		$method = new self($from);
 		$params = [];
 		$factory = new Code\Factory();
 		foreach ($from->getParameters() as $param) {
@@ -134,7 +137,13 @@ class PointcutMethod
 		}
 	}
 
-
+	/**
+	 * @return Code\Method
+	 */
+	public function getMethod(): Code\Method
+	{
+		return $this->method;
+	}
 
 	private function generateRuntimeCondition(Kdyby\Aop\DI\AdviceDefinition $adviceDef, $code)
 	{
@@ -242,7 +251,7 @@ class PointcutMethod
 	/**
 	 * @throws \ReflectionException
 	 */
-	public static function expandTypeHints(\ReflectionMethod $from, Code\Method $method): PointcutMethod
+	public static function expandTypeHints(\ReflectionMethod $from, PointcutMethod $method): PointcutMethod
 	{
 		$parameters = $method->getParameters();
 		/** @var Code\Parameter[] $parameters */
@@ -269,4 +278,8 @@ class PointcutMethod
 		return $method;
 	}
 
+	public function __call(string $name, array $args)
+	{
+		return call_user_func_array([$this->method, $name], $args);
+	}
 }
