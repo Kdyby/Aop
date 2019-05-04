@@ -25,7 +25,6 @@ use Nette\PhpGenerator as Code;
  */
 class AopExtension extends Nette\DI\CompilerExtension
 {
-	const CG_INJECT_METHOD = '__injectAopContainer';
 
 	/**
 	 * @var array
@@ -116,13 +115,15 @@ class AopExtension extends Nette\DI\CompilerExtension
 	private function patchService($serviceId, Code\ClassType $advisedClass, Code\PhpNamespace $cg, $constructorInject = FALSE)
 	{
 		static $publicSetup;
-
 		if ($publicSetup === NULL) {
 			$refl = new \ReflectionProperty('Nette\DI\ServiceDefinition', 'setup');
 			$publicSetup = $refl->isPublic();
 		}
 
 		$def = $this->getContainerBuilder()->getDefinition($serviceId);
+		if($def instanceof Nette\DI\Definitions\FactoryDefinition) {
+			$def = $def->getResultDefinition();
+		}
 		$factory = $def->getFactory();
 		if ($factory) {
 			$def->setFactory(new Nette\DI\Statement($cg->getName() . '\\' . $advisedClass->getName(), $factory->arguments));
@@ -214,8 +215,12 @@ class AopExtension extends Nette\DI\CompilerExtension
 		if ($this->classes === NULL) {
 			$this->classes = [];
 			foreach ($this->getContainerBuilder()->getDefinitions() as $name => $def) {
-				if (isset($def->class)) {
-					foreach (class_parents($def->class) + class_implements($def->class) + [$def->class] as $parent) {
+				if ($def->getType() !== NULL) {
+					$additional = [];
+					if ($def instanceof Nette\DI\Definitions\FactoryDefinition) {
+						$this->classes[strtolower($def->getResultDefinition()->getType())][] = (string) $name;
+					}
+					foreach (class_parents($def->getType()) + class_implements($def->getType()) + [$def->getType()] + $additional as $parent) {
 						$this->classes[strtolower($parent)][] = (string) $name;
 					}
 				}
@@ -242,7 +247,11 @@ class AopExtension extends Nette\DI\CompilerExtension
 	private function getWrappedDefinition($id)
 	{
 		if (!isset($this->serviceDefinitions[$id])) {
-			$this->serviceDefinitions[$id] = new Pointcut\ServiceDefinition($this->getContainerBuilder()->getDefinition($id), $id);
+			$def =$this->getContainerBuilder()->getDefinition($id);
+			if ($def instanceof Nette\DI\Definitions\FactoryDefinition) {
+				$def = $def->getResultDefinition();
+			}
+			$this->serviceDefinitions[$id] = new Pointcut\ServiceDefinition($def, $id);
 		}
 
 		return $this->serviceDefinitions[$id];

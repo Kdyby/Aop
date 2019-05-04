@@ -40,7 +40,7 @@ class ExtensionTest extends Tester\TestCase
 	{
 		$config = new Nette\Configurator();
 		$config->setTempDirectory(TEMP_DIR);
-		$config->addConfig(__DIR__ . '/../nette-reset.' . (!isset($config->defaultExtensions['nette']) ? 'v23' : 'v22') . '.neon');
+		$config->addConfig(__DIR__ . '/../nette-reset.neon');
 		$config->addConfig(__DIR__ . '/config/' . $configFile . '.neon');
 
 		$config->onCompile[] = function (Nette\Configurator $config, Nette\DI\Compiler $compiler): void {
@@ -71,11 +71,11 @@ class ExtensionTest extends Tester\TestCase
 	public function testIfAspectAppliedOnCreatedObject()
 	{
 		$dic = $this->createContainer('factory');
+
 		$service = $dic->getByType(CommonService::class);
 		$createdObject = $dic->getByType(ICommonServiceFactory::class)->create();
 		Assert::notEqual(CommonService::class, get_class($service));
 		Assert::notEqual(CommonService::class, get_class($createdObject));
-		Assert::isEqual(get_class($service), get_class($createdObject));
 	}
 
 

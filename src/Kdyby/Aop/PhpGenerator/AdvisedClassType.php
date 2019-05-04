@@ -68,7 +68,6 @@ class AdvisedClassType
 	public static function fromServiceDefinition(Kdyby\Aop\Pointcut\ServiceDefinition $service, Code\PhpNamespace $namespace)
 	{
 		$originalType = $service->getTypeReflection();
-
 		$class = $namespace->addClass(str_replace(['\\', '.'], '_', "{$originalType->getName()}Class_{$service->serviceId}"));
 
 		$class->setExtends('\\' . $originalType->getName());

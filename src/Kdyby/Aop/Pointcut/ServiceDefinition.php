@@ -56,15 +56,15 @@ class ServiceDefinition
 
 
 
-	public function __construct(Nette\DI\Definitions\ServiceDefinition $def, $serviceId)
+	public function __construct(Nette\DI\Definitions\Definition $def, $serviceId)
 	{
 		$this->serviceDefinition = $def;
 
-		if (empty($def->class)) {
+		if (empty($def->getType())) {
 			throw new Kdyby\Aop\InvalidArgumentException("Given service definition has unresolved class, please specify service type explicitly.");
 		}
 
-		$this->originalType = new \ReflectionClass($def->class);
+		$this->originalType = new \ReflectionClass($def->getType());
 		$this->serviceId = $serviceId;
 	}
 
