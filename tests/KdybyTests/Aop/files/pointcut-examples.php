@@ -116,15 +116,15 @@ class Test extends Annotation
 class CustomTemplate implements Nette\Application\UI\ITemplate
 {
 
-	public function render()
+	public function render(): void
 	{
 	}
 
-	public function setFile($file)
+	public function setFile(string $file)
 	{
 	}
 
-	public function getFile()
+	public function getFile(): ?string
 	{
 	}
 }

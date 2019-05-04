@@ -219,4 +219,4 @@ class CriteriaTest extends Tester\TestCase
 
 }
 
-\run(new CriteriaTest());
+(new CriteriaTest())->run();

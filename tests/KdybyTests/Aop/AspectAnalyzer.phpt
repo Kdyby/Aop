@@ -130,4 +130,4 @@ class AspectAnalyzerTest extends Tester\TestCase
 
 }
 
-\run(new AspectAnalyzerTest());
+(new AspectAnalyzerTest())->run();

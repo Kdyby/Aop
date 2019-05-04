@@ -294,4 +294,4 @@ class PointcutParserTest extends Tester\TestCase
 
 }
 
-\run(new PointcutParserTest());
+(new PointcutParserTest())->run();

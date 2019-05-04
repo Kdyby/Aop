@@ -19,9 +19,8 @@ use Nette\PhpGenerator as Code;
 /**
  * @author Filip Procházka <filip@prochazka.su>
  */
-class PointcutMethod extends Code\Method
+class PointcutMethod
 {
-
 	/**
 	 * @var array
 	 */
@@ -47,10 +46,19 @@ class PointcutMethod extends Code\Method
 	 */
 	private $after = [];
 
+	/**
+	 * @var Code\Method
+	 */
+	private $method;
 
-	public static function from($from)
+	public function __construct(\ReflectionMethod $from)
 	{
-		$method = new static($from->isClosure() ? NULL : $from->getName());
+		$this->method = (new Code\Factory())->fromMethodReflection($from);
+	}
+
+	public static function from(\ReflectionMethod $from): PointcutMethod
+	{
+		$method = new self($from);
 		$params = [];
 		$factory = new Code\Factory();
 		foreach ($from->getParameters() as $param) {
@@ -68,7 +76,7 @@ class PointcutMethod extends Code\Method
 		$method->setReturnReference($from->returnsReference());
 		$method->setVariadic($from->isVariadic());
 		$method->setComment(Code\Helpers::unformatDocComment($from->getDocComment()));
-		if (PHP_VERSION_ID >= 70000 && $from->hasReturnType()) {
+		if ($from->hasReturnType()) {
 			$method->setReturnType((string) $from->getReturnType());
 			$method->setReturnNullable($from->getReturnType()->allowsNull());
 		}
@@ -129,7 +137,13 @@ class PointcutMethod extends Code\Method
 		}
 	}
 
-
+	/**
+	 * @return Code\Method
+	 */
+	public function getMethod(): Code\Method
+	{
+		return $this->method;
+	}
 
 	private function generateRuntimeCondition(Kdyby\Aop\DI\AdviceDefinition $adviceDef, $code)
 	{
@@ -153,7 +167,7 @@ class PointcutMethod extends Code\Method
 	/**
 	 * @return string
 	 */
-	public function __toString()
+	public function beforePrint()
 	{
 		$this->setBody('');
 
@@ -228,19 +242,14 @@ class PointcutMethod extends Code\Method
 		if($this->getReturnType() !== 'void') {
 			$this->addBody('return $__result;');
 		}
-
-		return parent::__toString();
 	}
 
 
 
 	/**
-	 * @param \ReflectionMethod $from
-	 * @param Code\Method $method
 	 * @throws \ReflectionException
-	 * @return Code\Method
 	 */
-	public static function expandTypeHints(\ReflectionMethod $from, Code\Method $method)
+	public static function expandTypeHints(\ReflectionMethod $from, PointcutMethod $method): PointcutMethod
 	{
 		$parameters = $method->getParameters();
 		/** @var Code\Parameter[] $parameters */
@@ -267,4 +276,8 @@ class PointcutMethod extends Code\Method
 		return $method;
 	}
 
+	public function __call(string $name, array $args)
+	{
+		return call_user_func_array([$this->method, $name], $args);
+	}
 }

@@ -40,14 +40,17 @@ class ExtensionTest extends Tester\TestCase
 	{
 		$config = new Nette\Configurator();
 		$config->setTempDirectory(TEMP_DIR);
-		$config->addConfig(__DIR__ . '/../nette-reset.' . (!isset($config->defaultExtensions['nette']) ? 'v23' : 'v22') . '.neon');
+		$config->addConfig(__DIR__ . '/../nette-reset.neon');
 		$config->addConfig(__DIR__ . '/config/' . $configFile . '.neon');
 
-		Kdyby\Annotations\DI\AnnotationsExtension::register($config);
+		$config->onCompile[] = function (Nette\Configurator $config, Nette\DI\Compiler $compiler): void {
+			$compiler->addExtension('annotations', new Kdyby\Annotations\DI\AnnotationsExtension());
+		};
 		Kdyby\Aop\DI\AspectsExtension::register($config);
 		Kdyby\Aop\DI\AopExtension::register($config);
 
-		return $config->createContainer();
+		$container = $config->createContainer();
+		return $container;
 	}
 
 
@@ -58,9 +61,8 @@ class ExtensionTest extends Tester\TestCase
 		foreach ($services = array_keys($dic->findByTag(Kdyby\Aop\DI\AspectsExtension::ASPECT_TAG)) as $serviceId) {
 			$service = $dic->getService($serviceId);
 			Assert::true($service instanceof AspectWithArguments);
-			Assert::same([$dic->getByType('Nette\Http\Request')], $service->args);
+			Assert::same([$dic->getByType(Nette\Http\Request::class)], $service->args);
 		}
-
 		Assert::same(4, count($services));
 	}
 
@@ -69,12 +71,11 @@ class ExtensionTest extends Tester\TestCase
 	public function testIfAspectAppliedOnCreatedObject()
 	{
 		$dic = $this->createContainer('factory');
-		$service = $dic->getByType('KdybyTests\Aop\CommonService');
-		$createdObject = $dic->getByType('KdybyTests\Aop\ICommonServiceFactory')->create();
 
-		Assert::notEqual('KdybyTests\Aop\CommonService', get_class($service));
-		Assert::notEqual('KdybyTests\Aop\CommonService', get_class($createdObject));
-		Assert::isEqual(get_class($service), get_class($createdObject));
+		$service = $dic->getByType(CommonService::class);
+		$createdObject = $dic->getByType(ICommonServiceFactory::class)->create();
+		Assert::notEqual(CommonService::class, get_class($service));
+		Assert::notEqual(CommonService::class, get_class($createdObject));
 	}
 
 
@@ -421,7 +422,7 @@ class ExtensionTest extends Tester\TestCase
 	private static function getAspects($service)
 	{
 		try {
-			$propRefl = Nette\Reflection\ClassType::from($service)
+			$propRefl = (new \ReflectionClass($service))
 				->getProperty('_kdyby_aopAdvices'); // internal property
 
 			$propRefl->setAccessible(TRUE);
@@ -434,4 +435,4 @@ class ExtensionTest extends Tester\TestCase
 
 }
 
-\run(new ExtensionTest());
+(new ExtensionTest())->run();

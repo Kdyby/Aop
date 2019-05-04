@@ -21,7 +21,6 @@ use Nette\PhpGenerator as Code;
 /**
  * @author Filip Procházka <filip@prochazka.su>
  *
- * @property array|string[] $typesWithin
  * @property-read array|string[] $typesWithin
  */
 class Method
@@ -34,7 +33,7 @@ class Method
 	const VISIBILITY_PRIVATE = 'private';
 
 	/**
-	 * @var \Nette\Reflection\Method
+	 * @var \ReflectionMethod
 	 */
 	private $method;
 
@@ -45,7 +44,7 @@ class Method
 
 
 
-	public function __construct(Nette\Reflection\Method $method, ServiceDefinition $serviceDefinition)
+	public function __construct(\ReflectionMethod $method, ServiceDefinition $serviceDefinition)
 	{
 		$this->method = $method;
 		$this->serviceDefinition = $serviceDefinition;
@@ -125,41 +124,24 @@ class Method
 	}
 
 
-
-	/**
-	 * @return Code\Method
-	 */
-	public function getCode()
-	{
-		return PointcutMethod::expandTypeHints($this->method, Code\Method::from($this->method));
-	}
-
-
-
-	/**
-	 * @return PointcutMethod
-	 */
-	public function getPointcutCode()
+	public function getCode(): PointcutMethod
 	{
 		return PointcutMethod::expandTypeHints($this->method, PointcutMethod::from($this->method));
 	}
 
 
+	public function getPointcutCode(): PointcutMethod
+	{
+		return PointcutMethod::expandTypeHints($this->method, PointcutMethod::from($this->method));
+	}
 
-	/**
-	 * @return array
-	 */
-	public function getParameterNames()
+
+	public function getParameterNames(): array
 	{
 		return array_keys($this->method->getParameters());
 	}
 
-
-
-	/**
-	 * @return Nette\Reflection\Method
-	 */
-	public function unwrap()
+	public function unwrap(): \ReflectionMethod
 	{
 		return $this->method;
 	}

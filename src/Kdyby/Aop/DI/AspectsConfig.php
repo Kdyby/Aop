@@ -29,21 +29,15 @@ class AspectsConfig
 	private $aspectsList;
 
 	/**
-	 * @var \Nette\DI\CompilerExtension
-	 */
-	private $extension;
-
-	/**
 	 * @var bool
 	 */
 	private $prefix = TRUE;
 
 
 
-	public function __construct(array $aspectsList, Nette\DI\CompilerExtension $extension)
+	public function __construct(array $aspectsList)
 	{
 		$this->aspectsList = $aspectsList;
-		$this->extension = $extension;
 	}
 
 
@@ -58,20 +52,16 @@ class AspectsConfig
 
 	public function load(Nette\DI\Compiler $compiler, Nette\DI\ContainerBuilder $containerBuilder)
 	{
-		$aspects = [];
 		foreach ($this->aspectsList as $def) {
-			if (!is_array($def)) {
-				if (!is_string($def) && (!$def instanceof \stdClass || empty($def->value)) && !$def instanceof Nette\DI\Statement) {
-					$serialised = Nette\Utils\Json::encode($def);
-					throw new Kdyby\Aop\UnexpectedValueException("The service definition $serialised is expected to be an array or Neon entity.");
-				}
-				$def = ['factory' => $def];
+			if ( (!is_array($def)) && !is_string($def) && (!$def instanceof \stdClass || empty($def->value)) && !$def instanceof Nette\DI\Statement) {
+				$serialised = Nette\Utils\Json::encode($def);
+				throw new Kdyby\Aop\UnexpectedValueException("The service definition $serialised is expected to be an array or Neon entity.");
 			}
-			$def['tags'][] = AspectsExtension::ASPECT_TAG;
-			$aspects[] = $def;
+			$definition = new Nette\DI\Definitions\ServiceDefinition();
+			$definition->setFactory(is_array($def) ? $def['class'] : $def);
+			$definition->setTags([AspectsExtension::ASPECT_TAG => true]);
+			$containerBuilder->addDefinition(null, $definition);
 		}
-
-		$compiler->parseServices($containerBuilder, ['services' => $aspects], $this->prefix ? substr($this->extension->prefix('self'), 0, -5) : NULL);
 	}
 
 }

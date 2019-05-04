@@ -159,7 +159,7 @@ class Criteria
 			$expression = self::resolveExpression($expression);
 
 		} else {
-			$expression = $builder->expand('%' . $expression . '%');
+			$expression = Nette\DI\Helpers::expand('%' . $expression . '%', $builder->parameters);
 		}
 
 		return $expression;
@@ -210,7 +210,7 @@ class Criteria
 			$expression = self::resolveExpression($expression);
 
 		} elseif (substr($expression, 0, 1) === '%') {
-			$expression = $builder->expand($expression);
+			$expression =  Nette\DI\Helpers::expand($expression, $builder->parameters);
 
 		} elseif (substr($expression, 0, 1) === '$') {
 			$expression = new Code\PhpLiteral($expression);

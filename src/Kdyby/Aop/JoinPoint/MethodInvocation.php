@@ -12,8 +12,6 @@ namespace Kdyby\Aop\JoinPoint;
 
 use Kdyby;
 use Nette;
-use Nette\Reflection\ClassType;
-use Nette\Reflection\Method;
 
 
 
@@ -70,23 +68,15 @@ abstract class MethodInvocation
 	}
 
 
-
-	/**
-	 * @return ClassType
-	 */
-	public function getTargetObjectReflection()
+	public function getTargetObjectReflection(): \ReflectionClass
 	{
-		return ClassType::from($this->targetObject);
+		return new \ReflectionClass($this->targetObject);
 	}
 
 
-
-	/**
-	 * @return Method
-	 */
-	public function getTargetReflection()
+	public function getTargetReflection(): \ReflectionMethod
 	{
-		return new Method($this->targetObject, $this->targetMethod);
+		return new \ReflectionMethod($this->targetObject, $this->targetMethod);
 	}
 
 }
