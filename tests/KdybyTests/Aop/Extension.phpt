@@ -422,7 +422,7 @@ class ExtensionTest extends Tester\TestCase
 	private static function getAspects($service)
 	{
 		try {
-			$propRefl = (new \ReflectionClass($service))
+			$propRefl = (Nette\Reflection\ClassType::from($service))
 				->getProperty('_kdyby_aopAdvices'); // internal property
 
 			$propRefl->setAccessible(TRUE);

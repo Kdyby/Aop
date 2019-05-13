@@ -22,7 +22,7 @@ use Nette;
  *
  * @property string $serviceId
  * @property array|Method[] $openMethods
- * @property \ReflectionClass $typeReflection
+ * @property Nette\Reflection\ClassType $typeReflection
  */
 class ServiceDefinition
 {
@@ -35,7 +35,7 @@ class ServiceDefinition
 	private $serviceDefinition;
 
 	/**
-	 * @var \ReflectionClass
+	 * @var Nette\Reflection\ClassType
 	 */
 	private $originalType;
 
@@ -64,7 +64,7 @@ class ServiceDefinition
 			throw new Kdyby\Aop\InvalidArgumentException("Given service definition has unresolved class, please specify service type explicitly.");
 		}
 
-		$this->originalType = new \ReflectionClass($def->getType());
+		$this->originalType = Nette\Reflection\ClassType::from($def->getType());
 		$this->serviceId = $serviceId;
 	}
 
@@ -79,7 +79,7 @@ class ServiceDefinition
 	}
 
 
-	public function getTypeReflection(): \ReflectionClass
+	public function getTypeReflection(): Nette\Reflection\ClassType
 	{
 		return $this->originalType;
 	}

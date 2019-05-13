@@ -33,7 +33,7 @@ class Method
 	const VISIBILITY_PRIVATE = 'private';
 
 	/**
-	 * @var \ReflectionMethod
+	 * @var Nette\Reflection\Method
 	 */
 	private $method;
 
@@ -44,7 +44,7 @@ class Method
 
 
 
-	public function __construct(\ReflectionMethod $method, ServiceDefinition $serviceDefinition)
+	public function __construct(Nette\Reflection\Method $method, ServiceDefinition $serviceDefinition)
 	{
 		$this->method = $method;
 		$this->serviceDefinition = $serviceDefinition;
@@ -141,7 +141,7 @@ class Method
 		return array_keys($this->method->getParameters());
 	}
 
-	public function unwrap(): \ReflectionMethod
+	public function unwrap(): Nette\Reflection\Method
 	{
 		return $this->method;
 	}

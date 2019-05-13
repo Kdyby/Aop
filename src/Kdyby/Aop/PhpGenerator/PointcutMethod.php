@@ -51,12 +51,12 @@ class PointcutMethod
 	 */
 	private $method;
 
-	public function __construct(\ReflectionMethod $from)
+	public function __construct(Nette\Reflection\Method $from)
 	{
 		$this->method = (new Code\Factory())->fromMethodReflection($from);
 	}
 
-	public static function from(\ReflectionMethod $from): PointcutMethod
+	public static function from(Nette\Reflection\Method $from): PointcutMethod
 	{
 		$method = new self($from);
 		$params = [];
@@ -65,7 +65,7 @@ class PointcutMethod
 			$params[$param->getName()] = $factory->fromParameterReflection($param);
 		}
 		$method->setParameters($params);
-		if ($from instanceof \ReflectionMethod) {
+		if ($from instanceof Nette\Reflection\Method) {
 			$isInterface = $from->getDeclaringClass()->isInterface();
 			$method->setStatic($from->isStatic());
 			$method->setVisibility($from->isPrivate() ? 'private' : ($from->isProtected() ? 'protected' : ($isInterface ? NULL : 'public')));
@@ -249,7 +249,7 @@ class PointcutMethod
 	/**
 	 * @throws \ReflectionException
 	 */
-	public static function expandTypeHints(\ReflectionMethod $from, PointcutMethod $method): PointcutMethod
+	public static function expandTypeHints(Nette\Reflection\Method $from, PointcutMethod $method): PointcutMethod
 	{
 		$parameters = $method->getParameters();
 		/** @var Code\Parameter[] $parameters */

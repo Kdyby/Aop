@@ -68,15 +68,15 @@ abstract class MethodInvocation
 	}
 
 
-	public function getTargetObjectReflection(): \ReflectionClass
+	public function getTargetObjectReflection(): Nette\Reflection\ClassType
 	{
-		return new \ReflectionClass($this->targetObject);
+		return Nette\Reflection\ClassType::from($this->targetObject);
 	}
 
 
-	public function getTargetReflection(): \ReflectionMethod
+	public function getTargetReflection(): Nette\Reflection\Method
 	{
-		return new \ReflectionMethod($this->targetObject, $this->targetMethod);
+		return Nette\Reflection\Method::from($this->targetObject, $this->targetMethod);
 	}
 
 }

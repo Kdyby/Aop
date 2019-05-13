@@ -23,7 +23,8 @@
 		"nette/di": "~3.0",
 		"nette/php-generator": "^3.0",
 		"nette/tokenizer": "~3.0",
-		"kdyby/annotations": "dev-master",
+		"nette/reflection": "^2.4",
+		"kdyby/annotations": "^2.6",
 		"symfony/property-access": "~4.2"
 	},
 	"require-dev": {
@@ -58,7 +59,7 @@
 	},
 	"extra": {
 		"branch-alias": {
-			"dev-master": "1.0-dev"
+			"dev-master": "3.0-dev"
 		}
 	}
 }
