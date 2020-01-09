@@ -77,7 +77,7 @@ class PointcutMethod
 		$method->setVariadic($from->isVariadic());
 		$method->setComment(Code\Helpers::unformatDocComment($from->getDocComment()));
 		if ($from->hasReturnType()) {
-			$method->setReturnType((string) $from->getReturnType());
+			$method->setReturnType(($from->getReturnType()->getName()));
 			$method->setReturnNullable($from->getReturnType()->allowsNull());
 		}
 		return $method;
