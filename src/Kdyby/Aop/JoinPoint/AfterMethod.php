@@ -59,10 +59,7 @@ class AfterMethod extends MethodInvocation implements ResultAware, ExceptionAwar
 
 
 
-	/**
-	 * @return \Exception|\Throwable|NULL
-	 */
-	public function getException()
+	public function getException(): ?\Throwable
 	{
 		return $this->exception;
 	}

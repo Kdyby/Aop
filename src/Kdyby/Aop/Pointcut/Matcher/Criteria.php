@@ -69,13 +69,12 @@ class Criteria
 
 
 	/**
-	 * @param string $left
-	 * @param string $comparison
-	 * @param string $right
+	 * @param string|self $left
+	 * @param string|self|null $right
 	 * @throws \Kdyby\Aop\InvalidArgumentException
 	 * @return Criteria
 	 */
-	public function where($left, $comparison = NULL, $right = NULL)
+	public function where($left, ?string $comparison = NULL, $right = NULL): self
 	{
 		if ($left instanceof self) {
 			$this->expressions[] = $left;
@@ -92,18 +91,14 @@ class Criteria
 
 
 
-	/**
-	 * @param string $operator
-	 * @return Criteria
-	 */
-	public static function create($operator = self::TYPE_AND)
+	public static function create(string $operator = self::TYPE_AND): Criteria
 	{
 		return new static($operator);
 	}
 
 
 
-	public function evaluate(ContainerBuilder $builder)
+	public function evaluate(ContainerBuilder $builder): bool
 	{
 		if (empty($this->expressions)) {
 			throw new Kdyby\Aop\NoRulesExceptions();
@@ -122,7 +117,7 @@ class Criteria
 
 
 
-	private function isMatching(array $result)
+	private function isMatching(array $result): bool
 	{
 		if ($this->operator === self::TYPE_AND) {
 			return array_filter($result) === $result; // all values are TRUE
@@ -134,11 +129,9 @@ class Criteria
 
 
 	/**
-	 * @param ContainerBuilder $builder
 	 * @param array|Criteria $expression
-	 * @return bool
 	 */
-	private function doEvaluate(ContainerBuilder $builder, $expression)
+	private function doEvaluate(ContainerBuilder $builder, $expression): bool
 	{
 		if ($expression instanceof self) {
 			return $expression->evaluate($builder);
@@ -156,18 +149,15 @@ class Criteria
 	private function doEvaluateValueResolve(ContainerBuilder $builder, $expression)
 	{
 		if ($expression instanceof Code\PhpLiteral) {
-			$expression = self::resolveExpression($expression);
-
-		} else {
-			$expression = Nette\DI\Helpers::expand('%' . $expression . '%', $builder->parameters);
+			return self::resolveExpression($expression);
 		}
 
-		return $expression;
+		return Nette\DI\Helpers::expand('%' . $expression . '%', $builder->parameters);
 	}
 
 
 
-	public function serialize(ContainerBuilder $builder)
+	public function serialize(ContainerBuilder $builder): Code\Literal
 	{
 		if (empty($this->expressions)) {
 			throw new Kdyby\Aop\NoRulesExceptions();
@@ -184,9 +174,8 @@ class Criteria
 
 
 	/**
-	 * @param ContainerBuilder $builder
 	 * @param array|Criteria $expression
-	 * @return bool
+	 * @return string|Code\Literal
 	 */
 	private function doSerialize(ContainerBuilder $builder, $expression)
 	{
@@ -258,11 +247,7 @@ class Criteria
 
 
 
-	/**
-	 * @param $comparison
-	 * @return bool
-	 */
-	public static function isValidComparison($comparison)
+	public static function isValidComparison(string $comparison): bool
 	{
 		return in_array(strtoupper($comparison), [
 			self::EQ, self::NEQ, '!=',
@@ -276,11 +261,10 @@ class Criteria
 
 
 	/**
-	 * @param $expression
 	 * @throws Kdyby\Aop\ParserException
 	 * @return mixed
 	 */
-	private static function resolveExpression($expression)
+	private static function resolveExpression(Code\Literal $expression)
 	{
 		set_error_handler(function ($severenity, $message) {
 			restore_error_handler();
@@ -296,9 +280,9 @@ class Criteria
 
 	/**
 	 * @param string $path
-	 * @return array|NULL
+	 * @return array<string, string>|NULL
 	 */
-	private static function shiftAccessPath($path)
+	private static function shiftAccessPath(string $path): ?array
 	{
 		$shifted = Nette\Utils\Strings::match($path, '~^(?P<context>[^\\[\\]\\.]+)(?P<path>(\\[|\\.).*)\z~i');
 		if ($shifted && substr($shifted['path'], 0, 1) === '.') {
@@ -310,7 +294,7 @@ class Criteria
 
 
 
-	public static function compare($left, $operator, $right)
+	public static function compare($left, string $operator, $right)
 	{
 		switch (strtoupper($operator)) {
 			case self::EQ:

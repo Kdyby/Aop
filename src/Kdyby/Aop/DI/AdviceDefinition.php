@@ -47,7 +47,7 @@ class AdviceDefinition
 
 
 
-	public function __construct($adviceType, Method $targetMethod, Method $advice, Filter $filter)
+	public function __construct(string $adviceType, Method $targetMethod, Method $advice, Filter $filter)
 	{
 		$this->targetMethod = $targetMethod;
 		$this->advice = $advice;
@@ -57,40 +57,28 @@ class AdviceDefinition
 
 
 
-	/**
-	 * @return string
-	 */
-	public function getAdviceType()
+	public function getAdviceType(): string
 	{
 		return $this->adviceType;
 	}
 
 
 
-	/**
-	 * @return \Kdyby\Aop\Pointcut\Method
-	 */
-	public function getTargetMethod()
+	public function getTargetMethod(): Method
 	{
 		return $this->targetMethod;
 	}
 
 
 
-	/**
-	 * @return \Kdyby\Aop\Pointcut\Method
-	 */
-	public function getAdvice()
+	public function getAdvice(): Method
 	{
 		return $this->advice;
 	}
 
 
 
-	/**
-	 * @return \Kdyby\Aop\Pointcut\Filter
-	 */
-	public function getFilter()
+	public function getFilter(): Filter
 	{
 		return $this->filter;
 	}

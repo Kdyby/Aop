@@ -37,9 +37,9 @@ class Inverse implements Kdyby\Aop\Pointcut\Filter
 
 
 
-	public function matches(Kdyby\Aop\Pointcut\Method $method)
+	public function matches(Kdyby\Aop\Pointcut\Method $method): bool
 	{
-		return ! $this->filter->matches($method);
+		return !$this->filter->matches($method);
 	}
 
 

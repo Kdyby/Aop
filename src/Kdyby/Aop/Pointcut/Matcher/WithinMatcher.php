@@ -35,7 +35,7 @@ class WithinMatcher implements Kdyby\Aop\Pointcut\Filter
 
 
 
-	public function __construct($type)
+	public function __construct(string $type)
 	{
 		if (strpos($type, '*') !== FALSE) {
 			$this->pattern = str_replace('\\*', '.*', preg_quote($type));
@@ -47,7 +47,7 @@ class WithinMatcher implements Kdyby\Aop\Pointcut\Filter
 
 
 
-	public function matches(Kdyby\Aop\Pointcut\Method $method)
+	public function matches(Kdyby\Aop\Pointcut\Method $method): bool
 	{
 		if ($this->type !== NULL) {
 			return isset($method->typesWithin[$this->type]);

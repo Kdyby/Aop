@@ -21,7 +21,7 @@ use Nette;
 class BeforeMethod extends MethodInvocation
 {
 
-	public function setArgument($index, $value)
+	public function setArgument($index, $value): void
 	{
 		$this->arguments[$index] = $value;
 	}

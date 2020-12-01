@@ -23,11 +23,8 @@ interface Filter
 
 	/**
 	 * Analyzes method if it can be accepted.
-	 *
-	 * @param Method $method
-	 * @return bool
 	 */
-	function matches(Method $method);
+	function matches(Method $method): bool;
 
 
 

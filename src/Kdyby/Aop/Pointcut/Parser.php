@@ -70,7 +70,7 @@ class Parser
 
 
 
-	public function parse($input)
+	public function parse(string $input)
 	{
 		try {
 			$tokens = $this->tokenizer->tokenize($input);

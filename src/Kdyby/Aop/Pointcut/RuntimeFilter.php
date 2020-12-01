@@ -21,9 +21,6 @@ use Nette;
 interface RuntimeFilter
 {
 
-	/**
-	 * @return Nette\PhpGenerator\PhpLiteral|NULL
-	 */
-	function createCondition();
+	function createCondition(): ?Nette\PhpGenerator\Literal;
 
 }

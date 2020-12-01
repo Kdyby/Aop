@@ -44,7 +44,7 @@ class ClassAnnotateWithMatcher implements Kdyby\Aop\Pointcut\Filter
 
 
 
-	public function matches(Kdyby\Aop\Pointcut\Method $method)
+	public function matches(Kdyby\Aop\Pointcut\Method $method): bool
 	{
 		foreach ($method->getClassAnnotations($this->reader) as $annotation) {
 			if (!$annotation instanceof $this->annotationClass) {

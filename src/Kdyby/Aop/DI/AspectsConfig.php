@@ -42,7 +42,7 @@ class AspectsConfig
 
 
 
-	public function disablePrefixing()
+	public function disablePrefixing(): self
 	{
 		$this->prefix = FALSE;
 		return $this;
@@ -50,7 +50,7 @@ class AspectsConfig
 
 
 
-	public function load(Nette\DI\Compiler $compiler, Nette\DI\ContainerBuilder $containerBuilder)
+	public function load(Nette\DI\Compiler $compiler, Nette\DI\ContainerBuilder $containerBuilder): void
 	{
 		foreach ($this->aspectsList as $def) {
 			if ( (!is_array($def)) && !is_string($def) && (!$def instanceof \stdClass || empty($def->value)) && !$def instanceof Nette\DI\Statement) {

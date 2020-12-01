@@ -51,11 +51,10 @@ class MatcherFactory
 
 
 	/**
-	 * @param string $type
-	 * @param string $arg
+	 * @param mixed $arg
 	 * @return Filter
 	 */
-	public function getMatcher($type, $arg)
+	public function getMatcher(string $type, $arg)
 	{
 		if (!isset($this->cache[$type][(string) $arg])) {
 			$this->cache[$type][(string) $arg] = call_user_func([$this, 'create' . ucfirst($type)], $arg);
@@ -66,7 +65,7 @@ class MatcherFactory
 
 
 
-	public function createClass($class)
+	public function createClass(string $class): Kdyby\Aop\Pointcut\Matcher\WithinMatcher
 	{
 		return new Matcher\WithinMatcher($class);
 	}

@@ -21,9 +21,6 @@ use Nette;
 interface ExceptionAware
 {
 
-	/**
-	 * @return \Exception|\Throwable|NULL
-	 */
-	function getException();
+	function getException(): ?\Throwable;
 
 }

@@ -56,7 +56,7 @@ class ServiceDefinition
 
 
 
-	public function __construct(Nette\DI\Definitions\Definition $def, $serviceId)
+	public function __construct(Nette\DI\Definitions\Definition $def, string $serviceId)
 	{
 		$this->serviceDefinition = $def;
 
@@ -70,10 +70,7 @@ class ServiceDefinition
 
 
 
-	/**
-	 * @return string
-	 */
-	public function getServiceId()
+	public function getServiceId(): string
 	{
 		return $this->serviceId;
 	}
@@ -86,10 +83,7 @@ class ServiceDefinition
 
 
 
-	/**
-	 * @return array
-	 */
-	public function getTypesWithin()
+	public function getTypesWithin(): array
 	{
 		if ($this->typesWithing !== NULL) {
 			return $this->typesWithing;
@@ -101,9 +95,9 @@ class ServiceDefinition
 
 
 	/**
-	 * @return array|Method[]
+	 * @return Method[]
 	 */
-	public function getOpenMethods()
+	public function getOpenMethods(): array
 	{
 		if ($this->openMethods !== NULL) {
 			return $this->openMethods;
@@ -130,10 +124,9 @@ class ServiceDefinition
 
 
 	/**
-	 * @param Filter $rule
-	 * @return array|Method[]
+	 * @return Method[]
 	 */
-	public function match(Filter $rule)
+	public function match(Filter $rule): array
 	{
 		$matching = [];
 		foreach ($this->getOpenMethods() as $method) {

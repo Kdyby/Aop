@@ -50,10 +50,7 @@ class Rules implements Filter, RuntimeFilter
 
 
 
-	/**
-	 * @param Filter $rule
-	 */
-	public function addRule(Filter $rule)
+	public function addRule(Filter $rule): void
 	{
 		$this->rules[] = $rule;
 	}
@@ -61,20 +58,15 @@ class Rules implements Filter, RuntimeFilter
 
 
 	/**
-	 * @return array|\Kdyby\Aop\Pointcut\Filter[]
+	 * @return \Kdyby\Aop\Pointcut\Filter[]
 	 */
-	public function getRules()
+	public function getRules(): array
 	{
 		return $this->rules;
 	}
 
 
-
-	/**
-	 * @param Method $method
-	 * @return bool
-	 */
-	public function matches(Method $method)
+	public function matches(Method $method): bool
 	{
 		if (empty($this->rules)) {
 			throw new Kdyby\Aop\NoRulesExceptions();
@@ -108,10 +100,7 @@ class Rules implements Filter, RuntimeFilter
 
 
 
-	/**
-	 * @return Code\PhpLiteral|null
-	 */
-	public function createCondition()
+	public function createCondition(): ?Code\Literal
 	{
 		$conds = [];
 		foreach ($this->rules as $rule) {

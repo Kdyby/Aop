@@ -19,7 +19,7 @@
 	"minimum-stability": "dev",
 	"prefer-stable": true,
 	"require": {
-		"php": ">=7.1",
+		"php": ">=7.2",
 		"nette/di": "~3.0",
 		"nette/php-generator": "^3.0",
 		"nette/tokenizer": "~3.0",

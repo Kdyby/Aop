@@ -52,20 +52,14 @@ class Method
 
 
 
-	/**
-	 * @return string
-	 */
-	public function getName()
+	public function getName(): string
 	{
 		return $this->method->getName();
 	}
 
 
 
-	/**
-	 * @return string
-	 */
-	public function getVisibility()
+	public function getVisibility(): string
 	{
 		return $this->method->isPublic() ? self::VISIBILITY_PUBLIC
 			: ($this->method->isProtected() ? self::VISIBILITY_PROTECTED : self::VISIBILITY_PRIVATE);
@@ -73,20 +67,14 @@ class Method
 
 
 
-	/**
-	 * @return string
-	 */
-	public function getClassName()
+	public function getClassName(): string
 	{
 		return $this->serviceDefinition->getTypeReflection()->getName();
 	}
 
 
 
-	/**
-	 * @return array
-	 */
-	public function getTypesWithin()
+	public function getTypesWithin(): array
 	{
 		return $this->serviceDefinition->getTypesWithin();
 	}
@@ -95,9 +83,9 @@ class Method
 
 	/**
 	 * @param Reader $reader
-	 * @return array|object[]
+	 * @return object[]
 	 */
-	public function getAnnotations(Reader $reader)
+	public function getAnnotations(Reader $reader): array
 	{
 		return $reader->getMethodAnnotations($this->method);
 	}
@@ -105,20 +93,16 @@ class Method
 
 
 	/**
-	 * @param Reader $reader
 	 * @return array|object[]
 	 */
-	public function getClassAnnotations(Reader $reader)
+	public function getClassAnnotations(Reader $reader): array
 	{
 		return $reader->getClassAnnotations($this->serviceDefinition->getTypeReflection());
 	}
 
 
 
-	/**
-	 * @return \Kdyby\Aop\Pointcut\ServiceDefinition
-	 */
-	public function getServiceDefinition()
+	public function getServiceDefinition(): ServiceDefinition
 	{
 		return $this->serviceDefinition;
 	}

@@ -37,9 +37,6 @@ use Nette;
 interface IAspectsProvider
 {
 
-	/**
-	 * @return AspectsConfig
-	 */
-	function getAspectsConfiguration();
+	function getAspectsConfiguration(): AspectsConfig;
 
 }

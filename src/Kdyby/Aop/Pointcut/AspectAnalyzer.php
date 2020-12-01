@@ -46,11 +46,10 @@ class AspectAnalyzer
 
 
 	/**
-	 * @param ServiceDefinition $service
 	 * @throws \Kdyby\Aop\InvalidAspectExceptions
-	 * @return array|Filter[]
+	 * @return array<string, array<string, Rules|mixed>>
 	 */
-	public function analyze(ServiceDefinition $service)
+	public function analyze(ServiceDefinition $service): array
 	{
 		$pointcuts = [];
 		foreach ($service->getOpenMethods() as $method) {
@@ -79,7 +78,7 @@ class AspectAnalyzer
 	 * @param array $annotations
 	 * @return array|Kdyby\Aop\AdviceAnnotation[]
 	 */
-	private function filterAopAnnotations(array $annotations)
+	private function filterAopAnnotations(array $annotations): array
 	{
 		return array_filter($annotations, function ($annotation) {
 			return $annotation instanceof Kdyby\Aop\AdviceAnnotation;

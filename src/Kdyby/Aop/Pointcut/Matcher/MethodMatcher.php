@@ -65,7 +65,7 @@ class MethodMatcher implements Kdyby\Aop\Pointcut\Filter
 
 
 
-	public function matches(Kdyby\Aop\Pointcut\Method $method)
+	public function matches(Kdyby\Aop\Pointcut\Method $method): bool
 	{
 		if ($this->visibility !== NULL && $this->visibility !== $method->getVisibility()) {
 			return FALSE;

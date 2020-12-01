@@ -134,7 +134,7 @@ class CustomTemplate implements Nette\Application\UI\ITemplate
 class MyPointcutFilter implements Filter
 {
 
-	public function matches(Method $method)
+	public function matches(Method $method):bool
 	{
 		return $method->getClassName() === 'KdybyTests\Aop\Legie';
 	}

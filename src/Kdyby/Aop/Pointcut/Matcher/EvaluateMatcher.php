@@ -43,17 +43,14 @@ class EvaluateMatcher implements Kdyby\Aop\Pointcut\Filter, Kdyby\Aop\Pointcut\R
 
 
 
-	public function matches(Kdyby\Aop\Pointcut\Method $method)
+	public function matches(Kdyby\Aop\Pointcut\Method $method): bool
 	{
 		return TRUE;
 	}
 
 
 
-	/**
-	 * @return Nette\PhpGenerator\PhpLiteral|NULL
-	 */
-	public function createCondition()
+	public function createCondition(): ?Nette\PhpGenerator\Literal
 	{
 		return $this->evaluate->serialize($this->builder);
 	}

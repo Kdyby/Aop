@@ -84,7 +84,7 @@ class PointcutMethod
 	}
 
 
-	public function addAdvice(Kdyby\Aop\DI\AdviceDefinition $adviceDef)
+	public function addAdvice(Kdyby\Aop\DI\AdviceDefinition $adviceDef): void
 	{
 		$adviceMethod = $adviceDef->getAdvice();
 
@@ -137,15 +137,14 @@ class PointcutMethod
 		}
 	}
 
-	/**
-	 * @return Code\Method
-	 */
+
 	public function getMethod(): Code\Method
 	{
 		return $this->method;
 	}
 
-	private function generateRuntimeCondition(Kdyby\Aop\DI\AdviceDefinition $adviceDef, $code)
+
+	private function generateRuntimeCondition(Kdyby\Aop\DI\AdviceDefinition $adviceDef, string $code): string
 	{
 		$filter = $adviceDef->getFilter();
 		if (!$filter instanceof Kdyby\Aop\Pointcut\RuntimeFilter) {
@@ -164,10 +163,7 @@ class PointcutMethod
 
 
 
-	/**
-	 * @return string
-	 */
-	public function beforePrint()
+	public function beforePrint(): void
 	{
 		$this->setBody('');
 

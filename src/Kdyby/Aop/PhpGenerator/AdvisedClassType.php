@@ -38,7 +38,7 @@ class AdvisedClassType
 
 
 
-	public static function generatePublicProxyMethod(Code\ClassType $class, Code\Method $originalMethod)
+	public static function generatePublicProxyMethod(Code\ClassType $class, Code\Method $originalMethod): void
 	{
 		$proxyMethod = new Code\Method(self::CG_PUBLIC_PROXY_PREFIX .  $originalMethod->getName());
 
@@ -65,7 +65,7 @@ class AdvisedClassType
 	 * @param Code\PhpNamespace $namespace
 	 * @return Code\ClassType
 	 */
-	public static function fromServiceDefinition(Kdyby\Aop\Pointcut\ServiceDefinition $service, Code\PhpNamespace $namespace)
+	public static function fromServiceDefinition(Kdyby\Aop\Pointcut\ServiceDefinition $service, Code\PhpNamespace $namespace): Code\ClassType
 	{
 		$originalType = $service->getTypeReflection();
 		$class = $namespace->addClass(str_replace(['\\', '.'], '_', "{$originalType->getName()}Class_{$service->serviceId}"));
