@@ -20,15 +20,16 @@
 	"prefer-stable": true,
 	"require": {
 		"php": ">=7.2",
-		"nette/di": "~3.0",
+		"nette/di": "^3.0.3",
 		"nette/php-generator": "^3.0",
 		"nette/tokenizer": "~3.0",
 		"nette/reflection": "^2.4",
 		"kdyby/annotations": "^3.0",
-		"symfony/property-access": "~4.2"
+		"symfony/property-access": "^4.4|~5.0",
+		"symfony/polyfill-ctype": "^1.0"
 	},
 	"require-dev": {
-		"nette/application": "~3.0",
+		"nette/application": "^3.0.1",
 		"nette/bootstrap": "~3.0",
 		"nette/caching": "~3.0",
 		"nette/component-model": "~3.0",
@@ -41,11 +42,11 @@
 		"nette/robot-loader": "^3.0",
 		"nette/safe-stream": "~2.4",
 		"nette/security": "~3.0",
-		"nette/utils": "^3.0",
+		"nette/utils": "^3.1",
 		"latte/latte": "~2.5",
 		"tracy/tracy": "~2.6",
 		"kdyby/doctrine-cache": "^2.6",
-		"nette/tester": "~2.2",
+		"nette/tester": "^2.3.4",
 		"doctrine/collections": "~1.6"
 	},
 	"autoload": {
@@ -59,7 +60,7 @@
 	},
 	"extra": {
 		"branch-alias": {
-			"dev-master": "3.0-dev"
+			"dev-master": "3.1-dev"
 		}
 	}
 }
