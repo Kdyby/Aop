@@ -11,7 +11,7 @@ on:
     - cron: "0 8 * * 1" # At 08:00 on Monday
 
 env:
-  extensions: "json"
+  extensions: "json, mbstring"
   cache-version: "1"
   composer-version: "v2"
   composer-install: "composer update --no-interaction --no-progress --no-suggest --prefer-dist --prefer-stable"
@@ -83,7 +83,7 @@ jobs:
         run: 'echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"'
 
       - name: "Tests"
-        run: "vendor/bin/tester -p phpdbg -c ./tests/php.ini-unix ./tests/KdybyTests/"
+        run: "vendor/bin/tester -s -p php --colors 1 -C tests/KdybyTests/"
 
   tests-code-coverage:
     name: "Tests with code coverage"
@@ -141,7 +141,7 @@ jobs:
         run: "${{ env.composer-install }}"
 
       - name: "Tests"
-        run: "vendor/bin/tester --coverage ./coverage.xml --coverage-src ./src -s -p phpdbg -c ./tests/php.ini-unix ./tests/KdybyTests/"
+        run: "vendor/bin/tester -s -p php --colors 1 -C tests/KdybyTests/"
 
       - name: "Coveralls.io"
         env:

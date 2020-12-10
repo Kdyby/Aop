@@ -17,7 +17,7 @@ You can enable the extension using your neon config.
 ```yml
 extensions:
 	aop: Kdyby\Aop\DI\AopExtension
-	annotations: Kdyby\Annotations\DI\AnnotationsExtension
+	annotations: Nettrine\Annotations\DI\AnnotationsExtension
 	aspects: Kdyby\Aop\DI\AspectsExtension
 ```
 

@@ -24,9 +24,10 @@
 		"nette/php-generator": "^3.0",
 		"nette/tokenizer": "~3.0",
 		"nette/reflection": "^2.4",
-		"kdyby/annotations": "^3.0",
+		"nettrine/annotations": "^0.7",
 		"symfony/property-access": "^4.4|~5.0",
-		"symfony/polyfill-ctype": "^1.0"
+		"symfony/polyfill-ctype": "^1.0",
+		"nettrine/cache": "^0.3"
 	},
 	"require-dev": {
 		"nette/application": "^3.0.1",
@@ -45,7 +46,6 @@
 		"nette/utils": "^3.1",
 		"latte/latte": "~2.5",
 		"tracy/tracy": "~2.6",
-		"kdyby/doctrine-cache": "^2.6",
 		"nette/tester": "^2.3.4",
 		"doctrine/collections": "~1.6"
 	},

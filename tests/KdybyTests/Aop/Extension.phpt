@@ -18,6 +18,8 @@ use Kdyby\Aop\JoinPoint\AroundMethod;
 use Kdyby\Aop\JoinPoint\BeforeMethod;
 use Kdyby\Aop\JoinPoint\MethodInvocation;
 use Nette;
+use Nettrine\Annotations\DI\AnnotationsExtension;
+use Nettrine\Cache\DI\CacheExtension;
 use Tester;
 use Tester\Assert;
 
@@ -44,7 +46,8 @@ class ExtensionTest extends Tester\TestCase
 		$config->addConfig(__DIR__ . '/config/' . $configFile . '.neon');
 
 		$config->onCompile[] = function (Nette\Configurator $config, Nette\DI\Compiler $compiler): void {
-			$compiler->addExtension('annotations', new Kdyby\Annotations\DI\AnnotationsExtension());
+			$compiler->addExtension('annotations', new AnnotationsExtension());
+			$compiler->addExtension('nettrine.cache', new CacheExtension());
 		};
 		Kdyby\Aop\DI\AspectsExtension::register($config);
 		Kdyby\Aop\DI\AopExtension::register($config);

@@ -72,7 +72,7 @@ class PointcutRulesTest extends Tester\TestCase
 		];
 
 		$data[] = [TRUE,
-			new Pointcut\Rules([new Matcher\WithinMatcher('Nette\Application\UI\I*')]),
+			new Pointcut\Rules([new Matcher\WithinMatcher('Nette\Application\UI\*')]),
 			$this->createDefinition(Nette\Bridges\ApplicationLatte\Template::class),
 		];
 

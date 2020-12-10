@@ -253,11 +253,16 @@ class PointcutMethod
 		foreach ($from->getParameters() as $paramRefl) {
 			try {
 				if(!in_array($parameters[$paramRefl->getName()]->getTypeHint(),['boolean', 'integer', 'float', 'string', 'object', 'int', 'bool', ])) {
-					$parameters[$paramRefl->getName()]->setTypeHint($paramRefl->isArray() ? 'array' : ($paramRefl->getClass() ? '\\' . $paramRefl->getClass()->getName() : ''));
+					if (PHP_VERSION_ID >= 80000) {
+						$type = $paramRefl->getType() ? $paramRefl->getType()->getName() : '';
+					} else {
+						$type =  $paramRefl->isArray() ? 'array' : ($paramRefl->getClass() ? '\\' . $paramRefl->getClass()->getName() : '');
+					}
+					$parameters[$paramRefl->getName()]->setType($type);
 				}
 			} catch (\ReflectionException $e) {
 				if (preg_match('#Class (.+) does not exist#', $e->getMessage(), $m)) {
-					$parameters[$paramRefl->getName()]->setTypeHint('\\' . $m[1]);
+					$parameters[$paramRefl->getName()]->setType('\\' . $m[1]);
 				} else {
 					throw $e;
 				}
